@@ -1,56 +1,53 @@
 # Faramesh Documentation
 
-Complete documentation for the Faramesh Execution Governor platform.
+Deep-dive docs for [Faramesh Core](https://github.com/faramesh/faramesh-core) — the open-source execution gatekeeper for AI agents.
 
-## Documentation Structure
+For the hosted version, see [faramesh.dev](https://faramesh.dev).
 
-### Getting Started
-- **Quickstart.md** - Quick start guide
-- **API.md** - Complete API reference
-- **CLI.md** - Command-line interface documentation
+## Contents
 
-### Execution Gate (v0.3.0)
-- **EXECUTION-GATE.md** - Execution gate, deterministic hashing, tamper-evident audit, and decision replay
+### Getting started
+| File | What's in it |
+|---|---|
+| [Quickstart.md](Quickstart.md) | Install, run, first action |
+| [API.md](API.md) | Full HTTP API reference |
+| [CLI.md](CLI.md) | All CLI commands |
+
+### Core concepts
+| File | What's in it |
+|---|---|
+| [EXECUTION-GATE.md](EXECUTION-GATE.md) | How the gate works, deterministic hashing, audit chain |
+| [Policies.md](Policies.md) | Policy syntax, rules, first-match-wins |
+| [POLICY_PACKS.md](POLICY_PACKS.md) | Ready-to-use policy templates |
+
+### Framework integrations
+| File | What's in it |
+|---|---|
+| [INTEGRATIONS.md](INTEGRATIONS.md) | LangChain, CrewAI, AutoGen, MCP, LangGraph, LlamaIndex |
+| [govern-your-own-tool.md](govern-your-own-tool.md) | Wrap any custom tool |
 
 ### SDKs
-- **SDK-Python.md** - Python SDK documentation
-- **SDK-Node.md** - Node.js SDK documentation
-
-### Guides
-- **INTEGRATIONS.md** - Framework integration guides
-- **LangChain integration.md** - LangChain integration guide
-- **EXTENDING.md** - Extending Faramesh guide
-- **HOT_RELOAD.md** - Hot reload policies guide
-- **govern-your-own-tool.md** - Guide to governing custom tools
-
-### Configuration
-- **Policies.md** - Policy configuration guide
-- **POLICY_PACKS.md** - Pre-built policy packs
+| File | What's in it |
+|---|---|
+| [SDK-Python.md](SDK-Python.md) | Python SDK (`faramesh-sdk`) |
+| [SDK-Node.md](SDK-Node.md) | Node.js SDK (`@faramesh/sdk`) |
 
 ### Operations
-- **Docker.md** - Docker deployment guide
-- **OBSERVABILITY.md** - Metrics and monitoring
-- **ERROR-HANDLING.md** - Error handling guide
-- **Troubleshooting.md** - Troubleshooting guide
+| File | What's in it |
+|---|---|
+| [Docker.md](Docker.md) | Docker Compose setup |
+| [HOT_RELOAD.md](HOT_RELOAD.md) | Hot-reload policies without restart |
+| [OBSERVABILITY.md](OBSERVABILITY.md) | Prometheus metrics, monitoring |
+| [ERROR-HANDLING.md](ERROR-HANDLING.md) | Error types and handling |
+| [Troubleshooting.md](Troubleshooting.md) | Common issues |
+| [SECURITY-GUARDRAILS.md](SECURITY-GUARDRAILS.md) | Security model |
+| [EXTENDING.md](EXTENDING.md) | Extending Faramesh |
 
-### Security
-- **SECURITY-GUARDRAILS.md** - Security mechanisms and guardrails
+## Related repos
 
-### Design Partners
-- **DESIGN_PARTNER_GUIDE.md** - Guide for design partners
-
-## Repository
-
-**Source**: https://github.com/faramesh/faramesh-docs
-
-## Related Repositories
-
-- **Main Repository**: https://github.com/faramesh/faramesh-core
-- **Python SDK**: https://github.com/faramesh/faramesh-python-sdk
-- **Node.js SDK**: https://github.com/faramesh/faramesh-node-sdk
-- **Web UI**: https://github.com/faramesh/faramesh-ui
-- **Examples**: https://github.com/faramesh/faramesh-examples
-
-## License
-
-Elastic License 2.0
+| Repo | Purpose |
+|---|---|
+| [faramesh-core](https://github.com/faramesh/faramesh-core) | The server + policy engine |
+| [faramesh-examples](https://github.com/faramesh/faramesh-examples) | Runnable examples |
+| [faramesh-python-sdk](https://github.com/faramesh/faramesh-python-sdk) | Python SDK |
+| [faramesh-node-sdk](https://github.com/faramesh/faramesh-node-sdk) | Node.js SDK |
