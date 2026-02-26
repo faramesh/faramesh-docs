@@ -207,7 +207,7 @@ Override:
 tool = govern_langchain_tool(
     ShellTool(),
     agent_id="my-agent",
-    base_url="http://faramesh.example.com:8000"
+    base_url="http://127.0.0.1:8000"
 )
 ```
 
