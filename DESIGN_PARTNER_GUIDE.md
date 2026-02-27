@@ -140,7 +140,7 @@ def execute_with_governance(cmd: str):
 - Include steps to reproduce
 
 **Email:**
-- design-partners@faramesh.dev (if available)
+- founders@faramesh.dev (if available)
 - Include context about your use case
 
 **Discussions:**
@@ -257,7 +257,7 @@ rules:
 
 - **GitHub Issues**: [Create an issue](https://github.com/faramesh/faramesh-core/issues/new)
 - **GitHub Discussions**: [Join discussions](https://github.com/faramesh/faramesh-core/discussions)
-- **Email**: design-partners@faramesh.dev (if available)
+- **Email**: founders@faramesh.dev (if available)
 
 ---
 
