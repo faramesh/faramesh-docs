@@ -1,6 +1,15 @@
+<<<<<<< HEAD
 # Faramesh Docs
 
 Documentation site for Faramesh.
+
+## Project Structure
+
+# Faramesh Docs
+
+Documentation site for [Faramesh Core](https://github.com/faramesh/faramesh-core).
+
+This repo uses Astro + Starlight and keeps the authored docs in `src/content/docs/`.
 
 ## Project Structure
 
@@ -18,8 +27,6 @@ Documentation site for Faramesh.
 ├── package.json
 └── tsconfig.json
 ```
-
-Docs pages live in `src/content/docs/` as `.md` or `.mdx` files. The route matches the file path under that folder.
 
 ## Local Commands
 
@@ -93,3 +100,43 @@ Use a PR for every docs edit so changes stay reviewable.
 - `src/lib/docs-nav.js` controls sidebar sections and page placement.
 - `src/content/docs/` contains all authored docs pages.
 - `src/components/` contains the custom site chrome.
+
+
+### Reference
+| File | What's in it |
+|---|---|
+| [API.md](reference/API.md) | Full HTTP API reference |
+| [CLI.md](reference/CLI.md) | All CLI commands |
+| [EXECUTION-GATE.md](reference/EXECUTION-GATE.md) | How the gate works, deterministic hashing, audit chain |
+| [Policies.md](reference/Policies.md) | Policy syntax, rules, first-match-wins |
+| [POLICY_PACKS.md](reference/POLICY_PACKS.md) | Ready-to-use policy templates |
+
+### SDKs
+| File | What's in it |
+|---|---|
+| [SDK-Python.md](sdk/SDK-Python.md) | Python SDK (`faramesh-sdk`) |
+| [SDK-Node.md](sdk/SDK-Node.md) | Node.js SDK (`@faramesh/sdk`) |
+
+### Platform & Operations
+| File | What's in it |
+|---|---|
+| [Docker.md](platform/Docker.md) | Docker Compose setup |
+| [OBSERVABILITY.md](platform/OBSERVABILITY.md) | Prometheus metrics, monitoring |
+| [UI.md](platform/UI.md) | Dashboard and web UI |
+
+### Security & Troubleshooting
+| File | What's in it |
+|---|---|
+| [SECURITY-GUARDRAILS.md](security/SECURITY-GUARDRAILS.md) | Security model |
+| [ERROR-HANDLING.md](security/ERROR-HANDLING.md) | Error types and handling |
+| [Troubleshooting.md](community/Troubleshooting.md) | Common issues |
+
+## Related repos
+
+| Repo | Purpose |
+|---|---|
+| [faramesh-core](https://github.com/faramesh/faramesh-core) | The server + policy engine |
+| [faramesh-examples](https://github.com/faramesh/faramesh-examples) | Runnable examples |
+| [faramesh-python-sdk](https://github.com/faramesh/faramesh-python-sdk) | Python SDK |
+| [faramesh-node-sdk](https://github.com/faramesh/faramesh-node-sdk) | Node.js SDK |
+>>>>>>> origin/main
