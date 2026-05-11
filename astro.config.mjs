@@ -1,26 +1,41 @@
-// @ts-check
 import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
+import { docsSidebar } from './src/lib/docs-nav.js';
 
-// https://astro.build/config
 export default defineConfig({
+	site: 'https://docs.faramesh.com',
 	integrations: [
 		starlight({
-			title: 'My Docs',
-			social: [{ icon: 'github', label: 'GitHub', href: 'https://github.com/withastro/starlight' }],
-			sidebar: [
+			title: 'Faramesh Docs',
+			description:
+				'Non-bypassable execution control for AI agents. Policy engine, agent identity, credential sequestration, and human-in-the-loop approvals.',
+			logo: {
+				light: './src/assets/docs-logo-light.svg',
+				dark: './src/assets/logo-docs-dark-.svg',
+				replacesTitle: true,
+			},
+			social: [
+				{ icon: 'github', label: 'GitHub', href: 'https://github.com/faramesh/faramesh-docs' },
+			],
+			editLink: {
+				baseUrl: 'https://github.com/faramesh/faramesh-docs/edit/main/',
+			},
+			components: {
+				Header: './src/components/Header.astro',
+				Head: './src/components/Head.astro',
+				PageFrame: './src/components/PageFrame.astro',
+				Sidebar: './src/components/Sidebar.astro',
+				PageTitle: './src/components/PageTitle.astro',
+			},
+			customCss: ['./src/styles/custom.css'],
+			favicon: '/favicon.svg',
+			head: [
 				{
-					label: 'Guides',
-					items: [
-						// Each item here is one entry in the navigation menu.
-						{ label: 'Example Guide', slug: 'guides/example' },
-					],
-				},
-				{
-					label: 'Reference',
-					items: [{ autogenerate: { directory: 'reference' } }],
+					tag: 'meta',
+					attrs: { property: 'og:image', content: 'https://docs.faramesh.com/og.svg' },
 				},
 			],
+			sidebar: docsSidebar,
 		}),
 	],
 });

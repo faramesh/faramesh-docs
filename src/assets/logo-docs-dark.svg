@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 72" fill="none">
+  <rect width="360" height="72" rx="16" fill="#030712"/>
+  <path d="M24 18h14l10 18 10-18h14L54 39v15H42V39L24 18Z" fill="#93c5fd"/>
+  <path d="M88 18h18l18 36H94l-3-7H75l-3 7H60l18-36Zm6 10-5 11h10l-5-11Z" fill="#ffffff"/>
+  <path d="M130 18h12v18c0 6 3 10 10 10s10-4 10-10V18h12v19c0 14-9 23-22 23s-22-9-22-23V18Z" fill="#ffffff"/>
+  <path d="M194 18h14l8 14 8-14h14l-15 22 16 14h-15l-8-7-8 7h-15l16-14-15-22Z" fill="#93c5fd"/>
+  <text x="248" y="45" fill="#ffffff" font-family="ui-sans-serif, system-ui, sans-serif" font-size="26" font-weight="700">Faramesh</text>
+</svg>

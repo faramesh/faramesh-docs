@@ -1,0 +1,121 @@
+---
+import MobileMenuToggle from '@astrojs/starlight/components/MobileMenuToggle.astro';
+import { getSectionForPath, normalizePathname } from '../lib/docs-nav.js';
+
+const currentSection = getSectionForPath(Astro.url.pathname);
+const currentPath = normalizePathname(Astro.url.pathname);
+
+const isCurrent = (href) => normalizePathname(href) === currentPath;
+
+const linkHref = (item) => item.slug ? `/${item.slug.replace(/^\//, '')}/` : item.link;
+---
+
+<nav class="site-sidebar sidebar print:hidden" aria-label="Main">
+	<MobileMenuToggle />
+	<div id="starlight__sidebar" class="site-sidebar__content">
+		{currentSection.sidebar.map((group) => (
+			<section class="site-sidebar__group">
+				<h2 class="site-sidebar__group-label">{group.label}</h2>
+				<ul class="site-sidebar__list">
+					{group.items.map((item) => (
+						<li class="site-sidebar__item">
+							<a
+								href={linkHref(item)}
+								class:list={{
+									'site-sidebar__link': true,
+									'site-sidebar__link--current': item.slug ? isCurrent(linkHref(item)) : false,
+								}}
+								aria-current={item.slug && isCurrent(linkHref(item)) ? 'page' : undefined}
+								{...(item.attrs ?? {})}
+							>
+								{item.slug ? item.slug.split('/').pop()?.replace(/-/g, ' ').replace(/\b\w/g, (ch) => ch.toUpperCase()) : item.link}
+							</a>
+						</li>
+					))}
+				</ul>
+			</section>
+		))}
+	</div>
+</nav>
+
+<style>
+	.site-sidebar {
+		background: transparent;
+		padding: 0.75rem 0 1rem;
+	}
+
+	.site-sidebar__content {
+		padding: 0 0.5rem 1rem;
+	}
+
+	.site-sidebar__group + .site-sidebar__group {
+		margin-top: 1rem;
+	}
+
+	.site-sidebar__group-label {
+		margin: 0 0 0.45rem;
+		padding: 0 0.5rem;
+		font-size: 0.7rem;
+		font-weight: 700;
+		letter-spacing: 0.11em;
+		text-transform: uppercase;
+		color: var(--sl-color-gray-3);
+	}
+
+	.site-sidebar__list {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: grid;
+		gap: 0.2rem;
+	}
+
+	.site-sidebar__link {
+		display: block;
+		padding: 0.46rem 0.7rem;
+		border-radius: 0.35rem;
+		font-size: 0.92rem;
+		line-height: 1.35;
+		color: var(--sl-color-gray-2);
+		text-decoration: none;
+		transition: color 140ms ease, background-color 140ms ease;
+	}
+
+	.site-sidebar__link:hover {
+		color: var(--sl-color-white);
+		background: color-mix(in srgb, var(--sl-color-white) 4%, transparent);
+	}
+
+	.site-sidebar__link--current,
+	.site-sidebar__link[aria-current='page'] {
+		color: var(--sl-color-white);
+		background: transparent;
+		box-shadow: inset 2px 0 0 var(--sl-color-accent);
+	}
+
+	:global(:root[data-theme='light']) .site-sidebar__group-label {
+		color: #64748b;
+	}
+
+	:global(:root[data-theme='light']) .site-sidebar__link {
+		color: #475569;
+	}
+
+	:global(:root[data-theme='light']) .site-sidebar__link:hover {
+		color: #0f172a;
+		background: color-mix(in srgb, var(--sl-color-white) 4%, transparent);
+	}
+
+	:global(:root[data-theme='light']) .site-sidebar__link--current,
+	:global(:root[data-theme='light']) .site-sidebar__link[aria-current='page'] {
+		color: var(--sl-color-gray-1);
+		background: transparent;
+		box-shadow: inset 2px 0 0 var(--sl-color-accent);
+	}
+
+	@media (min-width: 900px) {
+		.site-sidebar {
+			width: 15rem;
+		}
+	}
+</style>

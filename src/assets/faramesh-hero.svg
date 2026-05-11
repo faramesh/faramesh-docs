@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 640" fill="none">
+  <defs>
+    <linearGradient id="g" x1="120" y1="100" x2="840" y2="560" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#2563eb"/>
+      <stop offset="1" stop-color="#0f172a"/>
+    </linearGradient>
+    <radialGradient id="r" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(480 320) rotate(90) scale(310 420)">
+      <stop stop-color="#93c5fd" stop-opacity="0.28"/>
+      <stop offset="1" stop-color="#030712" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="960" height="640" rx="42" fill="#030712"/>
+  <rect x="48" y="48" width="864" height="544" rx="34" fill="url(#g)" opacity="0.92"/>
+  <circle cx="702" cy="175" r="132" fill="url(#r)"/>
+  <g opacity="0.9">
+    <rect x="114" y="144" width="300" height="56" rx="16" fill="#ffffff" fill-opacity="0.10"/>
+    <rect x="114" y="220" width="480" height="56" rx="16" fill="#ffffff" fill-opacity="0.10"/>
+    <rect x="114" y="296" width="392" height="56" rx="16" fill="#ffffff" fill-opacity="0.10"/>
+    <rect x="114" y="372" width="528" height="56" rx="16" fill="#ffffff" fill-opacity="0.10"/>
+  </g>
+  <text x="114" y="512" fill="#ffffff" font-family="ui-sans-serif, system-ui, sans-serif" font-size="42" font-weight="700">Action Authorization Boundary</text>
+  <text x="114" y="556" fill="#cbd5e1" font-family="ui-sans-serif, system-ui, sans-serif" font-size="22">Deterministic policy, auditability, and HITL before execution.</text>
+</svg>

@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" fill="none">
+  <rect width="1200" height="630" rx="44" fill="#030712"/>
+  <path d="M84 96h1032v438H84z" fill="#0f172a"/>
+  <circle cx="930" cy="184" r="134" fill="#2563eb" fill-opacity="0.22"/>
+  <text x="96" y="186" fill="#ffffff" font-family="ui-sans-serif, system-ui, sans-serif" font-size="64" font-weight="800">Faramesh Documentation</text>
+  <text x="96" y="254" fill="#cbd5e1" font-family="ui-sans-serif, system-ui, sans-serif" font-size="30">Non-bypassable execution control for AI agents.</text>
+  <text x="96" y="366" fill="#93c5fd" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="26">Agent → AAB → Policy Engine → Executor</text>
+</svg>

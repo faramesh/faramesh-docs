@@ -1,40 +1,26 @@
 ---
-title: Welcome to Starlight
-description: Get started building your docs site with Starlight.
-template: splash # Remove or comment out this line to display the site sidebar on this page.
-hero:
-  tagline: Congrats on setting up a new Starlight project!
-  image:
-    file: ../../assets/houston.webp
-  actions:
-    - text: Example Guide
-      link: /guides/example/
-      icon: right-arrow
-    - text: Read the Starlight docs
-      link: https://starlight.astro.build
-      icon: external
-      variant: minimal
+title: Faramesh Documentation
+description: Non-bypassable execution control for AI agents.
 ---
 
-import { Card, CardGrid } from '@astrojs/starlight/components';
+# Faramesh
 
-## Next steps
+Non-bypassable execution control for AI agents.
 
-<CardGrid stagger>
-	<Card title="Update content" icon="pencil">
-		Edit `src/content/docs/index.mdx` to see this page change.
-	</Card>
-	<Card title="Change page layout" icon="document">
-		Delete `template: splash` in `src/content/docs/index.mdx` to display a
-		sidebar on this page.
-	</Card>
-	<Card title="Add new content" icon="add-document">
-		Add Markdown or MDX files to `src/content/docs` to create new pages.
-	</Card>
-	<Card title="Configure your site" icon="setting">
-		Edit your `sidebar` and other config in `astro.config.mjs`.
-	</Card>
-	<Card title="Read the docs" icon="open-book">
-		Learn more in [the Starlight Docs](https://starlight.astro.build/).
-	</Card>
-</CardGrid>
+Faramesh provides a deterministic policy gate that every agent tool call must cross before execution. Policies are defined in YAML, applied uniformly across all frameworks, and every decision is logged for compliance and audit.
+
+## Core Features
+
+- **Non-Bypassable Execution Control**: Every agent tool call crosses a deterministic policy gate before execution.
+- **Framework Agnostic**: Works with LangChain, CrewAI, AutoGen, MCP, LangGraph, LlamaIndex, DSPy, and custom tools.
+- **Deterministic Policy Engine**: Define rules in YAML, apply consistently, zero surprises.
+- **Credential Sequestration**: Credentials never touch the agent. Faramesh holds them and injects only what's needed.
+- **Human-in-the-Loop**: Approve high-risk actions with Slack, email, or web UI.
+- **Full Audit Trail**: Every decision is logged with cryptographic hashing for compliance.
+
+## Getting Started
+
+1. [Introduction](/getting-started/introduction/) — Understand what Faramesh does
+2. [Quickstart](/getting-started/quickstart/) — Get running in 5 minutes
+3. [Installation](/getting-started/installation/) — Set up in your environment
+4. [Your First Policy](/getting-started/your-first-policy/) — Define a real policy
