@@ -1,15 +1,8 @@
-<<<<<<< HEAD
-# Faramesh Docs
-
-Documentation site for Faramesh.
-
-## Project Structure
-
 # Faramesh Docs
 
 Documentation site for [Faramesh Core](https://github.com/faramesh/faramesh-core).
 
-This repo uses Astro + Starlight and keeps the authored docs in `src/content/docs/`.
+This repository contains all documentation for Faramesh. Docs are built with Astro + Starlight and automatically deployed to the live site via Netlify/Vercel when PRs merge to `main`.
 
 ## Project Structure
 
@@ -28,115 +21,56 @@ This repo uses Astro + Starlight and keeps the authored docs in `src/content/doc
 └── tsconfig.json
 ```
 
-## Local Commands
+## Contributing: How To Add or Edit Docs
 
-Run commands from the repo root:
+**All documentation changes go via pull request.** Contributors do NOT need to run the development server locally. When your PR merges to `main`, the site automatically deploys to the live site (Netlify/Vercel) with your changes.
 
-```bash
-npm install
-npm run dev
-npm run build
-npm run preview
-```
+### Edit an Existing Page
 
-## How To Edit Docs
+1. Locate the `.md` or `.mdx` file under `src/content/docs/` that you want to edit.
+2. Make your changes in GitHub's web editor or in your local fork.
+3. If adding the page to the sidebar for the first time, update `src/lib/docs-nav.js` with the new slug.
+4. Open a pull request with a clear description of your changes.
+5. Once the PR is merged to `main`, your changes will be live within minutes.
 
-If you want to change an existing page:
+### Add a Single New Page
 
-1. Edit the file under `src/content/docs/`.
-2. Update `src/lib/docs-nav.js` if the page should appear in the sidebar.
-3. Run `npm run build`.
-4. Open a pull request with the change.
+1. Create a new `.md` or `.mdx` file under `src/content/docs/` in the appropriate section folder.
+2. Add frontmatter with `title` and `description`:
+   ```md
+   ---
+   title: My New Page
+   description: A brief description of the page.
+   ---
+   ```
+3. Write your page content.
+4. If the page should appear in the sidebar navigation, add it to `src/lib/docs-nav.js`.
+5. Commit your changes and open a pull request.
+6. Once merged, the site will automatically update.
 
-## How To Add A Single Page
+### Add Multiple Pages
 
-1. Create a new `.md` or `.mdx` file under `src/content/docs/`.
-2. Add frontmatter with `title` and `description`.
-3. Write the page content.
-4. Add the new slug to `src/lib/docs-nav.js` if it should appear in the nav.
-5. Run `npm run build`.
-6. Submit the change in a pull request.
+1. Create one `.md` or `.mdx` file per page in the appropriate docs folder.
+2. Each file must have valid frontmatter (`title` and `description`).
+3. Add entries for each new page to `src/lib/docs-nav.js` in the correct section.
+4. Open a single pull request for the entire set of changes.
+5. Once merged, all pages will be live.
 
-Example:
+## PR Checklist
 
-```md
----
-title: Example Page
-description: Short summary of the page.
----
+Before submitting your PR:
 
-# Example Page
+- [ ] Each page has valid frontmatter (`title` and `description`).
+- [ ] New pages are added to `src/lib/docs-nav.js` if they should appear in the sidebar.
+- [ ] File paths and slugs match the documentation section they belong to.
 
-Your content goes here.
-```
+## File Reference
 
-## How To Add Multiple Pages
+- **`src/lib/docs-nav.js`** — Controls sidebar sections and page placement.
+- **`src/content/docs/`** — All authored documentation pages organized by section.
+- **`src/components/`** — Custom site components (header, sidebar, etc.).
+- **`astro.config.mjs`** — Astro and Starlight configuration.
 
-1. Create one file per page inside the correct docs folder.
-2. Keep filenames and slugs consistent with the sidebar section you want.
-3. Add every new slug to `src/lib/docs-nav.js`.
-4. Rebuild locally and confirm each route renders.
-5. Open a single pull request for the full doc set.
+## Deployment
 
-## Pull Request Workflow
-
-Use a PR for every docs edit so changes stay reviewable.
-
-1. Create a branch.
-2. Make the docs edits.
-3. Run `npm run build`.
-4. Open a pull request.
-5. Include a short summary of the pages you added or changed.
-
-## Checklist Before Sending A PR
-
-- The page has valid frontmatter.
-- The page appears in the correct sidebar section if needed.
-- The build completes without errors.
-- New routes render with the expected heading.
-
-## Reference
-
-- `src/lib/docs-nav.js` controls sidebar sections and page placement.
-- `src/content/docs/` contains all authored docs pages.
-- `src/components/` contains the custom site chrome.
-
-
-### Reference
-| File | What's in it |
-|---|---|
-| [API.md](reference/API.md) | Full HTTP API reference |
-| [CLI.md](reference/CLI.md) | All CLI commands |
-| [EXECUTION-GATE.md](reference/EXECUTION-GATE.md) | How the gate works, deterministic hashing, audit chain |
-| [Policies.md](reference/Policies.md) | Policy syntax, rules, first-match-wins |
-| [POLICY_PACKS.md](reference/POLICY_PACKS.md) | Ready-to-use policy templates |
-
-### SDKs
-| File | What's in it |
-|---|---|
-| [SDK-Python.md](sdk/SDK-Python.md) | Python SDK (`faramesh-sdk`) |
-| [SDK-Node.md](sdk/SDK-Node.md) | Node.js SDK (`@faramesh/sdk`) |
-
-### Platform & Operations
-| File | What's in it |
-|---|---|
-| [Docker.md](platform/Docker.md) | Docker Compose setup |
-| [OBSERVABILITY.md](platform/OBSERVABILITY.md) | Prometheus metrics, monitoring |
-| [UI.md](platform/UI.md) | Dashboard and web UI |
-
-### Security & Troubleshooting
-| File | What's in it |
-|---|---|
-| [SECURITY-GUARDRAILS.md](security/SECURITY-GUARDRAILS.md) | Security model |
-| [ERROR-HANDLING.md](security/ERROR-HANDLING.md) | Error types and handling |
-| [Troubleshooting.md](community/Troubleshooting.md) | Common issues |
-
-## Related repos
-
-| Repo | Purpose |
-|---|---|
-| [faramesh-core](https://github.com/faramesh/faramesh-core) | The server + policy engine |
-| [faramesh-examples](https://github.com/faramesh/faramesh-examples) | Runnable examples |
-| [faramesh-python-sdk](https://github.com/faramesh/faramesh-python-sdk) | Python SDK |
-| [faramesh-node-sdk](https://github.com/faramesh/faramesh-node-sdk) | Node.js SDK |
->>>>>>> origin/main
+Changes are automatically deployed via Netlify/Vercel when PRs merge to `main`. No manual deployment steps are needed; simply merge your PR and the site will update within minutes.
