@@ -222,6 +222,46 @@ nav[aria-label='Main'] a[aria-current='page'] {
 	color: var(--sl-text-primary) !important;
 }
 
+:root[data-theme='light'] #starlight__mobile-toc,
+:root[data-theme='light'] #starlight__mobile-toc .dropdown,
+:root[data-theme='light'] #starlight__mobile-toc summary {
+	background: #ffffff;
+	color: var(--sl-text-primary) !important;
+}
+
+:root[data-theme='light'] #starlight__mobile-toc {
+	border: 1px solid color-mix(in srgb, var(--sl-color-black) 12%, transparent);
+	box-shadow: 0 8px 24px color-mix(in srgb, var(--sl-color-black) 10%, transparent);
+	border-radius: 0.8rem;
+	overflow: clip;
+}
+
+:root[data-theme='light'] #starlight__mobile-toc summary {
+	border-bottom: 1px solid color-mix(in srgb, var(--sl-color-black) 8%, transparent);
+	padding-inline: 0.9rem;
+	min-height: 3rem;
+}
+
+:root[data-theme='light'] #starlight__mobile-toc .toggle,
+:root[data-theme='light'] #starlight__mobile-toc .display-current,
+:root[data-theme='light'] #starlight__mobile-toc a,
+:root[data-theme='light'] #starlight__mobile-toc span {
+	color: var(--sl-text-primary) !important;
+}
+
+:root[data-theme='light'] #starlight__mobile-toc .dropdown {
+	padding: 0.35rem;
+}
+
+:root[data-theme='light'] #starlight__mobile-toc ul a {
+	color: var(--sl-text-secondary) !important;
+}
+
+:root[data-theme='light'] #starlight__mobile-toc ul a:hover,
+:root[data-theme='light'] #starlight__mobile-toc ul a[aria-current='page'] {
+	color: var(--sl-text-primary) !important;
+}
+
 :root[data-theme='light'] .right-sidebar-panel ul a {
 	color: var(--sl-text-secondary) !important;
 }

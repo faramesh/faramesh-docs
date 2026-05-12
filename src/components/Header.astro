@@ -8,8 +8,27 @@ import logoLight from '../assets/docs-logo-light.svg';
 
 const { siteTitleHref } = Astro.locals.starlightRoute;
 const currentSection = getSectionForPath(Astro.url.pathname);
+const currentPath = Astro.url.pathname.endsWith('/') ? Astro.url.pathname : `${Astro.url.pathname}/`;
 const logoDarkSrc = typeof logoDark === 'string' ? logoDark : logoDark.src;
 const logoLightSrc = typeof logoLight === 'string' ? logoLight : logoLight.src;
+
+const linkHref = (item) => item.slug ? `/${item.slug.replace(/^\//, '')}/` : item.link;
+const linkLabel = (item) => {
+	if (item.label) return item.label;
+	if (item.slug) {
+		return item.slug
+			.split('/')
+			.pop()
+			?.replace(/-/g, ' ')
+			.replace(/\b\w/g, (ch) => ch.toUpperCase());
+	}
+	return item.link;
+};
+
+const isCurrent = (href) => {
+	const normalized = href.endsWith('/') ? href : `${href}/`;
+	return normalized === currentPath;
+};
 ---
 
 <header class="site-header" transition:persist="site-header" transition:name="site-header">
@@ -50,6 +69,42 @@ const logoLightSrc = typeof logoLight === 'string' ? logoLight : logoLight.src;
 			<div class="site-theme">
 				<ThemeSelect />
 			</div>
+		</div>
+
+		<div class="site-mobile-pages" aria-label="Pages in this section">
+			<div class="site-mobile-pages__title">Pages in this section</div>
+			{currentSection.sidebar.map((group) => {
+				const groupIsCurrent = group.items.some((item) => isCurrent(linkHref(item)));
+
+				return (
+					<details class="site-mobile-group" open={groupIsCurrent}>
+						<summary class="site-mobile-group__summary">
+							<span>{group.label}</span>
+							<svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+								<path d="m6 9 6 6 6-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+							</svg>
+						</summary>
+						<ul class="site-mobile-group__items">
+							{group.items.map((item) => {
+								const href = linkHref(item);
+								const current = isCurrent(href);
+
+								return (
+									<li>
+										<a
+											href={href}
+											class:list={{ 'site-mobile-group__link': true, 'site-mobile-group__link--current': current }}
+											aria-current={current ? 'page' : undefined}
+										>
+											{linkLabel(item)}
+										</a>
+									</li>
+								);
+							})}
+						</ul>
+					</details>
+				);
+			})}
 		</div>
 	</div>
 </header>
@@ -328,6 +383,89 @@ const logoLightSrc = typeof logoLight === 'string' ? logoLight : logoLight.src;
 			padding: 0.35rem 0 0.15rem;
 		}
 
+		.site-mobile-pages {
+			display: none;
+			width: 100%;
+			flex-basis: 100%;
+			padding: 0.5rem 0 0;
+			border-top: 1px solid color-mix(in srgb, var(--sl-color-white) 10%, transparent);
+		}
+
+		.site-mobile-pages__title {
+			margin: 0 0 0.45rem;
+			font-size: 0.66rem;
+			font-weight: 700;
+			letter-spacing: 0.12em;
+			text-transform: uppercase;
+			color: var(--sl-color-gray-3);
+		}
+
+		.site-mobile-group {
+			border: 1px solid color-mix(in srgb, var(--sl-color-white) 8%, transparent);
+			border-radius: 0.6rem;
+			background: color-mix(in srgb, var(--sl-color-white) 3%, transparent);
+			overflow: clip;
+		}
+
+		.site-mobile-group + .site-mobile-group {
+			margin-top: 0.45rem;
+		}
+
+		.site-mobile-group__summary {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			gap: 0.75rem;
+			padding: 0.62rem 0.72rem;
+			list-style: none;
+			cursor: pointer;
+			color: var(--sl-color-gray-1);
+			font-size: 0.82rem;
+			font-weight: 700;
+		}
+
+		.site-mobile-group__summary::-webkit-details-marker {
+			display: none;
+		}
+
+		.site-mobile-group__summary svg {
+			flex: none;
+			transition: transform 140ms ease;
+		}
+
+		.site-mobile-group[open] .site-mobile-group__summary svg {
+			transform: rotate(180deg);
+		}
+
+		.site-mobile-group__items {
+			list-style: none;
+			margin: 0;
+			padding: 0 0.35rem 0.35rem;
+			display: grid;
+			gap: 0.15rem;
+		}
+
+		.site-mobile-group__link {
+			display: block;
+			padding: 0.44rem 0.65rem;
+			border-radius: 0.4rem;
+			color: var(--sl-color-gray-2);
+			text-decoration: none;
+			font-size: 0.9rem;
+			line-height: 1.35;
+		}
+
+		.site-mobile-group__link:hover {
+			color: var(--sl-color-white);
+			background: color-mix(in srgb, var(--sl-color-white) 5%, transparent);
+		}
+
+		.site-mobile-group__link--current,
+		.site-mobile-group__link[aria-current='page'] {
+			color: var(--sl-color-white);
+			background: color-mix(in srgb, var(--sl-color-accent) 22%, transparent);
+		}
+
 		/* When mobile menu is opened, reveal the tabs and actions rows */
 		.site-header[data-mobile-open="true"] .site-tabs {
 			display: flex;
@@ -339,6 +477,11 @@ const logoLightSrc = typeof logoLight === 'string' ? logoLight : logoLight.src;
 		.site-header[data-mobile-open="true"] .site-actions {
 			display: inline-flex;
 			order: 4;
+		}
+
+		.site-header[data-mobile-open="true"] .site-mobile-pages {
+			display: block;
+			order: 5;
 		}
 
 		.site-brand__logo {
