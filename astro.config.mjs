@@ -3,7 +3,7 @@ import starlight from '@astrojs/starlight';
 import { docsSidebar } from './src/lib/docs-nav.js';
 
 export default defineConfig({
-	site: 'https://docs.faramesh.com',
+	site: 'https://docs.faramesh.dev',
 	integrations: [
 		starlight({
 			title: 'Faramesh Docs',
@@ -32,11 +32,11 @@ export default defineConfig({
 			head: [
 				{
 					tag: 'meta',
-					attrs: { property: 'og:image', content: 'https://docs.faramesh.com/docs-cover.png' },
+					attrs: { property: 'og:image', content: 'https://docs.faramesh.dev/docs-cover.png' },
 				},
 				{
 					tag: 'meta',
-					attrs: { name: 'twitter:image', content: 'https://docs.faramesh.com/docs-cover.png' },
+					attrs: { name: 'twitter:image', content: 'https://docs.faramesh.dev/docs-cover.png' },
 				},
 				// Basic SEO defaults for docs site
 				{
