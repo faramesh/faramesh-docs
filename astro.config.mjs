@@ -32,7 +32,11 @@ export default defineConfig({
 			head: [
 				{
 					tag: 'meta',
-					attrs: { property: 'og:image', content: 'https://docs.faramesh.com/og.svg' },
+					attrs: { property: 'og:image', content: 'https://docs.faramesh.com/docs-cover.png' },
+				},
+				{
+					tag: 'meta',
+					attrs: { name: 'twitter:image', content: 'https://docs.faramesh.com/docs-cover.png' },
 				},
 				// Basic SEO defaults for docs site
 				{
