@@ -8,6 +8,17 @@ const currentPath = normalizePathname(Astro.url.pathname);
 const isCurrent = (href) => normalizePathname(href) === currentPath;
 
 const linkHref = (item) => item.slug ? `/${item.slug.replace(/^\//, '')}/` : item.link;
+const linkLabel = (item) => {
+	if (item.label) return item.label;
+	if (item.slug) {
+		return item.slug
+			.split('/')
+			.pop()
+			?.replace(/-/g, ' ')
+			.replace(/\b\w/g, (ch) => ch.toUpperCase());
+	}
+	return item.link;
+};
 ---
 
 <nav class="site-sidebar sidebar print:hidden" aria-label="Main">
@@ -28,7 +39,7 @@ const linkHref = (item) => item.slug ? `/${item.slug.replace(/^\//, '')}/` : ite
 								aria-current={item.slug && isCurrent(linkHref(item)) ? 'page' : undefined}
 								{...(item.attrs ?? {})}
 							>
-								{item.slug ? item.slug.split('/').pop()?.replace(/-/g, ' ').replace(/\b\w/g, (ch) => ch.toUpperCase()) : item.link}
+								{linkLabel(item)}
 							</a>
 						</li>
 					))}

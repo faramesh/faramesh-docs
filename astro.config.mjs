@@ -28,11 +28,16 @@ export default defineConfig({
 				PageTitle: './src/components/PageTitle.astro',
 			},
 			customCss: ['./src/styles/custom.css'],
-			favicon: '/favicon.svg',
+			favicon: '/faramesh-icon-primary-white.svg',
 			head: [
 				{
 					tag: 'meta',
 					attrs: { property: 'og:image', content: 'https://docs.faramesh.com/og.svg' },
+				},
+				// Basic SEO defaults for docs site
+				{
+					tag: 'meta',
+					attrs: { name: 'robots', content: 'index, follow' },
 				},
 			],
 			sidebar: docsSidebar,
