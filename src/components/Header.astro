@@ -20,7 +20,13 @@ const logoLightSrc = typeof logoLight === 'string' ? logoLight : logoLight.src;
 		</a>
 		<span class="brand-divider" aria-hidden="true"></span>
 
-		<nav class="site-tabs" aria-label="Sections">
+		<button class="mobile-menu-toggle" aria-expanded="false" aria-controls="site-tabs" aria-label="Toggle menu">
+			<svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+				<path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+			</svg>
+		</button>
+
+		<nav id="site-tabs" class="site-tabs" aria-label="Sections">
 			{headerSections.map((section) => (
 				<a
 					href={section.href}
@@ -224,6 +230,25 @@ const logoLightSrc = typeof logoLight === 'string' ? logoLight : logoLight.src;
 		background-color: var(--sl-color-bg-nav);
 	}
 
+	/* Mobile menu toggle button */
+	.mobile-menu-toggle {
+		display: none;
+		align-items: center;
+		justify-content: center;
+		width: 2.4rem;
+		height: 2.4rem;
+		padding: 0.25rem;
+		border: 0;
+		background: transparent;
+		color: var(--sl-color-gray-2);
+		border-radius: 0.45rem;
+		cursor: pointer;
+	}
+
+	.mobile-menu-toggle svg { display: block; width: 1.25rem; height: 1.25rem; }
+
+	.mobile-menu-toggle:hover { color: var(--sl-color-white); background: color-mix(in srgb, var(--sl-color-white) 6%, transparent); }
+
 	:global(:root[data-theme='light']) .site-header {
 		background: var(--sl-color-bg);
 		border-bottom-color: color-mix(in srgb, var(--sl-color-white) 10%, transparent);
@@ -285,6 +310,23 @@ const logoLightSrc = typeof logoLight === 'string' ? logoLight : logoLight.src;
 			flex-wrap: wrap;
 		}
 
+		/* Show the mobile toggle and collapse tabs by default */
+		.mobile-menu-toggle {
+			display: inline-flex;
+		}
+
+		.site-tabs {
+			display: none;
+		}
+
+		/* When mobile menu is opened, reveal the tabs row */
+		.site-header[data-mobile-open="true"] .site-tabs {
+			display: flex;
+			order: 3;
+			flex-basis: 100%;
+			padding-top: 0.1rem;
+		}
+
 		.site-tabs {
 			order: 3;
 			flex-basis: 100%;
@@ -342,4 +384,39 @@ const logoLightSrc = typeof logoLight === 'string' ? logoLight : logoLight.src;
 
 	document.addEventListener('astro:page-load', updateActiveTab);
 	updateActiveTab();
+
+	// Keep the CSS nav height in sync with the actual header size so
+	// `.main-frame` padding matches the header and avoids overlap on mobile.
+	function updateNavHeight() {
+		const header = document.querySelector('.site-header');
+		if (!header) return;
+		const h = Math.ceil(header.getBoundingClientRect().height);
+		document.documentElement.style.setProperty('--sl-nav-height', `${h}px`);
+	}
+
+	// Mobile menu toggle behavior: toggle a `data-mobile-open` attribute
+	// on the header so CSS can reveal the collapsed nav.
+	function setupMobileToggle() {
+		const header = document.querySelector('.site-header');
+		const toggle = document.querySelector('.mobile-menu-toggle');
+		if (!header || !toggle) return;
+
+		toggle.addEventListener('click', () => {
+			const open = header.getAttribute('data-mobile-open') === 'true';
+			header.setAttribute('data-mobile-open', (!open).toString());
+			toggle.setAttribute('aria-expanded', (!open).toString());
+			// Update header height since nav becomes visible/hidden
+			requestAnimationFrame(updateNavHeight);
+		});
+	}
+
+	window.addEventListener('load', () => {
+		setupMobileToggle();
+		updateNavHeight();
+	});
+
+	window.addEventListener('resize', () => {
+		// throttling not necessary for small site; keep simple
+		updateNavHeight();
+	});
 </script>

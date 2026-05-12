@@ -1,5 +1,5 @@
 :root {
-	--sl-nav-height: 3.2rem;
+	--sl-nav-height: 3.6rem;
 	--sl-text-primary: var(--sl-color-gray-1);
 	--sl-text-secondary: var(--sl-color-gray-3);
 	--sl-color-accent-low: #112033;
@@ -16,6 +16,13 @@
 	--sl-color-gray-5: #161b24;
 	--sl-color-gray-6: #0a0c10;
 	--sl-color-black: #05070b;
+}
+
+/* Use the original smaller nav height on larger screens where layout differs */
+@media (min-width: 900px) {
+	:root {
+		--sl-nav-height: 3.2rem;
+	}
 }
 
 :root[data-theme='dark'] {
@@ -160,7 +167,8 @@ body {
 
 /* Ensure content is not hidden under the fixed header on narrow viewports */
 .main-frame {
-	padding-top: calc(var(--sl-nav-height, 3.2rem) + env(safe-area-inset-top));
+	/* Increase the mobile fallback to slightly exceed measured header height */
+	padding-top: calc(var(--sl-nav-height, 3.6rem) + env(safe-area-inset-top));
 }
 
 @media (min-width: 900px) {
@@ -311,4 +319,13 @@ nav[aria-label='Main'] a[aria-current='page'] {
 
 :root[data-theme='light'] .right-sidebar-container :is(a[aria-current='page'], a:hover) {
 	color: #0f172a !important;
+}
+
+/* Emergency override for mobile: ensure main content sits below header
+   This uses higher specificity and !important to override component-scoped
+   styles until the site rebuilds/hot-reloads with the above variable changes. */
+@media (max-width: 899px) {
+	.page > .main-frame {
+		padding-top: calc(3.6rem + var(--sl-mobile-toc-height, 0px)) !important;
+	}
 }
