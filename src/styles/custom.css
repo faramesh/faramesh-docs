@@ -158,6 +158,18 @@ body {
 	color: var(--sl-color-white);
 }
 
+/* Ensure content is not hidden under the fixed header on narrow viewports */
+.main-frame {
+	padding-top: calc(var(--sl-nav-height, 3.2rem) + env(safe-area-inset-top));
+}
+
+@media (min-width: 900px) {
+	/* Reduce extra top padding on larger screens where layout handles spacing differently */
+	.main-frame {
+		padding-top: calc(var(--sl-nav-height, 3.2rem));
+	}
+}
+
 .sl-markdown-content :is(th, td) {
 	border-color: color-mix(in srgb, var(--sl-color-white) 8%, transparent);
 	padding: 0.8rem 0.95rem;
