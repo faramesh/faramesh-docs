@@ -242,6 +242,17 @@ nav[aria-label='Main'] a[aria-current='page'] {
 	min-height: 3rem;
 }
 
+:root[data-theme='light'] #starlight__mobile-toc .toggle {
+	background: #ffffff !important;
+	border-color: color-mix(in srgb, var(--sl-color-black) 12%, transparent) !important;
+	color: var(--sl-text-primary) !important;
+	box-shadow: none !important;
+}
+
+:root[data-theme='light'] #starlight__mobile-toc .toggle svg {
+	color: var(--sl-text-secondary) !important;
+}
+
 :root[data-theme='light'] #starlight__mobile-toc .toggle,
 :root[data-theme='light'] #starlight__mobile-toc .display-current,
 :root[data-theme='light'] #starlight__mobile-toc a,
@@ -366,6 +377,6 @@ nav[aria-label='Main'] a[aria-current='page'] {
    styles until the site rebuilds/hot-reloads with the above variable changes. */
 @media (max-width: 899px) {
 	.page > .main-frame {
-		padding-top: calc(3.6rem + var(--sl-mobile-toc-height, 0px)) !important;
+		padding-top: calc(var(--sl-nav-height, 3.6rem) + var(--sl-mobile-toc-height, 0px)) !important;
 	}
 }

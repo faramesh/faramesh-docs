@@ -16,11 +16,9 @@ const linkHref = (item) => item.slug ? `/${item.slug.replace(/^\//, '')}/` : ite
 const linkLabel = (item) => {
 	if (item.label) return item.label;
 	if (item.slug) {
-		return item.slug
-			.split('/')
-			.pop()
-			?.replace(/-/g, ' ')
-			.replace(/\b\w/g, (ch) => ch.toUpperCase());
+		const parts = item.slug.split('/');
+		const lastPart = parts[parts.length - 1] || '';
+		return lastPart.replace(/-/g, ' ').replace(/\b\w/g, (ch) => ch.toUpperCase());
 	}
 	return item.link;
 };
@@ -29,6 +27,20 @@ const isCurrent = (href) => {
 	const normalized = href.endsWith('/') ? href : `${href}/`;
 	return normalized === currentPath;
 };
+
+const mobileSectionsData = headerSections.map((section) => ({
+	id: section.id,
+	label: section.label,
+	href: section.href,
+	sidebar: section.sidebar.map((group) => ({
+		label: group.label,
+		items: group.items.map((item) => ({
+			label: item.label ?? null,
+			slug: item.slug ?? null,
+			link: item.link ?? null,
+		})),
+	})),
+}));
 ---
 
 <header class="site-header" transition:persist="site-header" transition:name="site-header">
@@ -203,6 +215,10 @@ const isCurrent = (href) => {
 		justify-content: flex-end;
 		gap: 0.55rem;
 		flex: none;
+	}
+
+	.site-mobile-pages {
+		display: none;
 	}
 
 	.site-icon-link {
@@ -392,7 +408,7 @@ const isCurrent = (href) => {
 			background: var(--sl-color-bg-nav);
 		}
 
-		.site-mobile-pages__title {
+		:global(.site-mobile-pages__title) {
 			margin: 0 0 0.45rem;
 			font-size: 0.66rem;
 			font-weight: 700;
@@ -401,18 +417,18 @@ const isCurrent = (href) => {
 			color: var(--sl-color-gray-3);
 		}
 
-		.site-mobile-group {
+		:global(.site-mobile-group) {
 			border: 1px solid color-mix(in srgb, var(--sl-color-white) 8%, transparent);
 			border-radius: 0.6rem;
 			background: var(--sl-color-bg-sidebar);
 			overflow: clip;
 		}
 
-		.site-mobile-group + .site-mobile-group {
+		:global(.site-mobile-group + .site-mobile-group) {
 			margin-top: 0.45rem;
 		}
 
-		.site-mobile-group__summary {
+		:global(.site-mobile-group__summary) {
 			display: flex;
 			align-items: center;
 			justify-content: space-between;
@@ -426,20 +442,20 @@ const isCurrent = (href) => {
 			background: transparent;
 		}
 
-		.site-mobile-group__summary::-webkit-details-marker {
+		:global(.site-mobile-group__summary::-webkit-details-marker) {
 			display: none;
 		}
 
-		.site-mobile-group__summary svg {
+		:global(.site-mobile-group__summary svg) {
 			flex: none;
 			transition: transform 140ms ease;
 		}
 
-		.site-mobile-group[open] .site-mobile-group__summary svg {
+		:global(.site-mobile-group[open] .site-mobile-group__summary svg) {
 			transform: rotate(180deg);
 		}
 
-		.site-mobile-group__items {
+		:global(.site-mobile-group__items) {
 			list-style: none;
 			margin: 0;
 			padding: 0 0.35rem 0.35rem;
@@ -447,7 +463,7 @@ const isCurrent = (href) => {
 			gap: 0.15rem;
 		}
 
-		.site-mobile-group__link {
+		:global(.site-mobile-group__link) {
 			display: block;
 			padding: 0.44rem 0.65rem;
 			border-radius: 0.4rem;
@@ -457,31 +473,31 @@ const isCurrent = (href) => {
 			line-height: 1.35;
 		}
 
-		.site-mobile-group__link:hover {
+		:global(.site-mobile-group__link:hover) {
 			color: var(--sl-color-white);
 			background: color-mix(in srgb, var(--sl-color-white) 5%, transparent);
 		}
 
-		.site-mobile-group__link--current,
-		.site-mobile-group__link[aria-current='page'] {
+		:global(.site-mobile-group__link--current),
+		:global(.site-mobile-group__link[aria-current='page']) {
 			color: var(--sl-color-white);
 			background: color-mix(in srgb, var(--sl-color-accent) 22%, transparent);
 		}
 
 		/* When mobile menu is opened, reveal the tabs and actions rows */
-		.site-header[data-mobile-open="true"] .site-tabs {
+		:global(.site-header[data-mobile-open="true"] .site-tabs) {
 			display: flex;
 			order: 3;
 			flex-basis: 100%;
 			padding-top: 0.1rem;
 		}
 
-		.site-header[data-mobile-open="true"] .site-actions {
+		:global(.site-header[data-mobile-open="true"] .site-actions) {
 			display: inline-flex;
 			order: 4;
 		}
 
-		.site-header[data-mobile-open="true"] .site-mobile-pages {
+		:global(.site-header[data-mobile-open="true"] .site-mobile-pages) {
 			display: block;
 			order: 5;
 		}
@@ -492,7 +508,8 @@ const isCurrent = (href) => {
 	}
 </style>
 
-<script is:inline>
+<script is:inline define:vars={{ mobileSectionsData }}>
+
 	const sectionMatchers = [
 		{ id: 'getting-started', matches: ['/getting-started/', '/'] },
 		{ id: 'concepts', matches: ['/concepts/', '/architecture/', '/security/', '/advanced/'] },
@@ -531,8 +548,68 @@ const isCurrent = (href) => {
 		});
 	}
 
+	function escapeHtml(value) {
+		return String(value)
+			.replace(/&/g, '&amp;')
+			.replace(/</g, '&lt;')
+			.replace(/>/g, '&gt;')
+			.replace(/"/g, '&quot;')
+			.replace(/'/g, '&#39;');
+	}
+
+	function linkLabel(item) {
+		if (item.label) return item.label;
+		if (item.slug) {
+			const parts = item.slug.split('/');
+			const lastPart = parts[parts.length - 1] || '';
+			return lastPart.replace(/-/g, ' ').replace(/\b\w/g, (ch) => ch.toUpperCase());
+		}
+		return item.link || '';
+	}
+
+	function linkHref(item) {
+		if (item.slug) {
+			return `/${item.slug.replace(/^\//, '')}/`;
+		}
+
+		return item.link || '';
+	}
+
+	function isCurrent(href, pathname) {
+		return normalizePathname(href) === normalizePathname(pathname);
+	}
+
+	function buildMobilePagesMarkup(sectionId, pathname) {
+		const section = mobileSectionsData.find((entry) => entry.id === sectionId) || mobileSectionsData[0];
+		const currentPath = normalizePathname(pathname);
+		const groupsMarkup = section.sidebar.map((group) => {
+			const groupIsCurrent = group.items.some((item) => isCurrent(linkHref(item), currentPath));
+
+			const itemsMarkup = group.items.map((item) => {
+				const href = linkHref(item);
+				const current = isCurrent(href, currentPath);
+
+				return `<li><a href="${escapeHtml(href)}" class="site-mobile-group__link${current ? ' site-mobile-group__link--current' : ''}"${current ? ' aria-current="page"' : ''}>${escapeHtml(linkLabel(item))}</a></li>`;
+			}).join('');
+
+			return `<details class="site-mobile-group"${groupIsCurrent ? ' open' : ''}><summary class="site-mobile-group__summary"><span>${escapeHtml(group.label)}</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m6 9 6 6 6-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" /></svg></summary><ul class="site-mobile-group__items">${itemsMarkup}</ul></details>`;
+		}).join('');
+
+		return `<div class="site-mobile-pages__title">Pages in this section</div>${groupsMarkup}`;
+	}
+
+	function updateMobilePages() {
+		const mobilePages = document.querySelector('.site-mobile-pages');
+		if (!mobilePages) return;
+
+		const sectionId = getSectionIdForPath(window.location.pathname);
+		mobilePages.innerHTML = buildMobilePagesMarkup(sectionId, window.location.pathname);
+	}
+
 	document.addEventListener('astro:page-load', updateActiveTab);
+	document.addEventListener('astro:page-load', updateMobilePages);
 	updateActiveTab();
+	updateMobilePages();
 
 	// Keep the CSS nav height in sync with the actual header size so
 	// `.main-frame` padding matches the header and avoids overlap on mobile.
@@ -550,6 +627,10 @@ const isCurrent = (href) => {
 		const toggle = document.querySelector('.mobile-menu-toggle');
 		if (!header || !toggle) return;
 
+		// Prevent duplicate listeners
+		if (toggle.__toggleListenerAttached) return;
+		toggle.__toggleListenerAttached = true;
+
 		toggle.addEventListener('click', () => {
 			const open = header.getAttribute('data-mobile-open') === 'true';
 			header.setAttribute('data-mobile-open', (!open).toString());
@@ -558,6 +639,10 @@ const isCurrent = (href) => {
 			requestAnimationFrame(updateNavHeight);
 		});
 	}
+
+	// Call immediately in case load event already fired, then also on load
+	setupMobileToggle();
+	updateNavHeight();
 
 	window.addEventListener('load', () => {
 		setupMobileToggle();
@@ -568,4 +653,12 @@ const isCurrent = (href) => {
 		// throttling not necessary for small site; keep simple
 		updateNavHeight();
 	});
+
+	// When details elements in mobile menu expand/collapse, recalculate header height
+	const mobilePages = document.querySelector('.site-mobile-pages');
+	if (mobilePages) {
+		mobilePages.addEventListener('toggle', () => {
+			requestAnimationFrame(updateNavHeight);
+		}, true); // capture phase to catch all toggle events
+	}
 </script>
