@@ -9,12 +9,26 @@ faramesh apply [--dir DIR] [--check-uid] [--require-uid-separation]
 
 Runs `check` with environment validation, compiles artifacts, downloads registry provider binaries when declared, and starts (or reloads) the daemon.
 
-| Platform | Enforcement note |
+After apply, start your agent with the generated launcher (no extra CLI flags):
+
+```bash
+.faramesh/bin/agent -- python your_agent.py
+```
+
+Configure OS sandboxing and credential stripping in `governance.fms`:
+
+```hcl title="governance.fms"
+runtime {
+  os_tier = true
+  strip_ambient_credentials = true
+}
+```
+
+| Platform | `os_tier = true` |
 |----------|------------------|
-| Linux | OS-tier seccomp/Landlock when configured in policy |
-| macOS | Application-tier only; CLI prints a darwin notice |
-| Windows | Network proxy enforcement; CLI prints a windows notice |
+| Linux | seccomp-BPF + Landlock via `.faramesh/bin/agent` |
+| macOS | Seatbelt (`sandbox-exec`) via `.faramesh/bin/agent` |
 
-Use `faramesh apply --stop` to shut down the daemon without recompiling.
+Use `faramesh apply --stop` to shut down the daemon.
 
-Optional `runtime { immutable_config = true }` locks `governance.fms` on disk after a successful apply (Linux: `chattr +i`, macOS: `uchg`).
+Optional `runtime { immutable_config = true }` locks `governance.fms` on disk after apply (Linux: `chattr +i`, macOS: `uchg`).

@@ -38,9 +38,9 @@ If `cat` fails, you are in the wrong directory. Paste the single-line base64 sec
 
 After key rotation: update `catalog/trust/keys.json`, re-run `make sign-catalog`, and update `trust { }` blocks in docs and sample `governance.fms` files.
 
-## Linux enforcement not active
+## OS-tier sandbox not active
 
-`faramesh dev` on macOS does not install seccomp/Landlock. Use Linux + `faramesh apply` with `enforcement { os_tier = true }` for syscall-level agent isolation.
+Set `runtime { os_tier = true }` in `governance.fms`, run `faramesh apply`, then start the agent with `.faramesh/bin/agent -- …`. `faramesh dev` keeps application-tier enforcement only (no OS sandbox).
 
 ## More help
 

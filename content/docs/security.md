@@ -102,7 +102,7 @@ Optional `runtime { cold_start_deny_window = "30s" }` transitions to **HALT** if
 
 ### Seccomp and eBPF for hostile agents
 
-On Linux, the agent seccomp profile **denies** `kill`, `tkill`, and `tgkill` against foreign PIDs. Landlock and optional **eBPF LSM** (`runtime { ebpf = true }`) enforce the same baseline at kernel level. Enable `enforcement { os_tier = true }` in `governance.fms` for production stacks running untrusted code.
+On Linux, the agent seccomp profile **denies** `kill`, `tkill`, and `tgkill` against foreign PIDs. Landlock and optional **eBPF LSM** enforce the same baseline at kernel level. Enable **`runtime { os_tier = true }`** in `governance.fms`, then start the agent with **`.faramesh/bin/agent`** (written by `faramesh apply`) — no separate CLI command.
 
 ## Defense in depth
 
