@@ -97,6 +97,8 @@ The agent runtime is treated as untrusted code. Everything below the dashed line
 
 ## What's next
 
+- [Enforcement](/concepts/enforcement/) — the decision pipeline in depth
+- [Auditing](/concepts/auditing/) — DPR, WAL, chain verification
+- [Credentials](/concepts/credentials/) — the broker and how secrets stay out of the agent
 - [Limitations](/limitations/) — explicit non-goals
 - [Denial codes](/errors/) — what agents receive on policy failures
-- [Providers](/providers/) — credential and audit backends

@@ -3,15 +3,34 @@ export const docsSections = [
 		id: 'start',
 		label: 'Start',
 		href: '/',
-		matches: ['/', '/quickstart/', '/flows/', '/dev/'],
+		matches: ['/', '/quickstart/', '/flows/', '/dev/', '/use-cases/'],
 		sidebar: [
 			{
 				label: 'START',
 				items: [
 					{ slug: 'index', label: 'Overview' },
 					{ slug: 'quickstart' },
-					{ slug: 'flows' },
+					{ slug: 'use-cases', label: 'Use cases' },
+					{ slug: 'flows', label: 'Workflows' },
 					{ slug: 'dev', label: 'Run locally' },
+				],
+			},
+		],
+	},
+	{
+		id: 'concepts',
+		label: 'Concepts',
+		href: '/concepts/how-it-works/',
+		matches: ['/concepts/'],
+		sidebar: [
+			{
+				label: 'CONCEPTS',
+				items: [
+					{ slug: 'concepts/how-it-works', label: 'How it works' },
+					{ slug: 'concepts/enforcement' },
+					{ slug: 'concepts/interception' },
+					{ slug: 'concepts/auditing' },
+					{ slug: 'concepts/credentials' },
 				],
 			},
 		],
@@ -65,7 +84,7 @@ export const docsSections = [
 		id: 'operations',
 		label: 'Operations',
 		href: '/security/',
-		matches: ['/security/', '/errors/', '/limitations/'],
+		matches: ['/security/', '/errors/', '/limitations/', '/cloud/'],
 		sidebar: [
 			{
 				label: 'OPERATIONS',
@@ -73,6 +92,12 @@ export const docsSections = [
 					{ slug: 'security', label: 'Security model' },
 					{ slug: 'errors', label: 'Denial codes' },
 					{ slug: 'limitations' },
+				],
+			},
+			{
+				label: 'PLATFORM',
+				items: [
+					{ slug: 'cloud', label: 'Faramesh Cloud' },
 				],
 			},
 		],

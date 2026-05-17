@@ -96,38 +96,77 @@ There is no language model on the enforcement path. Policy is compiled to a dete
     icon: '🛡',
     title: 'Deterministic enforcement',
     body: 'The daemon compiles policy once at apply, then evaluates every tool call against a deterministic AST. No LLM judges, no surprises.',
-    href: '/fpl/',
-    cta: 'FPL reference',
+    href: '/concepts/enforcement/',
+    cta: 'Enforcement',
+  },
+  {
+    icon: '🪝',
+    title: 'Four ways to intercept',
+    body: 'SDK shim for native agents, MCP and HTTP proxy for off-the-shelf clients, A2A proxy for cross-agent delegation. Combine if you need to.',
+    href: '/concepts/interception/',
+    cta: 'Interception',
   },
   {
     icon: '🔑',
     title: 'Credentials never leak',
-    body: 'Vault, AWS Secrets Manager, GCP, Azure, and SPIFFE providers mint short-lived, scoped credentials at the call site. The agent never holds a long-lived secret.',
-    href: '/providers/',
-    cta: 'Providers',
+    body: 'Vault, AWS, GCP, Azure, and SPIFFE providers mint short-lived, scoped credentials at the call site. The agent never holds a long-lived secret.',
+    href: '/concepts/credentials/',
+    cta: 'Credentials',
   },
   {
     icon: '📜',
     title: 'Tamper-evident evidence',
     body: 'Every decision is a Decision Provenance Record in a hash-chained WAL, optionally KMS-signed. faramesh audit verify walks the chain.',
-    href: '/security/',
-    cta: 'Guarantees',
+    href: '/concepts/auditing/',
+    cta: 'Auditing',
   },
   {
     icon: '🧑‍⚖️',
     title: 'Human approvals built in',
-    body: 'Deferred actions land in the approvals inbox. Operators approve, deny, or set a rule. Agents resume seamlessly.',
+    body: 'Deferred actions land in the approvals inbox. Operators approve, deny, or promote to a rule. Agents resume seamlessly.',
     href: '/cli/#approvals',
     cta: 'Approval workflow',
   },
-  {
-    icon: '📦',
-    title: 'Registry of policy and providers',
-    body: 'Pin policy packs, framework profiles, and signed provider binaries from registry.faramesh.dev. Or run your own.',
-    href: '/registry/',
-    cta: 'Registry',
-  },
 ]} />
+
+## Real use cases
+
+Faramesh is built for agents that touch money, customer data, infrastructure, and code. A few patterns we see in production:
+
+<CardGrid>
+  <LinkCard
+    title="Payments agents"
+    description="Hard dollar ceilings, human approval over a threshold, redacted card data."
+    href="/use-cases/#1-payments-and-money-movement"
+  />
+  <LinkCard
+    title="Coding agents"
+    description="Read everything, edit source, never run a free-form shell or git force-push."
+    href="/use-cases/#3-coding-agents"
+  />
+  <LinkCard
+    title="Customer support"
+    description="Email confined to your own domain. Cancellations need a click."
+    href="/use-cases/#2-customer-support-agents"
+  />
+  <LinkCard
+    title="Multi-tenant SaaS"
+    description="Cross-tenant access fails closed. Every violation pages on-call."
+    href="/use-cases/#6-multi-tenant-saas-agents"
+  />
+  <LinkCard
+    title="Regulated workloads"
+    description="KMS-signed evidence chain, redaction by default, exportable for auditors."
+    href="/use-cases/#7-regulated-workloads-hipaa-soc-2-pci"
+  />
+  <LinkCard
+    title="Autonomous web agents"
+    description="Bounded crawl, no uploads without approval, daily browsing budget."
+    href="/use-cases/#8-autonomous-web-agents"
+  />
+</CardGrid>
+
+[See every pattern →](/use-cases/)
 
 ## Pick your framework
 
@@ -237,3 +276,11 @@ agent "payments-bot" {
   <LinkCard title="Security model" description="Threats, mitigations, and explicit limits." href="/security/" />
   <LinkCard title="Denial codes" description="Structured error payloads agents and SDKs understand." href="/errors/" />
 </CardGrid>
+
+## Faramesh Cloud
+
+When one stack is no longer enough, **Faramesh Cloud** is the hosted operating console for the same runtime — orgs, projects, an approvals UI, an evidence browser, and fleet visibility.
+
+The daemon stays the enforcement truth. Cloud is the surface security and platform teams operate through.
+
+<LinkButton href="/cloud/" variant="primary">Learn about Faramesh Cloud →</LinkButton>
