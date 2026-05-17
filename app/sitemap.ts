@@ -11,6 +11,12 @@ function pagePriority(url: string): number {
   return 0.75;
 }
 
+function pageChangeFrequency(
+  url: string,
+): MetadataRoute.Sitemap[number]['changeFrequency'] {
+  return url === '/quickstart' ? 'daily' : 'weekly';
+}
+
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
 
@@ -24,7 +30,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...source.getPages().map((page) => ({
       url: `${siteUrl}${page.url}`,
       lastModified: now,
-      changeFrequency: (page.url === '/quickstart' ? 'daily' : 'weekly') as const,
+      changeFrequency: pageChangeFrequency(page.url),
       priority: pagePriority(page.url),
     })),
   ];

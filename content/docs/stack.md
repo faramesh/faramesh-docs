@@ -60,13 +60,18 @@ Top-level runtime configuration for the daemon.
 
 ```hcl title="governance.fms"
 runtime {
-  mode             = "enforce"     # or "audit"
-  wal_dir          = "./faramesh-wal"
-  backend          = "sqlite"      # sqlite | postgres
-  socket           = "/tmp/faramesh.sock"
-  http_listen      = "127.0.0.1:8080"
-  mcp_proxy_port   = 8081
-  cold_start_grace = "5s"
+  mode                      = "enforce"     # or "audit"
+  wal_dir                   = "./faramesh-wal"
+  backend                   = "sqlite"      # sqlite | postgres
+  socket                    = "/tmp/faramesh.sock"
+  http_listen               = "127.0.0.1:8080"
+  mcp_proxy_port            = 8081
+  cold_start_deny_window    = "5s"
+  os_tier                   = true
+  strip_ambient_credentials = true
+  immutable_config          = false
+  agent_enforce_profile     = "full"        # full | minimal | off
+  supervised_command        = "python agent.py"
 }
 ```
 
@@ -78,7 +83,12 @@ runtime {
 | `socket` | Unix socket the SDK shim connects to. |
 | `http_listen` | HTTPS evaluate endpoint for remote SDKs and Lambda-style runtimes. |
 | `mcp_proxy_port` | Port the MCP proxy binds (for Claude Code, Cursor, OpenCode). |
-| `cold_start_grace` | Window after startup during which calls are denied with `DAEMON_NOT_READY` instead of evaluated. |
+| `cold_start_deny_window` | After startup, calls return `DAEMON_NOT_READY` until the daemon reaches `READY`. |
+| `os_tier` | Enable OS sandbox for agent children (Linux seccomp/Landlock; macOS Seatbelt). Writes `.faramesh/bin/agent` on apply. |
+| `strip_ambient_credentials` | Drop broker/API keys from the agent child environment. |
+| `immutable_config` | Lock `governance.fms` on disk after apply (`chattr +i` / `uchg`). |
+| `agent_enforce_profile` | Sandbox profile passed to `__agent-exec` (`full`, `minimal`, `off`). |
+| `supervised_command` | When set, the daemon starts this command under the agent supervisor after `READY` (same sandbox as `.faramesh/bin/agent`). |
 
 ## `provider`
 
@@ -278,9 +288,10 @@ Per-agent enforcement tier overrides.
 ```hcl title="governance.fms"
 enforcement {
   mcp_proxy_port = 8081
-  os_tier        = true     # Linux seccomp/Landlock
 }
 ```
+
+OS sandboxing uses `runtime { os_tier = true }` at stack level, not `enforcement`.
 
 ### `alert`
 

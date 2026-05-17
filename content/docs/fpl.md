@@ -56,17 +56,21 @@ import "<registry-host>/<path>@<semver>" as <alias>
 
 ```hcl title="governance.fms"
 runtime {
-  mode             = "enforce"
-  wal_dir          = "./faramesh-wal"
-  backend          = "sqlite"
-  socket           = "/tmp/faramesh.sock"
-  http_listen      = "127.0.0.1:8080"
-  mcp_proxy_port   = 8081
-  cold_start_grace = "5s"
+  mode                      = "enforce"
+  wal_dir                   = "./faramesh-wal"
+  backend                   = "sqlite"
+  socket                    = "/tmp/faramesh.sock"
+  http_listen               = "127.0.0.1:8080"
+  mcp_proxy_port            = 8081
+  cold_start_deny_window    = "5s"
+  os_tier                   = true
+  strip_ambient_credentials = true
+  agent_enforce_profile     = "full"
+  supervised_command        = "python agent.py"
 }
 ```
 
-`runtime` accepts string, number, bool, or `env("...")` values. Unknown fields are reported by `faramesh check`.
+`runtime` accepts string, number, bool, or `env("...")` values. See [stack](/stack/) for field reference. Unknown fields are reported by `faramesh check`.
 
 ## `provider`
 
@@ -248,9 +252,10 @@ completion_gate {
 ```hcl title="governance.fms"
 enforcement {
   mcp_proxy_port = 8081
-  os_tier        = true
 }
 ```
+
+OS sandboxing is configured on the **`runtime`** block (`os_tier`, `agent_enforce_profile`, `supervised_command`), not here.
 
 ### `alert`
 
