@@ -9,8 +9,8 @@ export default function HomePage() {
     <div className="mx-auto w-full max-w-6xl px-4 py-8 md:px-6">
       <HomeHero
         eyebrow="Faramesh"
-        title="Governance for the agent layer."
-        body="Every agent gets an attested identity. Every tool call gets a policy decision. Every action gets a tamper-evident, KMS-signed record. The daemon enforces locally; the cloud is observability."
+        title="Governance as code for AI agents."
+        body="Declare policy in FPL, enforce it on every tool call, and keep a tamper-evident audit trail. The daemon runs beside your agent; Faramesh Cloud is optional fleet visibility."
         primaryHref="/quickstart"
         primaryLabel="Quickstart →"
         secondaryHref="/concepts/how-it-works"

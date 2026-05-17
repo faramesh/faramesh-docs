@@ -1,4 +1,3 @@
-import { FarameshLogo } from '@/components/faramesh-logo';
 import Link from 'next/link';
 
 type HomeHeroProps = {
@@ -22,7 +21,6 @@ export function HomeHero({
 }: HomeHeroProps) {
   return (
     <header className="mb-6 grid gap-3 border-b border-fd-border pb-8">
-      <FarameshLogo height={32} />
       <span className="w-fit rounded border border-fd-primary/30 bg-fd-primary/10 px-2 py-0.5 font-mono text-[0.7rem] font-semibold uppercase tracking-wider text-fd-primary">
         {eyebrow}
       </span>
