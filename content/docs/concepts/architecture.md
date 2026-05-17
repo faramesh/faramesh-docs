@@ -13,9 +13,9 @@ flowchart LR
     A[LLM + tools]
   end
   subgraph faramesh [Faramesh stack]
-    T[Interception tier\nSDK / MCP / HTTP proxy]
-    D[Daemon\npolicy engine]
-    P[Providers\nVault SPIFFE KMS]
+    T["Interception tier<br/>SDK / MCP / HTTP proxy"]
+    D["Daemon<br/>policy engine"]
+    P["Providers<br/>Vault SPIFFE KMS"]
     W[WAL + DPR]
   end
   subgraph optional [Optional]

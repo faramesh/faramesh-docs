@@ -29,7 +29,7 @@ import "github.com/faramesh/faramesh-registry/providers/faramesh/vault@1.0.0"
 
 ```hcl title="governance.fms"
 trust {
-  key "github.com/faramesh/faramesh-registry" ed25519:QHApN8LymAWpwUlmsFXW0yNcC1hXtgAcwKIgJsOLnJA=
+  key "github.com/faramesh/faramesh-registry" ed25519:nxNjaQnS3L+zzKrRq48XfYBDWlFXkNJkxUiTD8j0sFs=
 }
 ```
 

@@ -11,12 +11,15 @@ export function GET() {
     .map((p) => `- ${p.data.title}: ${siteUrl}${p.url}`)
     .join('\n');
   const body = [
+    '# Faramesh Documentation (llms.txt)',
+    '# Product: pre-execution governance for AI agents — policy engine, MCP/HTTP proxy, SDK shim, audit WAL.',
+    `# Canonical site: ${siteUrl}`,
+    `# Full corpus (plain text): ${siteUrl}/llms-full.txt`,
+    `# Sitemap: ${siteUrl}/sitemap.xml`,
+    '',
     index,
     '',
     '# All documentation pages',
-    'For full text export (LLM-friendly), fetch:',
-    `${siteUrl}/llms-full.txt`,
-    '',
     pages,
   ].join('\n');
   return new Response(body, {

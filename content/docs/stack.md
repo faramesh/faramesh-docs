@@ -121,7 +121,7 @@ Public-key trust roots for verifying signed registry artifacts. The daemon verif
 
 ```hcl title="governance.fms"
 trust {
-  key "github.com/faramesh/faramesh-registry" ed25519:MCowBQYDK2VwAyEA...
+  key "github.com/faramesh/faramesh-registry" ed25519:nxNjaQnS3L+zzKrRq48XfYBDWlFXkNJkxUiTD8j0sFs=
 }
 ```
 

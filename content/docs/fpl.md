@@ -96,7 +96,7 @@ A free-form block of trust-root declarations parsed line-by-line. Used to verify
 
 ```hcl title="governance.fms"
 trust {
-  key "github.com/faramesh/faramesh-registry" ed25519:MCowBQYDK2VwAyEA...
+  key "github.com/faramesh/faramesh-registry" ed25519:nxNjaQnS3L+zzKrRq48XfYBDWlFXkNJkxUiTD8j0sFs=
 }
 ```
 

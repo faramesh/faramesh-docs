@@ -1,4 +1,5 @@
 import { HomeLayout } from 'fumadocs-ui/layouts/home';
+import { StructuredData } from '@/components/structured-data';
 import { baseOptions } from '@/lib/layout.shared';
 import { createDocMetadata } from '@/lib/metadata';
 import { siteUrl } from '@/lib/shared';
@@ -12,5 +13,10 @@ export const metadata = createDocMetadata({
 });
 
 export default function Layout({ children }: LayoutProps<'/'>) {
-  return <HomeLayout {...baseOptions()}>{children}</HomeLayout>;
+  return (
+    <>
+      <StructuredData />
+      <HomeLayout {...baseOptions()}>{children}</HomeLayout>
+    </>
+  );
 }

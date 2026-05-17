@@ -3,6 +3,29 @@ title: Quickstart
 description: From an empty repo to a fully governed agent in under five minutes.
 ---
 
+## Before you start: what you need
+
+- **Faramesh CLI** — install from [GitHub releases](https://github.com/faramesh/faramesh-core/releases) or `brew install faramesh/tap/faramesh` when the tap is published.
+- **Python 3.10+** (for LangGraph/LangChain examples) and `pip install faramesh==0.3.3`.
+- **No Vault, SPIRE, or cloud KMS** for your first run — `faramesh dev` starts in-process stubs for credentials, identity, and signing.
+- A project directory where you will run `faramesh init` (it writes `governance.fms` once).
+
+Production later: replace stub providers in `governance.fms` with real `provider` and `identity` blocks. Your agent code and policy rules stay the same.
+
+### Zero-infrastructure path (summary)
+
+| Step | Command | What runs |
+|------|---------|-----------|
+| 1 | `faramesh init` | Writes `governance.fms` only |
+| 2 | `faramesh dev` | In-process vault/SPIFFE/KMS stubs, memory WAL, Unix socket |
+| 3 | Agent with `GovernedToolSet` | Connects via `FARAMESH_SOCKET` |
+| 4 | `faramesh approvals …` | Resolve defers |
+| 5 | `faramesh apply` | Persistent WAL, real providers, OS-tier on Linux |
+
+No Docker, Vault, or SPIRE required for steps 1–4. See [Run Faramesh locally](/dev/) and [Troubleshooting](/troubleshooting/).
+
+---
+
 This page walks you from installation to a tool call that is permitted, deferred, and approved, all with one `governance.fms` file.
 
 :::info
@@ -114,11 +137,17 @@ faramesh plan
 
 ## 4. Wire your agent
 
-Drop the SDK shim into your code:
+Drop the SDK shim into your code (Python or TypeScript):
+
+<Tabs items={['Python', 'TypeScript']}>
+<Tab value="Python">
 
 ```python title="agent.py"
+import os
 from faramesh import GovernedToolSet
 from langgraph.prebuilt import create_react_agent
+
+os.environ.setdefault("FARAMESH_AGENT_ID", "myproject-agent")
 
 tools = GovernedToolSet(
     [search_docs, send_email, charge_card],
@@ -128,22 +157,57 @@ tools = GovernedToolSet(
 graph = create_react_agent(model, tools)
 ```
 
+</Tab>
+<Tab value="TypeScript">
+
+```ts title="agent.ts"
+import { GovernedToolSet } from '@faramesh/sdk';
+import { createReactAgent } from '@langchain/langgraph/prebuilt';
+
+const tools = new GovernedToolSet([searchDocs, sendEmail, chargeCard], {
+  agentId: 'myproject-agent',
+});
+
+const graph = createReactAgent({ llm: model, tools });
+```
+
+Set `FARAMESH_SOCKET` to the path printed by `faramesh dev` (default `~/.faramesh/runtime/faramesh.sock`).
+
+</Tab>
+</Tabs>
+
 That's the entire integration. Every tool call now traverses the Faramesh daemon before it executes.
 
 :::tip[MCP clients]
 Using Claude Code, Cursor, or another MCP client? See [Frameworks → MCP](/frameworks/claude-code/) and point the client at the Faramesh proxy URL instead.
 :::
 
-## 5. Apply and run
+## 5. Dev locally, then apply
 
-Start enforcement and run your agent normally:
+<Tabs items={['Dev (no infra)', 'Apply (production path)']}>
+<Tab value="Dev (no infra)">
+
+```bash title="Terminal"
+faramesh dev
+# separate terminal:
+export FARAMESH_SOCKET=~/.faramesh/runtime/faramesh.sock
+python my_agent.py
+```
+
+</Tab>
+<Tab value="Apply (production path)">
 
 ```bash title="Terminal"
 faramesh apply
 python my_agent.py
 ```
 
-A `permit` call returns the tool result. A `defer` call returns a structured denial telling the agent its action is pending approval. Watch the inbox in another terminal:
+On macOS you will see a note that OS-tier seccomp/Landlock is Linux-only; application-tier enforcement still applies.
+
+</Tab>
+</Tabs>
+
+A `permit` call returns the tool result. A `defer` call raises `ToolDeniedException` (Python) or `ToolDeniedException` (TypeScript) with a structured payload. Watch the inbox in another terminal:
 
 ```bash title="Terminal"
 faramesh approvals list

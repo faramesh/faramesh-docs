@@ -23,7 +23,7 @@ Generate `governance.fms` from your project layout. Never starts the daemon.
 faramesh init [--dir DIR] [--offline] [--non-interactive] [--yaml | --json]
 ```
 
-See [faramesh init](/init/) for framework detection rules.
+See [faramesh init](/cli/init/) (or [full init guide](/init/)) for framework detection rules.
 
 ### `faramesh check`
 

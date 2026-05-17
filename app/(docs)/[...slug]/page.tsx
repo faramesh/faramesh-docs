@@ -12,7 +12,7 @@ import { getMDXComponents } from '@/components/mdx';
 import type { Metadata } from 'next';
 import { createRelativeLink } from 'fumadocs-ui/mdx';
 import { createDocMetadata } from '@/lib/metadata';
-import { gitConfig, siteUrl } from '@/lib/shared';
+import { docsGitConfig, siteUrl } from '@/lib/shared';
 
 export default async function Page(props: { params: Promise<{ slug: string[] }> }) {
   const params = await props.params;
@@ -30,7 +30,7 @@ export default async function Page(props: { params: Promise<{ slug: string[] }> 
         <MarkdownCopyButton markdownUrl={markdownUrl} />
         <ViewOptionsPopover
           markdownUrl={markdownUrl}
-          githubUrl={`https://github.com/${gitConfig.user}/${gitConfig.repo}/blob/${gitConfig.branch}/content/docs/${page.path}`}
+          githubUrl={`https://github.com/${docsGitConfig.user}/${docsGitConfig.repo}/blob/${docsGitConfig.branch}/content/docs/${page.path}`}
         />
       </div>
       <DocsBody>

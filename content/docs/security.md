@@ -74,6 +74,36 @@ The agent runtime is treated as untrusted code. Everything below the dashed line
 
 **Limit.** Upstream MCP servers must implement the extension. Faramesh logs a `RUNTIME_GAP` decision if a tool reports an async task without committing to completion.
 
+### Config load-once (no hot edit bypass)
+
+**Threat.** A compromised agent edits `governance.fms` or `.fpl` on disk and expects the daemon to pick up permissive rules.
+
+**Mitigation.**
+
+1. **`faramesh apply`** compiles policy into `.faramesh/governance.compiled.json` and materialized `governance.policy.fpl`. The daemon started with `--from-compiled` does **not** hot-reload source files on SIGHUP (load-once default).
+2. **`runtime { immutable_config = true }`** — after apply, the CLI sets the Linux immutable flag (`chattr +i`) or macOS `uchg` on the config source so even root must explicitly unlock before editing.
+3. **Privileged apply only** — policy changes require `faramesh apply` as a user that can restart the daemon, not the agent UID.
+
+### Daemon lifecycle and `DAEMON_NOT_READY`
+
+The daemon moves **STARTING → INITIALIZING → READY → DRAINING → HALT**. While state is not `READY` (WAL replay, policy compile, listeners wiring), every govern RPC returns structured denial **`DAEMON_NOT_READY`**. The Unix socket is opened only after `READY`, so clients never observe a half-initialized engine.
+
+Optional `runtime { cold_start_deny_window = "30s" }` transitions to **HALT** if initialization exceeds the window (fail-closed).
+
+### UID separation and process isolation
+
+| Component | Recommended UID | Owns |
+|-----------|-------------------|------|
+| `faramesh serve` (daemon) | `faramesh` | `.faramesh/`, socket, WAL, compiled policy |
+| Agent / IDE / CI job | `agent` (unprivileged) | project workspace only |
+| `faramesh apply` | root or `faramesh` + sudo | restart daemon, immutable flags |
+
+`kill()` requires same UID or capability; an agent running as `agent` cannot signal the daemon running as `faramesh`. Pair with **systemd** `Restart=always` on the daemon unit so a successful kill only causes a brief governance gap.
+
+### Seccomp and eBPF for hostile agents
+
+On Linux, the agent seccomp profile **denies** `kill`, `tkill`, and `tgkill` against foreign PIDs. Landlock and optional **eBPF LSM** (`runtime { ebpf = true }`) enforce the same baseline at kernel level. Enable `enforcement { os_tier = true }` in `governance.fms` for production stacks running untrusted code.
+
 ## Defense in depth
 
 | Layer | What it does | When to enable |
