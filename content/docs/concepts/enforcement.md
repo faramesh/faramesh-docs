@@ -5,6 +5,49 @@ description: How Faramesh evaluates every tool call before it runs, what's deter
 
 **Enforcement** is the act of turning your `governance.fms` into a binding decision on every tool call. This page describes the pipeline in detail, what runs, in what order, and what guarantees each step provides.
 
+If you haven't read [How Faramesh works](/concepts/how-it-works/) yet, do that first. It introduces the pipeline at a higher level and is much shorter. This page is the depth.
+
+## Quick recap
+
+A tool call arrives at the daemon. Twelve numbered steps run. Steps 1–8 are pure functions over `(policy AST, action payload)` and produce the decision. Steps 9–12 happen only on permit and handle credential brokering, tool execution, and audit. Defer and deny stop at step 8.
+
+The pipeline is **deterministic**: same input, same decision, every time. There is no LLM in the decision path.
+
+A worked example before we go deep — the policy:
+
+```hcl title="governance.fms"
+agent "support-bot" {
+  default deny
+  rules {
+    permit stripe/refund if amount < $500
+    defer  stripe/refund if amount >= $500
+    deny   stripe/payouts
+  }
+  rate_limit "stripe/*": 10 per minute
+  budget daily { max $500 on_exceed defer }
+  redact stripe/refund args: ["card_number"]
+}
+```
+
+A call: `stripe/refund({"amount": 80, "card_number": "4242…"})`.
+
+Walking the pipeline:
+
+1. Identity → resolved.
+2. Rule match → first rule matches (`permit stripe/refund if amount < $500`).
+3. Conditions → `80 < 500` is true.
+4. Rate limit → bucket has tokens, ok.
+5. Budget → daily $0 + this call ≤ $500, ok.
+6. Egress → n/a (SDK tier).
+7. Redaction → `card_number` will be masked in step 11.
+8. Decision → **PERMIT**.
+9. Provider broker → mint a Stripe key with 30s TTL.
+10. Run tool → refund $80.
+11. DPR → write hash-chained record (with redacted `card_number`).
+12. Audit sink → emit to Splunk/Datadog/etc.
+
+Every other tool call goes through the same twelve steps.
+
 ## Modes
 
 Two enforcement modes, set in `runtime { mode = ... }`:

@@ -1,32 +1,51 @@
 ---
 title: Quickstart
-description: From an empty repo to a fully governed agent in under five minutes.
+description: From an empty repo to a fully governed agent in about five minutes. No infrastructure required.
 ---
 
-## Before you start: what you need
+## What you'll do
+
+In the next five minutes you'll:
+
+1. Install the Faramesh CLI.
+2. Run `faramesh init` to write a starter `governance.fms`.
+3. Wire one line of SDK code into your agent.
+4. Watch a tool call get permitted, another get deferred, and approve the deferred one from the CLI.
+
+You don't need Vault, SPIRE, KMS, Docker, or a cloud account. `faramesh dev` runs everything in-process. We'll cover moving to production at the end.
+
+## Before you start
 
 - **Faramesh CLI** — install from [GitHub releases](https://github.com/faramesh/faramesh-core/releases) or `brew install faramesh/tap/faramesh` when the tap is published.
-- **Python 3.10+** (for LangGraph/LangChain examples) and `pip install faramesh-sdk==0.3.3` (imports as `faramesh`).
-- **No Vault, SPIRE, or cloud KMS** for your first run — `faramesh dev` starts in-process stubs for credentials, identity, and signing.
-- A project directory where you will run `faramesh init` (it writes `governance.fms` once).
+- **Python 3.10+** for the example below. (TypeScript, Node, and Go SDKs work the same way; pick whichever matches your agent.)
+- A project directory. Anything works — a fresh folder, your existing repo, a scratch space.
 
-Production later: replace stub providers in `governance.fms` with real `provider` and `identity` blocks. Your agent code and policy rules stay the same.
+### How the pieces fit (very short version)
 
-### Zero-infrastructure path (summary)
+```text title="In your head"
+your agent  ──► Faramesh SDK shim  ──► local daemon  ──► your tools
+                  (one-line wrapper)    (governance.fms)
+```
 
-| Step | Command | What runs |
-|------|---------|-----------|
-| 1 | `faramesh init` | Writes `governance.fms` only |
-| 2 | `faramesh dev` | In-process vault/SPIFFE/KMS stubs, memory WAL, Unix socket |
-| 3 | Agent with `GovernedToolSet` | Connects via `FARAMESH_SOCKET` |
-| 4 | `faramesh approvals …` | Resolve defers |
-| 5 | `faramesh apply` | Persistent WAL, real providers, OS-tier on Linux |
+The shim turns every tool call into a question for the daemon: "is this allowed?" The daemon checks your policy and answers permit, defer, or deny. **Permit** runs the tool. **Defer** waits for human approval. **Deny** refuses with a structured reason.
 
-No Docker, Vault, or SPIRE required for steps 1–4. See [Run Faramesh locally](/dev/) and [Troubleshooting](/troubleshooting/).
+That's the whole runtime. Everything else is detail.
+
+### The five steps at a glance
+
+| Step | Command | What it does |
+|------|---------|-------------|
+| 1 | `faramesh init` | Writes a starter `governance.fms` based on your framework |
+| 2 | `faramesh dev` | Starts the daemon with in-process stubs for everything |
+| 3 | One-line SDK wrapper | The agent now routes every call through the daemon |
+| 4 | `faramesh approvals approve …` | Resolve a deferred call from the CLI |
+| 5 | `faramesh apply` (later) | Replace stubs with real providers, persist the WAL, enable OS sandbox |
+
+No Docker, Vault, or SPIRE required for steps 1–4. If you get stuck, jump to [Troubleshooting](/troubleshooting/).
 
 ---
 
-This page walks you from installation to a tool call that is permitted, deferred, and approved, all with one `governance.fms` file.
+The walkthrough below is the short version. For a fully worked example with a LangGraph agent, see [Tutorial: Govern your first LangGraph agent](/guides/govern-a-langgraph-agent/).
 
 :::info
 The example uses **LangGraph**. The flow is identical for every other framework; only the wiring in step 4 changes.

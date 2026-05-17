@@ -9,42 +9,74 @@ export default function HomePage() {
     <div className="mx-auto w-full max-w-6xl px-4 py-8 md:px-6">
       <HomeHero
         eyebrow="Faramesh"
-        title="Governance as code for AI agents."
-        body="Declare policy in FPL, enforce it on every tool call, and keep a tamper-evident audit trail. The daemon runs beside your agent; Faramesh Cloud is optional fleet visibility."
-        primaryHref="/introduction"
-        primaryLabel="Why Faramesh →"
-        secondaryHref="/quickstart"
-        secondaryLabel="Quickstart"
+        title="Make every agent tool call a decision, not a hope."
+        body="Declare what your AI agent is allowed to do in one file. A small daemon runs alongside it and decides — permit, defer, or deny — before each tool call. You get a tamper-evident audit trail by default. No SDK lock-in, no cloud required."
+        primaryHref="/quickstart"
+        primaryLabel="Get started in 5 min →"
+        secondaryHref="/introduction"
+        secondaryLabel="Why Faramesh"
       />
 
       <HomeSection
-        label="Start here"
-        intro="Install Faramesh and run a governed agent."
+        label="New here? Start with the story"
+        intro="Three short pages that take you from never-heard-of-it to a running governed agent."
+      >
+        <HomeGrid cols={3}>
+          <HomeCard
+            href="/introduction"
+            title="1. Why Faramesh exists"
+            icon="?"
+            body="The problem in one paragraph. What you get, who it's for, and the one scene that explains everything: declare → enforce → record → review."
+          />
+          <HomeCard
+            href="/quickstart"
+            title="2. Run a governed agent"
+            icon="▸"
+            accent
+            body="Install the CLI, run faramesh init, wire the SDK shim. You'll see your first permit, defer, and deny in under five minutes."
+          />
+          <HomeCard
+            href="/concepts/how-it-works"
+            title="3. The mental model"
+            icon="◆"
+            body="Where Faramesh sits, what runs on every call, and what it deliberately doesn't do. Read this before designing a deployment."
+          />
+        </HomeGrid>
+      </HomeSection>
+
+      <HomeSection
+        label="Tutorials"
+        intro="Step-by-step walkthroughs for common situations. Pick the one that matches what you're building."
         footer={
-          <Link href="/concepts/how-it-works" className="text-fd-primary no-underline hover:underline">
-            Learn about Faramesh concepts →
+          <Link href="/guides/govern-a-langgraph-agent" className="text-fd-primary no-underline hover:underline">
+            See all tutorials →
           </Link>
         }
       >
         <HomeGrid cols={2}>
           <HomeCard
-            href="/quickstart"
-            title="Quickstart"
-            icon="▸"
-            accent
-            bullets={[
-              'Install the CLI',
-              'faramesh init writes governance.fms',
-              'faramesh check / apply',
-              'Wire the SDK shim or MCP proxy',
-              'See your first permit / defer / deny',
-            ]}
+            href="/guides/govern-a-langgraph-agent"
+            title="Govern your first LangGraph agent"
+            icon="①"
+            body="Take an existing LangGraph agent, add governance, watch a deferred refund get approved by a human. No infra needed."
           />
           <HomeCard
-            href="/concepts/how-it-works"
-            title="How Faramesh works"
-            icon="◆"
-            body="The mental model — where Faramesh sits, the decision pipeline, what's compiled versus evaluated, and how trust boundaries are drawn."
+            href="/guides/your-first-policy"
+            title="Write your first policy"
+            icon="②"
+            body="Build a governance.fms from scratch — rules, budgets, redaction. Plain-English explanations of every line."
+          />
+          <HomeCard
+            href="/guides/debugging-denials"
+            title="Debug a denial"
+            icon="③"
+            body="Why was my call denied? A diagnostic walkthrough using faramesh explain, the WAL, and the structured denial payload."
+          />
+          <HomeCard
+            href="/guides/from-dev-to-prod"
+            title="From dev to production"
+            icon="④"
+            body="Move from in-process stubs to real Vault, SPIFFE, and KMS providers without changing a single rule."
           />
         </HomeGrid>
       </HomeSection>
@@ -80,49 +112,51 @@ export default function HomePage() {
         </HomeGrid>
       </HomeSection>
 
-      <HomeSection label="Concepts" intro="What's actually happening inside the daemon, end to end.">
+      <HomeSection
+        label="Concepts"
+        intro="What's actually happening inside the daemon, in plain language. Read these in order if you're new."
+        footer={
+          <Link href="/concepts/architecture" className="text-fd-primary no-underline hover:underline">
+            Full architecture →
+          </Link>
+        }
+      >
         <HomeGrid cols={2}>
           <HomeCard
             href="/concepts/enforcement"
             title="Enforcement"
             icon="⊕"
-            body="The deterministic decision pipeline — identity, rule match, conditions, rates, budgets, egress, redaction, decision, broker, DPR."
+            body="The decision pipeline, step by step. Same input, same decision — every time."
           />
           <HomeCard
             href="/concepts/interception"
             title="Interception"
             icon="⇆"
-            body="Four tiers — SDK shim, MCP proxy, HTTP proxy, A2A proxy. Pick one; combine when you need defense in depth."
+            body="How the call reaches the daemon: SDK shim, MCP proxy, or HTTP proxy. Pick one based on your runtime."
+          />
+          <HomeCard
+            href="/concepts/architecture"
+            title="Architecture & supervisor"
+            icon="◆"
+            body="Daemon lifecycle, the agent supervisor, OS-tier sandbox, and how everything fits together end to end."
           />
           <HomeCard
             href="/concepts/identity"
             title="Identity"
             icon="◉"
-            body="SPIFFE / SVID, IDP attestation, multi-agent processes, sub-agent delegation chains. The identity model that holds the whole system together."
-          />
-          <HomeCard
-            href="/concepts/topologies"
-            title="Topologies"
-            icon="◇"
-            body="Ten deployment shapes — laptop, sidecar, serverless, multi-region. What counts as one stack and what splits into many."
+            body="SPIFFE/SVID and OIDC attestation. How the daemon knows which agent is calling — without trusting the agent."
           />
           <HomeCard
             href="/concepts/credentials"
             title="Credentials"
             icon="✱"
-            body="Call-site brokering of short-lived scoped tokens from Vault, AWS, GCP, Azure. The agent never holds a secret."
+            body="Short-lived, scoped tokens minted at the call site. The agent never holds a long-lived secret."
           />
           <HomeCard
             href="/concepts/auditing"
             title="Auditing"
             icon="✓"
-            body="Decision Provenance Records, hash-chained WAL, KMS signing, faramesh audit verify. Tamper-evident by construction."
-          />
-          <HomeCard
-            href="/concepts/kms"
-            title="KMS & signing"
-            icon="⎔"
-            body="External signing for DPR chains so daemon compromise cannot forge audit. AWS KMS, GCP KMS, Vault Transit, Azure Key Vault."
+            body="Decision Provenance Records, hash-chained WAL, KMS signing. Tamper-evident by construction."
           />
         </HomeGrid>
       </HomeSection>

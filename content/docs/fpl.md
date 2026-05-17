@@ -5,7 +5,57 @@ description: Grammar, types, and every construct in the Faramesh Policy Language
 
 **FPL**. Faramesh Policy Language, is the default syntax for `governance.fms`. It compiles to a deterministic AST that the daemon evaluates. YAML and JSON encode the same AST.
 
-This page is the language reference. For block semantics see [Stack reference](/stack/).
+This page is the language reference. For block semantics see [Stack reference](/stack/). For step-by-step authoring guidance start with [Write your first policy](/guides/your-first-policy/).
+
+## A small policy, end to end
+
+Before the grammar, here's a complete `governance.fms` you can read top to bottom. The rest of the page is a reference for everything in it (and a few things that aren't).
+
+```hcl title="governance.fms"
+import "github.com/faramesh/faramesh-registry/frameworks/langgraph@1.0.0"
+
+runtime {
+  mode    = "enforce"
+  wal_dir = "./faramesh-wal"
+  backend = "sqlite"
+}
+
+agent "support-bot" {
+  default deny
+
+  rules {
+    permit search_docs
+    permit stripe/refund if amount < $500
+    defer  stripe/refund if amount >= $500
+    deny   stripe/payouts reason "platform team only"
+  }
+
+  rate_limit "stripe/*": 10 per minute
+
+  redact stripe/refund args: ["card_number", "cvv"]
+
+  budget daily {
+    max       $500
+    warn_at   0.8
+    on_exceed defer
+  }
+
+  egress {
+    allow = ["api.stripe.com", "docs.example.com"]
+  }
+
+  alert {
+    on     = "deny"
+    notify = "slack://#sec-alerts"
+  }
+}
+```
+
+**What this policy says, in plain English:**
+
+> The `support-bot` agent denies everything by default. It's allowed to search docs. It can issue Stripe refunds under $500 directly; refunds of $500+ wait for a human. Payouts are flat-out denied. Stripe calls are rate-limited to 10/minute. Card numbers and CVVs are redacted from the audit log. The agent has a $500 daily budget; at 80% we get a warning, at 100% new charges defer for human review. The agent can only talk to Stripe and our docs site. Every denial pings `#sec-alerts`.
+
+You'll write something like this for every agent. The rest of the page tells you what each piece means and what's available.
 
 ## File shape
 
@@ -172,6 +222,36 @@ Available variables in expressions:
 - `principal`, `principal.email`, `principal.groups`
 - `time.hour`, `time.weekday`, `time.now`
 
+**Worked condition examples.** Each of these is a real rule you'd ship:
+
+```hcl title="governance.fms"
+# Tiered approval ladder by amount
+permit stripe/charge if amount < $50
+permit stripe/charge if amount < $500 and principal.groups contains "ops"
+defer  stripe/charge if amount < $5000
+deny   stripe/charge
+
+# Multi-condition with currency allow-list
+permit stripe/charge if amount < $500 and currency in ["USD", "EUR", "GBP"]
+
+# Path-pattern guard for HTTP-governed APIs
+permit api/get if path matches "^/v1/orders/[0-9]+$"
+deny   api/get if path matches "/admin"
+
+# Time-of-day restriction
+defer  github/merge if time.hour >= 18 or time.hour < 8
+
+# Principal-based rule for delegated agents
+permit fs/write if principal.email == "ops@example.com"
+deny   fs/write
+
+# Email confined to your domain
+permit send_email if args.to matches "@(example\\.com|example\\.io)$"
+deny   send_email reason "external email requires approval"
+```
+
+Conditions are pure: no functions, no side effects, no I/O. If a referenced field is missing from the payload, the condition evaluates to false (the rule does not match).
+
 ### `rate_limit`
 
 ```hcl title="governance.fms"
@@ -180,6 +260,17 @@ rate_limit "<glob>": <n> per <window>
 
 `<window>` ∈ { `second`, `minute`, `hour`, `day` }.
 
+**Examples.** Token-bucket limits per agent per pattern:
+
+```hcl title="governance.fms"
+rate_limit "stripe/*":     10 per minute     # all Stripe calls combined
+rate_limit "stripe/charge": 5 per minute     # narrower limit on charges
+rate_limit "send_email":   100 per hour
+rate_limit "github/*":     1000 per day
+```
+
+When the bucket is empty, the daemon returns `RATE_EXCEEDED` with a `retry_after_seconds` hint. Buckets refill at the configured rate and survive WAL replay across restarts.
+
 ### `redact`
 
 ```hcl title="governance.fms"
@@ -187,6 +278,17 @@ redact <tool> args: ["<path>", "<path>", ...]
 ```
 
 Argument paths are dot-separated for nested objects: `payment.card.number`.
+
+**Examples.** Redacted fields are masked **before** they reach the WAL or any audit sink:
+
+```hcl title="governance.fms"
+redact stripe/charge   args: ["card_number", "cvv"]
+redact send_email      args: ["body"]                        # don't log message bodies
+redact db/query        args: ["params.ssn", "params.dob"]    # nested paths
+redact http/post       args: ["headers.authorization"]
+```
+
+The original arguments are never persisted. The redacted form is what subsequently flows to providers and audit sinks.
 
 ### `budget`
 
@@ -201,6 +303,29 @@ budget <id> {
 ```
 
 Common ids: `session`, `daily`. Custom ids are allowed.
+
+**Examples.** Budgets are enforced at step 5 of the [decision pipeline](/concepts/enforcement/) using costs from the configured cost provider:
+
+```hcl title="governance.fms"
+# Hard daily cap on the agent's total spend
+budget daily {
+  max       $100
+  warn_at   0.8           # log BUDGET_WARNING at 80%
+  on_exceed deny          # at 100%, deny new calls
+}
+
+# Per-session call ceiling
+budget session {
+  max_calls 50
+  on_exceed defer
+}
+
+# Custom budget keyed off any rule
+budget refunds_daily {
+  max       $5000
+  on_exceed defer         # over $5k/day, refunds need a human
+}
+```
 
 ### `egress`
 
@@ -351,9 +476,162 @@ Errors include file and line:
 governance.fms:12: agent "payments-bot": rate_limit "stripe/*": expected 'per <window>'
 ```
 
+## Cookbook: complete examples
+
+Pick one that matches what you're building. Each is a runnable `governance.fms`.
+
+### A coding agent that can read everything but not push to main
+
+```hcl title="governance.fms"
+import "github.com/faramesh/faramesh-registry/policies/shell@1.0.0"
+
+agent "coding-bot" {
+  default deny
+
+  rules {
+    permit fs/read
+    permit fs/list
+    permit fs/write if path matches "^./"
+    deny   fs/write reason "writes outside repo are forbidden"
+
+    permit shell if args.cmd matches "^(go|npm|pnpm|pytest)\\s"
+    deny   shell reason "general shell exec is forbidden"
+
+    permit git/diff
+    permit git/commit
+    defer  git/push if args.ref == "main"
+    permit git/push
+  }
+
+  redact fs/read args: [".env", "secrets.json"]
+}
+```
+
+### A payments agent with a tiered approval ladder
+
+```hcl title="governance.fms"
+agent "payments-bot" {
+  default deny
+
+  rules {
+    permit stripe/charge if amount < $50
+    permit stripe/charge if amount < $500 and principal.groups contains "ops"
+    defer  stripe/charge if amount < $5000
+    deny   stripe/charge
+
+    permit stripe/refund if amount < $500
+    defer  stripe/refund
+
+    deny   stripe/payouts reason "platform team only"
+  }
+
+  rate_limit "stripe/*": 30 per minute
+
+  redact stripe/charge args: ["card.number", "card.cvv"]
+
+  budget daily {
+    max       $25000
+    warn_at   0.9
+    on_exceed defer
+  }
+
+  alert {
+    on     = "deny"
+    notify = "pagerduty://payments-oncall"
+  }
+}
+```
+
+### A customer-support agent confined to your email domain
+
+```hcl title="governance.fms"
+agent "support-bot" {
+  default deny
+
+  rules {
+    permit knowledgebase/search
+    permit ticket/read
+    permit ticket/create
+    permit send_email if args.to matches "@example\\.com$"
+    deny   send_email reason "external email requires approval"
+  }
+
+  rate_limit "send_email": 50 per hour
+
+  egress {
+    allow = ["api.zendesk.com", "smtp.example.com"]
+  }
+}
+```
+
+### An MCP-governed coding assistant (Claude Code / Cursor)
+
+```hcl title="governance.fms"
+runtime {
+  mode           = "enforce"
+  mcp_proxy_port = 8081
+}
+
+agent "claude-code" {
+  default deny
+
+  rules {
+    permit fs_read
+    permit fs_list
+    permit fs_write if path matches "^./"
+    deny   fs_write
+    permit shell if args.command matches "^(go|npm|pnpm|pytest|cargo)\\s"
+    deny   shell
+    permit github/get
+    defer  github/post
+  }
+
+  alert { on = "deny" notify = "slack://#agent-denials" }
+}
+```
+
+Point Claude Code or Cursor at `http://localhost:8081/mcp/<server>` (see [framework guides](/frameworks/claude-code/)).
+
+### A multi-agent orchestrator with delegation
+
+```hcl title="governance.fms"
+agent "orchestrator" {
+  default deny
+
+  rules {
+    permit task/plan
+    permit delegate/researcher
+    permit delegate/writer
+    deny   shell
+  }
+}
+
+agent "researcher" {
+  default deny
+
+  rules {
+    permit web/fetch if host in ["docs.example.com", "wikipedia.org"]
+    permit search_docs
+  }
+
+  rate_limit "web/fetch": 60 per minute
+}
+
+agent "writer" {
+  default deny
+
+  rules {
+    permit fs/write if path matches "^./drafts/"
+    permit knowledgebase/search
+  }
+}
+```
+
 ## What's next
 
 - [Stack reference](/stack/): block-by-block semantics
+- [Write your first policy](/guides/your-first-policy/): step-by-step authoring guide
+- [Debug a denial](/guides/debugging-denials/): what to do when a rule fires you didn't expect
 - [Providers](/providers/): every provider schema
 - [CLI](/cli/): commands and flags
 - [Denial codes](/errors/): runtime error payloads
