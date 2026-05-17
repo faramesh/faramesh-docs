@@ -1,0 +1,203 @@
+---
+const {
+	eyebrow = 'Faramesh',
+	title = 'Govern every agent tool call before it runs.',
+	tagline = 'Declare one policy file per stack. Compile it, apply it, enforce it. Tamper-evident decisions, scoped credentials, structured denials — no LLM in the enforcement path.',
+	primary = { href: '/quickstart/', label: 'Get started' },
+	secondary = { href: '/fpl/', label: 'Read the policy spec' },
+} = Astro.props;
+---
+
+<section class="fm-hero">
+	<div class="fm-hero__bg" aria-hidden="true"></div>
+	<div class="fm-hero__inner">
+		<span class="fm-hero__eyebrow">{eyebrow}</span>
+		<h1 class="fm-hero__title">{title}</h1>
+		<p class="fm-hero__tagline">{tagline}</p>
+		<div class="fm-hero__actions">
+			<a class="fm-btn fm-btn--primary" href={primary.href}>{primary.label}</a>
+			<a class="fm-btn fm-btn--secondary" href={secondary.href}>{secondary.label}</a>
+		</div>
+
+		<div class="fm-hero__terminal" role="presentation">
+			<div class="fm-hero__terminal-bar">
+				<span></span><span></span><span></span>
+				<em>governance.fms</em>
+			</div>
+			<pre class="fm-hero__code"><code><span class="t-comment"># One file. Compiled. Enforced.</span>
+<span class="t-key">import</span> <span class="t-str">"registry.faramesh.dev/frameworks/langgraph@1.0.0"</span>
+
+<span class="t-key">runtime</span> &#123;
+  mode    = <span class="t-str">"enforce"</span>
+  wal_dir = <span class="t-str">"./faramesh-wal"</span>
+&#125;
+
+<span class="t-key">agent</span> <span class="t-str">"payments-bot"</span> &#123;
+  <span class="t-key">rules</span> &#123;
+    permit <span class="t-tool">stripe/charge</span> if amount &lt; <span class="t-num">$500</span>
+    defer  <span class="t-tool">stripe/refund</span>
+    deny   <span class="t-tool">stripe/payouts</span>
+  &#125;
+
+  <span class="t-key">rate_limit</span> <span class="t-str">"stripe/*"</span>: <span class="t-num">10</span> per minute
+  <span class="t-key">budget</span> daily &#123; max <span class="t-num">$500</span>; warn_at <span class="t-num">0.8</span> &#125;
+&#125;</code></pre>
+		</div>
+	</div>
+</section>
+
+<style>
+	.fm-hero {
+		position: relative;
+		padding: 4rem 0 5rem;
+		isolation: isolate;
+		overflow: hidden;
+	}
+
+	.fm-hero__bg {
+		position: absolute;
+		inset: -10% -10% 0 -10%;
+		z-index: -1;
+		background:
+			radial-gradient(60% 40% at 30% 30%, color-mix(in srgb, #4f81ff 22%, transparent), transparent 60%),
+			radial-gradient(50% 40% at 70% 20%, color-mix(in srgb, #9b6bff 16%, transparent), transparent 60%),
+			radial-gradient(40% 40% at 50% 90%, color-mix(in srgb, #22c55e 10%, transparent), transparent 60%);
+		filter: blur(2px);
+	}
+
+	.fm-hero__inner {
+		max-width: 70rem;
+		margin: 0 auto;
+		padding: 0 1.25rem;
+		display: grid;
+		gap: 1.25rem;
+	}
+
+	.fm-hero__eyebrow {
+		display: inline-block;
+		text-transform: uppercase;
+		letter-spacing: 0.16em;
+		font-size: 0.72rem;
+		font-weight: 700;
+		color: var(--sl-color-accent-high);
+		background: color-mix(in srgb, var(--sl-color-accent) 14%, transparent);
+		border: 1px solid color-mix(in srgb, var(--sl-color-accent) 30%, transparent);
+		padding: 0.32rem 0.7rem;
+		border-radius: 999px;
+		width: fit-content;
+	}
+
+	.fm-hero__title {
+		font-size: clamp(2rem, 4.6vw, 3.4rem);
+		line-height: 1.05;
+		letter-spacing: -0.025em;
+		color: var(--sl-color-white);
+		font-weight: 700;
+		margin: 0;
+		max-width: 38ch;
+	}
+
+	.fm-hero__tagline {
+		font-size: clamp(1rem, 1.4vw, 1.18rem);
+		color: var(--sl-color-gray-2);
+		max-width: 62ch;
+		margin: 0;
+		line-height: 1.55;
+	}
+
+	.fm-hero__actions {
+		display: flex;
+		gap: 0.6rem;
+		flex-wrap: wrap;
+		margin-top: 0.3rem;
+	}
+
+	.fm-btn {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.4rem;
+		padding: 0.7rem 1.1rem;
+		border-radius: 0.55rem;
+		font-weight: 600;
+		font-size: 0.95rem;
+		text-decoration: none;
+		transition: transform 0.05s ease, background-color 0.15s ease, border-color 0.15s ease;
+		border: 1px solid transparent;
+	}
+
+	.fm-btn--primary {
+		background: var(--sl-color-accent);
+		color: #f8fafc !important;
+	}
+	.fm-btn--primary:hover {
+		background: var(--sl-color-accent-high);
+		color: #ffffff !important;
+	}
+
+	.fm-btn--secondary {
+		background: transparent;
+		color: var(--sl-color-gray-1) !important;
+		border-color: color-mix(in srgb, var(--sl-color-white) 18%, transparent);
+	}
+	.fm-btn--secondary:hover {
+		border-color: var(--sl-color-accent);
+		color: var(--sl-color-white) !important;
+	}
+
+	.fm-hero__terminal {
+		margin-top: 1.75rem;
+		border-radius: 0.9rem;
+		border: 1px solid color-mix(in srgb, var(--sl-color-white) 10%, transparent);
+		background: #06080d;
+		box-shadow: 0 24px 80px -20px color-mix(in srgb, #000 70%, transparent);
+		overflow: hidden;
+	}
+
+	.fm-hero__terminal-bar {
+		display: flex;
+		align-items: center;
+		gap: 0.4rem;
+		padding: 0.55rem 0.85rem;
+		border-bottom: 1px solid color-mix(in srgb, var(--sl-color-white) 6%, transparent);
+		background: #0a0c12;
+	}
+
+	.fm-hero__terminal-bar span {
+		display: inline-block;
+		width: 0.65rem;
+		height: 0.65rem;
+		border-radius: 999px;
+		background: color-mix(in srgb, var(--sl-color-white) 18%, transparent);
+	}
+
+	.fm-hero__terminal-bar em {
+		margin-left: 0.5rem;
+		font-style: normal;
+		color: var(--sl-color-gray-3);
+		font-size: 0.78rem;
+		letter-spacing: 0.05em;
+		text-transform: uppercase;
+	}
+
+	.fm-hero__code {
+		margin: 0;
+		padding: 1.1rem 1.25rem;
+		font-size: 0.86rem;
+		line-height: 1.65;
+		color: #cdd9ea;
+		font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+		overflow-x: auto;
+	}
+
+	.fm-hero__code code { color: inherit; background: transparent; padding: 0; border: none; }
+
+	.t-comment { color: #5b6b86; font-style: italic; }
+	.t-key { color: #82aaff; }
+	.t-str { color: #c3e88d; }
+	.t-num { color: #f78c6c; }
+	.t-tool { color: #ffcb6b; }
+
+	:root[data-theme='light'] .fm-hero__terminal { background: #0b1220; }
+	:root[data-theme='light'] .fm-hero__terminal-bar { background: #111a2e; border-bottom-color: #1f2937; }
+	:root[data-theme='light'] .fm-hero__code { color: #e6ecf5; }
+</style>

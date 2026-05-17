@@ -1,29 +1,41 @@
 export const docsSections = [
 	{
 		id: 'start',
-		label: 'Start here',
+		label: 'Start',
 		href: '/',
-		matches: ['/', '/quickstart/', '/flows/'],
+		matches: ['/', '/quickstart/', '/flows/', '/dev/'],
 		sidebar: [
-			{ label: 'START', items: [{ slug: 'index' }, { slug: 'quickstart' }, { slug: 'flows' }] },
+			{
+				label: 'START',
+				items: [
+					{ slug: 'index', label: 'Overview' },
+					{ slug: 'quickstart' },
+					{ slug: 'flows' },
+					{ slug: 'dev', label: 'Run locally' },
+				],
+			},
 		],
 	},
 	{
 		id: 'reference',
 		label: 'Reference',
-		href: '/init/',
-		matches: ['/init/', '/stack/', '/providers/', '/fpl/', '/cli/', '/registry/', '/dev/'],
+		href: '/stack/',
+		matches: ['/init/', '/stack/', '/fpl/', '/providers/', '/registry/', '/cli/'],
 		sidebar: [
 			{
-				label: 'REFERENCE',
+				label: 'CONFIGURATION',
 				items: [
-					{ slug: 'init' },
-					{ slug: 'stack' },
+					{ slug: 'init', label: 'faramesh init' },
+					{ slug: 'stack', label: 'Stack file' },
+					{ slug: 'fpl', label: 'FPL language' },
 					{ slug: 'providers' },
-					{ slug: 'fpl' },
+				],
+			},
+			{
+				label: 'PLATFORM',
+				items: [
 					{ slug: 'cli' },
 					{ slug: 'registry' },
-					{ slug: 'dev' },
 				],
 			},
 		],
@@ -37,7 +49,7 @@ export const docsSections = [
 			{
 				label: 'FRAMEWORKS',
 				items: [
-					{ slug: 'frameworks' },
+					{ slug: 'frameworks', label: 'Overview' },
 					{ slug: 'frameworks/langgraph' },
 					{ slug: 'frameworks/langchain' },
 					{ slug: 'frameworks/openai-agents' },
@@ -57,7 +69,11 @@ export const docsSections = [
 		sidebar: [
 			{
 				label: 'OPERATIONS',
-				items: [{ slug: 'security' }, { slug: 'errors' }, { slug: 'limitations' }],
+				items: [
+					{ slug: 'security', label: 'Security model' },
+					{ slug: 'errors', label: 'Denial codes' },
+					{ slug: 'limitations' },
+				],
 			},
 		],
 	},

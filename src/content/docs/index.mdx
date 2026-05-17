@@ -1,50 +1,239 @@
 ---
-title: What is a Faramesh stack?
-description: One directory, one governance file, one daemon.
+title: Faramesh
+description: Govern every AI agent tool call before it runs. One policy file. Compiled. Enforced. Tamper-evident.
+template: splash
+hero:
+  tagline: ''
+  actions: []
 ---
 
-**Documentation:** https://docs.faramesh.dev  
-**Registry:** https://registry.faramesh.dev  
-**Source (core):** https://github.com/faramesh/faramesh-core
+import Hero from '../../components/Hero.astro';
+import FeatureGrid from '../../components/FeatureGrid.astro';
+import { Card, CardGrid, LinkButton, LinkCard, Tabs, TabItem, Steps, Aside, Code } from '@astrojs/starlight/components';
 
-## Faramesh
+<Hero
+  eyebrow="Faramesh"
+  title="Govern every agent tool call before it runs."
+  tagline="Declare one policy file per stack. Compile it. Apply it. Enforce it. Tamper-evident decisions, scoped credentials, structured denials — and no LLM judge sitting on the enforcement path."
+  primary={{ href: '/quickstart/', label: 'Get started' }}
+  secondary={{ href: '/fpl/', label: 'Read the policy spec' }}
+/>
 
-Faramesh governs AI agent tool calls before they execute.
+## What is Faramesh?
 
-```bash
-faramesh init
-faramesh dev
-faramesh apply
+Faramesh sits between your AI agent and the tools it can call. Every tool invocation passes through a policy engine that returns one of three answers:
+
+<CardGrid>
+  <Card title="Permit" icon="approve-check">
+    The rule said yes. The action runs. A signed decision record lands in the audit ledger.
+  </Card>
+  <Card title="Deny" icon="error">
+    Blocked before execution. The agent receives a structured denial telling it why and what to do next.
+  </Card>
+  <Card title="Defer" icon="warning">
+    Held for a human to approve in the inbox. Nothing runs until the operator decides.
+  </Card>
+</CardGrid>
+
+There is no language model on the enforcement path. Policy is compiled to a deterministic AST and evaluated by the daemon. The agent never sees raw credentials — providers mint short-lived, scoped tokens at the moment of execution.
+
+## Get going
+
+<Steps>
+
+1. **Install the CLI.**
+
+   <Tabs>
+     <TabItem label="curl">
+       ```bash
+       curl -fsSL https://raw.githubusercontent.com/faramesh/faramesh-core/main/install.sh | bash
+       ```
+     </TabItem>
+     <TabItem label="npm">
+       ```bash
+       npx @faramesh/cli@latest
+       ```
+     </TabItem>
+     <TabItem label="Homebrew">
+       ```bash
+       brew install faramesh/tap/faramesh
+       ```
+     </TabItem>
+   </Tabs>
+
+2. **Generate `governance.fms`** in your agent project.
+
+   ```bash
+   faramesh init
+   ```
+
+3. **Compile and start enforcement.**
+
+   ```bash
+   faramesh check
+   faramesh apply
+   ```
+
+4. **Wire your agent.** Drop in the SDK shim or point an MCP client at the proxy port.
+
+   See the [frameworks index](/frameworks/) for a one-page per framework.
+
+</Steps>
+
+<LinkButton href="/quickstart/" variant="primary">Walk through the full quickstart →</LinkButton>
+
+## How it works
+
+<FeatureGrid items={[
+  {
+    icon: '⚖',
+    title: 'Policy as a single file',
+    body: 'governance.fms declares agents, rules, budgets, rate limits, redaction, egress, and approvals. FPL by default; YAML and JSON are equivalent.',
+    href: '/stack/',
+    cta: 'Stack reference',
+  },
+  {
+    icon: '🛡',
+    title: 'Deterministic enforcement',
+    body: 'The daemon compiles policy once at apply, then evaluates every tool call against a deterministic AST. No LLM judges, no surprises.',
+    href: '/fpl/',
+    cta: 'FPL reference',
+  },
+  {
+    icon: '🔑',
+    title: 'Credentials never leak',
+    body: 'Vault, AWS Secrets Manager, GCP, Azure, and SPIFFE providers mint short-lived, scoped credentials at the call site. The agent never holds a long-lived secret.',
+    href: '/providers/',
+    cta: 'Providers',
+  },
+  {
+    icon: '📜',
+    title: 'Tamper-evident evidence',
+    body: 'Every decision is a Decision Provenance Record in a hash-chained WAL, optionally KMS-signed. faramesh audit verify walks the chain.',
+    href: '/security/',
+    cta: 'Guarantees',
+  },
+  {
+    icon: '🧑‍⚖️',
+    title: 'Human approvals built in',
+    body: 'Deferred actions land in the approvals inbox. Operators approve, deny, or set a rule. Agents resume seamlessly.',
+    href: '/cli/#approvals',
+    cta: 'Approval workflow',
+  },
+  {
+    icon: '📦',
+    title: 'Registry of policy and providers',
+    body: 'Pin policy packs, framework profiles, and signed provider binaries from registry.faramesh.dev. Or run your own.',
+    href: '/registry/',
+    cta: 'Registry',
+  },
+]} />
+
+## Pick your framework
+
+Faramesh wires into the place where your agent decides what to call.
+
+<CardGrid>
+  <LinkCard
+    title="LangGraph"
+    description="SDK shim. Wrap your tool list with GovernedToolSet."
+    href="/frameworks/langgraph/"
+  />
+  <LinkCard
+    title="LangChain"
+    description="Same SDK shim, classic chains and agents."
+    href="/frameworks/langchain/"
+  />
+  <LinkCard
+    title="OpenAI Agents"
+    description="Drop-in adapter for the Agents SDK."
+    href="/frameworks/openai-agents/"
+  />
+  <LinkCard
+    title="CrewAI"
+    description="Govern crews end-to-end."
+    href="/frameworks/crewai/"
+  />
+  <LinkCard
+    title="Claude Code"
+    description="MCP proxy. Point Claude Code at Faramesh and every tool call is governed."
+    href="/frameworks/claude-code/"
+  />
+  <LinkCard
+    title="Bedrock"
+    description="HTTP proxy in front of the Bedrock action group invocation."
+    href="/frameworks/bedrock/"
+  />
+</CardGrid>
+
+[See the full framework matrix →](/frameworks/)
+
+## A complete policy in one page
+
+Below is a real `governance.fms`. Faramesh compiles it once at `faramesh apply` and the daemon enforces every block live.
+
+```fpl
+import "registry.faramesh.dev/frameworks/langgraph@1.0.0"
+import "registry.faramesh.dev/policies/pci-dss@1.2.0" as pci
+
+runtime {
+  mode    = "enforce"
+  wal_dir = "./faramesh-wal"
+  backend = "sqlite"
+}
+
+provider "vault" {
+  type      = "vault"
+  addr      = env("VAULT_ADDR")
+  token     = env("VAULT_TOKEN")
+  mount     = "kv/data/payments"
+}
+
+agent "payments-bot" {
+  default deny
+
+  rules {
+    permit stripe/charge   if amount < $500
+    defer  stripe/refund
+    deny   stripe/payouts
+    permit health/*
+  }
+
+  rate_limit "stripe/*": 10 per minute
+
+  redact stripe/charge args: ["card_number", "cvv"]
+
+  budget daily {
+    max       $500
+    warn_at   0.8
+    on_exceed deny
+  }
+
+  egress {
+    allow = ["api.stripe.com", "api.faramesh.dev"]
+  }
+
+  alert {
+    on     = "deny"
+    notify = "slack://#sec-alerts"
+  }
+}
 ```
 
-A **stack** is a directory with `governance.fms` (FPL, YAML, or JSON). `faramesh apply` compiles it and starts the daemon.
+<CardGrid>
+  <LinkCard title="Stack reference" description="Every block, every field." href="/stack/" />
+  <LinkCard title="FPL syntax" description="Grammar, types, examples." href="/fpl/" />
+  <LinkCard title="Providers" description="Vault, AWS, GCP, Azure, SPIFFE, audit sinks." href="/providers/" />
+  <LinkCard title="CLI" description="Every command, every flag." href="/cli/" />
+</CardGrid>
 
-A **provider** is a `provider "name" { }` block. The daemon calls it over gRPC for secrets, identity, KMS, audit sink, and cost.
+## Operating Faramesh
 
-A **policy pack** is an import from `registry.faramesh.dev` with a pinned version.
-
-### Key capabilities
-
-- **Governance as code** — one file per stack; `faramesh check` / `plan` / `apply` replace legacy `serve` flags.
-- **Deterministic engine** — no LLM judges on the enforcement path; structured denials to adapters.
-- **Evidence** — WAL-first DPR chain; `faramesh audit verify` walks active and archived segments.
-- **Registry** — providers, policy packs, and framework profiles with pinned semver imports.
-
-### Start here
-
-- [Quickstart](/quickstart/) — zero to governed in five steps
-- [Flows](/flows/) — init, change, monitor
-- [Stack](/stack/) — `governance.fms` blocks
-- [CLI](/cli/) — thirteen commands
-
-### Reference
-
-- [Init](/init/) · [Providers](/providers/) · [FPL](/fpl/) · [Registry](/registry/) · [Dev mode](/dev/)
-
-### Frameworks
-
-- [Framework index](/frameworks/) — interception tiers and before/after wiring
-
-### Operations
-
-- [Security](/security/) · [Errors](/errors/) · [Limitations](/limitations/)
+<CardGrid>
+  <LinkCard title="Quickstart" description="From an empty repo to a governed agent in five steps." href="/quickstart/" />
+  <LinkCard title="Workflows" description="First apply, change policy, monitor live." href="/flows/" />
+  <LinkCard title="Local runs" description="Run Faramesh without external secret backends." href="/dev/" />
+  <LinkCard title="Registry" description="Import providers and policy packs by semver." href="/registry/" />
+  <LinkCard title="Security model" description="Threats, mitigations, and explicit limits." href="/security/" />
+  <LinkCard title="Denial codes" description="Structured error payloads agents and SDKs understand." href="/errors/" />
+</CardGrid>

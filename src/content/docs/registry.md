@@ -1,51 +1,94 @@
 ---
 title: Registry
+description: Pinned, signed, versioned distribution for providers, policy packs, and framework profiles.
 ---
 
-The **Faramesh Registry** (`registry.faramesh.dev`) is the official distribution surface for three artifact kinds — **providers**, **policy packs**, and **framework profiles**. They are not interchangeable.
+The **Faramesh Registry** at `registry.faramesh.dev` is where signed artifacts live. The CLI resolves every import from the registry at `faramesh check` and `faramesh apply`.
 
-Browse, search, and copy usage snippets from the registry web app (Terraform Registry–style UX). The CLI resolves pinned imports at `faramesh check` / `apply`.
+Three artifact kinds are distributed:
+
+| Kind | What it is | Example |
+|------|-----------|---------|
+| **Provider** | Signed binary implementing `ProviderService` (gRPC). | `faramesh/vault@2.1.0` |
+| **Policy pack** | Versioned set of FPL rules, redactions, rate limits. | `faramesh/pci-dss@1.2.0`, `faramesh/stripe@1.3.0` |
+| **Framework profile** | FPL wiring for one framework's interception tier. | `frameworks/langgraph@1.0.0`, `frameworks/mcp@1.0.0` |
 
 ## Import syntax
 
 ```fpl
 import "registry.faramesh.dev/frameworks/langgraph@1.0.0"
-import "registry.faramesh.dev/policies/stripe@1.3.0" as stripe_rules
+import "registry.faramesh.dev/policies/stripe@1.3.0"     as stripe_rules
 import "registry.faramesh.dev/providers/vault@2.1.0"
 ```
 
-`@latest` is rejected at `faramesh check`. Use an explicit semver pin.
+- A pinned semver is required. `@latest` is rejected at `check`.
+- `as <alias>` lets you reference the imported symbols by a short name.
+- Multiple imports of the same kind are allowed; FPL composes them.
 
-## Artifact kinds
+## How imports resolve
 
-| Kind | What it is | Example |
-|------|-----------|---------|
-| **Provider** | Signed binary (`ProviderService` gRPC) | `faramesh/vault` |
-| **Policy pack** | Versioned FPL rules, redaction, rate limits | `faramesh/pci-dss`, `faramesh/stripe` |
-| **Framework profile** | FPL wiring for interception tier | `langgraph`, `mcp` |
+At `faramesh check`:
 
-## Offline
+1. The CLI fetches `<registry>/.well-known/faramesh.json` to discover artifact endpoints.
+2. Each import is downloaded with its signature and provenance manifest.
+3. Signatures are verified against the public keys in your `trust { ... }` block.
+4. Resolved imports are cached in `.faramesh/cache/`. The cache is content-addressed by digest.
 
-`faramesh bundle` exports a tarball of resolved artifacts for air-gapped stacks. `faramesh init --offline` skips the framework import line.
+A failed signature aborts the build. There is no fallback path for an untrusted artifact.
 
-## Local registry (development)
+## Trust roots
 
-Run the registry service from the `faramesh-registry` repository:
+```fpl
+trust {
+  key "registry.faramesh.dev" ed25519:MCowBQYDK2VwAyEA...
+}
+```
+
+`faramesh init` writes the default Faramesh trust root. Add more keys for private registries you publish to yourself.
+
+## Browsing the catalog
+
+Open `https://registry.faramesh.dev` in a browser. Each artifact page shows:
+
+- Versions with semver tags.
+- The signed digest and signing key.
+- A copy-paste `import` line.
+- The rule set or provider schema in the case of policy packs and providers.
+
+## Offline use
+
+`faramesh bundle` packs every resolved import into a single tarball:
 
 ```bash
-go run ./cmd/registry -catalog catalog -listen 127.0.0.1:8787
-export FARAMESH_REGISTRY_URL=http://127.0.0.1:8787
+faramesh bundle --include-providers --out faramesh-bundle.tar
+```
+
+Distribute the tarball to an air-gapped environment and unpack it next to `governance.fms`. `faramesh apply --offline` then resolves from the bundle without any network access.
+
+## Self-hosting a registry
+
+If you run your own internal registry, point Faramesh at it:
+
+```bash
+export FARAMESH_REGISTRY_URL=https://registry.internal.corp
 faramesh check
 ```
 
-Service discovery:
+Add your registry's public key to `trust { ... }` so artifacts you publish are verified. The self-host implementation lives in the `faramesh-registry` repository.
+
+## Publishing
+
+Authenticate, then push:
 
 ```bash
-curl -s http://127.0.0.1:8787/.well-known/faramesh.json
+faramesh auth login --registry registry.internal.corp
+faramesh publish ./my-policy-pack --kind policy --version 1.0.0
 ```
 
-## Architecture
+The CLI signs the artifact with your private key, computes the digest, and uploads the binary, signature, and manifest. The registry rejects any artifact whose signature does not verify against an enrolled publisher key.
 
-Implementation lives in **`faramesh-registry/`** (HTTP API R0 shipped; Next.js browse UI planned). Design spec: **FARAMESH_REGISTRY_PLATFORM** in the monorepo `docs/internal/` tree.
+## What's next
 
-Next: [Providers](/providers/) · [FPL](/fpl/) · [Frameworks](/frameworks/)
+- [Providers](/providers/) — the provider catalog
+- [Stack reference](/stack/) — where imports go in `governance.fms`
+- [CLI](/cli/) — `faramesh auth`, `faramesh bundle`, `faramesh publish`

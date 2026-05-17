@@ -9,6 +9,11 @@ export default defineConfig({
 			title: 'Faramesh Docs',
 			description:
 				'Non-bypassable execution control for AI agents. Policy engine, agent identity, credential sequestration, and human-in-the-loop approvals.',
+			expressiveCode: {
+				shiki: {
+					langAlias: { fpl: 'hcl', fms: 'hcl' },
+				},
+			},
 			logo: {
 				light: './src/assets/docs-logo-light.svg',
 				dark: './src/assets/logo-docs-dark-.svg',
