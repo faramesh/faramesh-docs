@@ -1,0 +1,34 @@
+---
+const { cols = 2, dense = false } = Astro.props;
+---
+
+<div class:list={["home-grid", dense && "home-grid--dense"]} data-cols={cols}>
+	<slot />
+</div>
+
+<style>
+	.home-grid {
+		display: grid;
+		gap: 0.55rem;
+	}
+
+	.home-grid[data-cols='2'] {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+
+	.home-grid[data-cols='3'] {
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+	}
+
+	.home-grid[data-cols='4'] {
+		grid-template-columns: repeat(4, minmax(0, 1fr));
+	}
+
+	@media (max-width: 900px) {
+		.home-grid[data-cols='2'],
+		.home-grid[data-cols='3'],
+		.home-grid[data-cols='4'] {
+			grid-template-columns: 1fr;
+		}
+	}
+</style>

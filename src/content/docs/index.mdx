@@ -1,286 +1,218 @@
 ---
-title: Faramesh
-description: Govern every AI agent tool call before it runs. One policy file. Compiled. Enforced. Tamper-evident.
-template: splash
-hero:
-  tagline: ''
-  actions: []
+title: Faramesh Docs
+description: Every agent gets an identity. Every tool call gets a policy decision. Every action gets a tamper-evident record.
 ---
 
-import Hero from '../../components/Hero.astro';
-import FeatureGrid from '../../components/FeatureGrid.astro';
-import { Card, CardGrid, LinkButton, LinkCard, Tabs, TabItem, Steps, Aside, Code } from '@astrojs/starlight/components';
+import HomeHero from '../../components/HomeHero.astro';
+import HomeSection from '../../components/HomeSection.astro';
+import HomeGrid from '../../components/HomeGrid.astro';
+import HomeCard from '../../components/HomeCard.astro';
 
-<Hero
-  eyebrow="Faramesh"
-  title="Govern every agent tool call before it runs."
-  tagline="Declare one policy file per stack. Compile it. Apply it. Enforce it. Tamper-evident decisions, scoped credentials, structured denials — and no LLM judge sitting on the enforcement path."
-  primary={{ href: '/quickstart/', label: 'Get started' }}
-  secondary={{ href: '/fpl/', label: 'Read the policy spec' }}
+<HomeHero
+	eyebrow="Faramesh"
+	title="Governance for the agent layer."
+	body="Every agent gets an attested identity. Every tool call gets a policy decision. Every action gets a tamper-evident, KMS-signed record. The daemon enforces locally; the cloud is observability."
+	primaryHref="/quickstart/"
+	primaryLabel="Quickstart →"
+	secondaryHref="/concepts/how-it-works/"
+	secondaryLabel="How it works"
 />
 
-## What is Faramesh?
+<HomeSection label="Start here" intro="Install Faramesh and run a governed agent.">
+	<HomeGrid cols={2}>
+		<HomeCard
+			href="/quickstart/"
+			title="Quickstart"
+			icon="▸"
+			accent
+			bullets={[
+				'Install the CLI',
+				'faramesh init writes governance.fms',
+				'faramesh check / apply',
+				'Wire the SDK shim or MCP proxy',
+				'See your first permit / defer / deny',
+			]}
+		/>
+		<HomeCard
+			href="/concepts/how-it-works/"
+			title="How Faramesh works"
+			icon="◆"
+			body="The mental model — where Faramesh sits, the decision pipeline, what's compiled versus evaluated, and how trust boundaries are drawn."
+		/>
+	</HomeGrid>
 
-Faramesh sits between your AI agent and the tools it can call. Every tool invocation passes through a policy engine that returns one of three answers:
+	<p class="home-section__more">
+		<a href="/concepts/how-it-works/">Learn about Faramesh concepts →</a>
+	</p>
+</HomeSection>
 
-<CardGrid>
-  <Card title="Permit" icon="approve-check">
-    The rule said yes. The action runs. A signed decision record lands in the audit ledger.
-  </Card>
-  <Card title="Deny" icon="error">
-    Blocked before execution. The agent receives a structured denial telling it why and what to do next.
-  </Card>
-  <Card title="Defer" icon="warning">
-    Held for a human to approve in the inbox. Nothing runs until the operator decides.
-  </Card>
-</CardGrid>
+<HomeSection label="Build with Faramesh" intro="Pick the wiring tier that matches your agent runtime.">
+	<HomeGrid cols={3}>
+		<HomeCard
+			href="/frameworks/langgraph/"
+			title="Govern a native agent"
+			icon="L"
+			body="LangGraph, LangChain, CrewAI, OpenAI Agents. One-line SDK shim wraps your tool list."
+		/>
+		<HomeCard
+			href="/frameworks/claude-code/"
+			title="Govern an MCP client"
+			icon="M"
+			body="Claude Code, Cursor, OpenCode. Point the client at the Faramesh MCP proxy — zero code change."
+		/>
+		<HomeCard
+			href="/frameworks/bedrock/"
+			title="Govern a hosted runtime"
+			icon="H"
+			body="Bedrock and any OpenAPI action group. The HTTP proxy sits in front of your tool endpoints."
+		/>
+	</HomeGrid>
 
-There is no language model on the enforcement path. Policy is compiled to a deterministic AST and evaluated by the daemon. The agent never sees raw credentials — providers mint short-lived, scoped tokens at the moment of execution.
+	<p class="home-section__more">
+		<a href="/frameworks/">See every framework →</a>
+	</p>
+</HomeSection>
 
-## Get going
+<HomeSection label="Concepts" intro="What's actually happening inside the daemon.">
+	<HomeGrid cols={2}>
+		<HomeCard
+			href="/concepts/enforcement/"
+			title="Enforcement"
+			icon="⊕"
+			body="The deterministic decision pipeline — identity, rule match, conditions, rates, budgets, egress, redaction, decision, broker, DPR."
+		/>
+		<HomeCard
+			href="/concepts/interception/"
+			title="Interception"
+			icon="⇆"
+			body="Four tiers — SDK shim, MCP proxy, HTTP proxy, A2A proxy. Pick one; combine when you need defense in depth."
+		/>
+		<HomeCard
+			href="/concepts/identity/"
+			title="Identity"
+			icon="◉"
+			body="SPIFFE / SVID, IDP attestation, the agent identity that scopes every credential and rule. Workload identity for AI agents."
+		/>
+		<HomeCard
+			href="/concepts/credentials/"
+			title="Credentials"
+			icon="✱"
+			body="Call-site brokering of short-lived scoped tokens from Vault, AWS, GCP, Azure. The agent never holds a secret."
+		/>
+		<HomeCard
+			href="/concepts/auditing/"
+			title="Auditing"
+			icon="✓"
+			body="Decision Provenance Records, hash-chained WAL, KMS signing, faramesh audit verify. Tamper-evident by construction."
+		/>
+		<HomeCard
+			href="/concepts/kms/"
+			title="KMS & signing"
+			icon="⎔"
+			body="External signing for DPR chains so daemon compromise cannot forge audit. AWS KMS, GCP KMS, Vault Transit, Azure Key Vault."
+		/>
+	</HomeGrid>
+</HomeSection>
 
-<Steps>
+<HomeSection label="CLI & SDKs" intro="The CLI is the primary interface. The SDKs wire it into your agent.">
+	<HomeGrid cols={2}>
+		<HomeCard
+			href="/cli/"
+			title="Faramesh CLI"
+			icon="$"
+			body="init, check, plan, apply, dev, approvals, audit, explain, rollback, credential. The single binary that operates a stack."
+		/>
+		<HomeCard
+			href="/fpl/"
+			title="FPL language"
+			icon="ƒ"
+			body="The grammar of governance.fms — imports, runtime, providers, agents, rules, budgets, rate limits, redaction, egress, alerts."
+		/>
+		<HomeCard
+			href="/sdks/python/"
+			title="Python SDK"
+			icon="P"
+			body="GovernedToolSet for LangGraph, LangChain, CrewAI, OpenAI Agents. ToolDeniedException with the structured denial payload."
+		/>
+		<HomeCard
+			href="/sdks/node/"
+			title="Node SDK"
+			icon="N"
+			body="governedTools() for the AI SDK, Mastra, and custom Node runtimes. ToolDeniedError with the same payload shape."
+		/>
+	</HomeGrid>
 
-1. **Install the CLI.**
+	<p class="home-section__more">
+		<a href="/cli/">CLI reference →</a> &nbsp;
+		<a href="/fpl/">FPL reference →</a> &nbsp;
+		<a href="/stack/">Stack reference →</a>
+	</p>
+</HomeSection>
 
-   <Tabs>
-     <TabItem label="curl">
-       ```bash
-       curl -fsSL https://raw.githubusercontent.com/faramesh/faramesh-core/main/install.sh | bash
-       ```
-     </TabItem>
-     <TabItem label="npm">
-       ```bash
-       npx @faramesh/cli@latest
-       ```
-     </TabItem>
-     <TabItem label="Homebrew">
-       ```bash
-       brew install faramesh/tap/faramesh
-       ```
-     </TabItem>
-   </Tabs>
+<HomeSection label="Operate" intro="Production posture, evidence, and the hosted control plane.">
+	<HomeGrid cols={2}>
+		<HomeCard
+			href="/security/"
+			title="Security model"
+			icon="⛨"
+			body="Threats, guarantees, and explicit limits. Per-environment posture matrix for local, staging, production, and air-gapped."
+		/>
+		<HomeCard
+			href="/errors/"
+			title="Denial codes"
+			icon="!"
+			body="Structured payloads for POLICY_DENY, POLICY_DEFER, RATE_EXCEEDED, BUDGET_EXCEEDED, COMPLETION_BLOCKED, and the rest."
+		/>
+		<HomeCard
+			href="/registry/"
+			title="Registry"
+			icon="⊟"
+			body="Signed, pinned distribution of providers, policy packs, and framework profiles. Trust roots, bundle export, self-host."
+		/>
+		<HomeCard
+			href="/cloud/"
+			title="Faramesh Cloud"
+			icon="☁"
+			body="Fleet visibility, the approvals UI, the DPR replica, compliance reporting. Never in the enforcement path."
+		/>
+	</HomeGrid>
+</HomeSection>
 
-2. **Generate `governance.fms`** in your agent project.
+<HomeSection label="Use cases" intro="Production patterns we see most often. Full policy snippets for each.">
+	<HomeGrid cols={3}>
+		<HomeCard
+			href="/use-cases/#1-payments-and-money-movement"
+			title="Payments agents"
+			body="Hard dollar ceilings, redacted card data, human approval over a threshold."
+		/>
+		<HomeCard
+			href="/use-cases/#3-coding-agents"
+			title="Coding agents"
+			body="Read everything, edit source, never run shell exec or git force-push."
+		/>
+		<HomeCard
+			href="/use-cases/#2-customer-support-agents"
+			title="Customer support"
+			body="Email confined to your domain. Cancellations need a click."
+		/>
+		<HomeCard
+			href="/use-cases/#6-multi-tenant-saas-agents"
+			title="Multi-tenant SaaS"
+			body="Cross-tenant access fails closed. Every violation pages on-call."
+		/>
+		<HomeCard
+			href="/use-cases/#7-regulated-workloads-hipaa-soc-2-pci"
+			title="Regulated workloads"
+			body="KMS-signed evidence, redaction by default, auditor-ready exports."
+		/>
+		<HomeCard
+			href="/use-cases/#8-autonomous-web-agents"
+			title="Autonomous web agents"
+			body="Bounded crawl, no uploads without approval, daily browsing budget."
+		/>
+	</HomeGrid>
 
-   ```bash
-   faramesh init
-   ```
-
-3. **Compile and start enforcement.**
-
-   ```bash
-   faramesh check
-   faramesh apply
-   ```
-
-4. **Wire your agent.** Drop in the SDK shim or point an MCP client at the proxy port.
-
-   See the [frameworks index](/frameworks/) for a one-page per framework.
-
-</Steps>
-
-<LinkButton href="/quickstart/" variant="primary">Walk through the full quickstart →</LinkButton>
-
-## How it works
-
-<FeatureGrid items={[
-  {
-    icon: '⚖',
-    title: 'Policy as a single file',
-    body: 'governance.fms declares agents, rules, budgets, rate limits, redaction, egress, and approvals. FPL by default; YAML and JSON are equivalent.',
-    href: '/stack/',
-    cta: 'Stack reference',
-  },
-  {
-    icon: '🛡',
-    title: 'Deterministic enforcement',
-    body: 'The daemon compiles policy once at apply, then evaluates every tool call against a deterministic AST. No LLM judges, no surprises.',
-    href: '/concepts/enforcement/',
-    cta: 'Enforcement',
-  },
-  {
-    icon: '🪝',
-    title: 'Four ways to intercept',
-    body: 'SDK shim for native agents, MCP and HTTP proxy for off-the-shelf clients, A2A proxy for cross-agent delegation. Combine if you need to.',
-    href: '/concepts/interception/',
-    cta: 'Interception',
-  },
-  {
-    icon: '🔑',
-    title: 'Credentials never leak',
-    body: 'Vault, AWS, GCP, Azure, and SPIFFE providers mint short-lived, scoped credentials at the call site. The agent never holds a long-lived secret.',
-    href: '/concepts/credentials/',
-    cta: 'Credentials',
-  },
-  {
-    icon: '📜',
-    title: 'Tamper-evident evidence',
-    body: 'Every decision is a Decision Provenance Record in a hash-chained WAL, optionally KMS-signed. faramesh audit verify walks the chain.',
-    href: '/concepts/auditing/',
-    cta: 'Auditing',
-  },
-  {
-    icon: '🧑‍⚖️',
-    title: 'Human approvals built in',
-    body: 'Deferred actions land in the approvals inbox. Operators approve, deny, or promote to a rule. Agents resume seamlessly.',
-    href: '/cli/#approvals',
-    cta: 'Approval workflow',
-  },
-]} />
-
-## Real use cases
-
-Faramesh is built for agents that touch money, customer data, infrastructure, and code. A few patterns we see in production:
-
-<CardGrid>
-  <LinkCard
-    title="Payments agents"
-    description="Hard dollar ceilings, human approval over a threshold, redacted card data."
-    href="/use-cases/#1-payments-and-money-movement"
-  />
-  <LinkCard
-    title="Coding agents"
-    description="Read everything, edit source, never run a free-form shell or git force-push."
-    href="/use-cases/#3-coding-agents"
-  />
-  <LinkCard
-    title="Customer support"
-    description="Email confined to your own domain. Cancellations need a click."
-    href="/use-cases/#2-customer-support-agents"
-  />
-  <LinkCard
-    title="Multi-tenant SaaS"
-    description="Cross-tenant access fails closed. Every violation pages on-call."
-    href="/use-cases/#6-multi-tenant-saas-agents"
-  />
-  <LinkCard
-    title="Regulated workloads"
-    description="KMS-signed evidence chain, redaction by default, exportable for auditors."
-    href="/use-cases/#7-regulated-workloads-hipaa-soc-2-pci"
-  />
-  <LinkCard
-    title="Autonomous web agents"
-    description="Bounded crawl, no uploads without approval, daily browsing budget."
-    href="/use-cases/#8-autonomous-web-agents"
-  />
-</CardGrid>
-
-[See every pattern →](/use-cases/)
-
-## Pick your framework
-
-Faramesh wires into the place where your agent decides what to call.
-
-<CardGrid>
-  <LinkCard
-    title="LangGraph"
-    description="SDK shim. Wrap your tool list with GovernedToolSet."
-    href="/frameworks/langgraph/"
-  />
-  <LinkCard
-    title="LangChain"
-    description="Same SDK shim, classic chains and agents."
-    href="/frameworks/langchain/"
-  />
-  <LinkCard
-    title="OpenAI Agents"
-    description="Drop-in adapter for the Agents SDK."
-    href="/frameworks/openai-agents/"
-  />
-  <LinkCard
-    title="CrewAI"
-    description="Govern crews end-to-end."
-    href="/frameworks/crewai/"
-  />
-  <LinkCard
-    title="Claude Code"
-    description="MCP proxy. Point Claude Code at Faramesh and every tool call is governed."
-    href="/frameworks/claude-code/"
-  />
-  <LinkCard
-    title="Bedrock"
-    description="HTTP proxy in front of the Bedrock action group invocation."
-    href="/frameworks/bedrock/"
-  />
-</CardGrid>
-
-[See the full framework matrix →](/frameworks/)
-
-## A complete policy in one page
-
-Below is a real `governance.fms`. Faramesh compiles it once at `faramesh apply` and the daemon enforces every block live.
-
-```fpl
-import "registry.faramesh.dev/frameworks/langgraph@1.0.0"
-import "registry.faramesh.dev/policies/pci-dss@1.2.0" as pci
-
-runtime {
-  mode    = "enforce"
-  wal_dir = "./faramesh-wal"
-  backend = "sqlite"
-}
-
-provider "vault" {
-  type      = "vault"
-  addr      = env("VAULT_ADDR")
-  token     = env("VAULT_TOKEN")
-  mount     = "kv/data/payments"
-}
-
-agent "payments-bot" {
-  default deny
-
-  rules {
-    permit stripe/charge   if amount < $500
-    defer  stripe/refund
-    deny   stripe/payouts
-    permit health/*
-  }
-
-  rate_limit "stripe/*": 10 per minute
-
-  redact stripe/charge args: ["card_number", "cvv"]
-
-  budget daily {
-    max       $500
-    warn_at   0.8
-    on_exceed deny
-  }
-
-  egress {
-    allow = ["api.stripe.com", "api.faramesh.dev"]
-  }
-
-  alert {
-    on     = "deny"
-    notify = "slack://#sec-alerts"
-  }
-}
-```
-
-<CardGrid>
-  <LinkCard title="Stack reference" description="Every block, every field." href="/stack/" />
-  <LinkCard title="FPL syntax" description="Grammar, types, examples." href="/fpl/" />
-  <LinkCard title="Providers" description="Vault, AWS, GCP, Azure, SPIFFE, audit sinks." href="/providers/" />
-  <LinkCard title="CLI" description="Every command, every flag." href="/cli/" />
-</CardGrid>
-
-## Operating Faramesh
-
-<CardGrid>
-  <LinkCard title="Quickstart" description="From an empty repo to a governed agent in five steps." href="/quickstart/" />
-  <LinkCard title="Workflows" description="First apply, change policy, monitor live." href="/flows/" />
-  <LinkCard title="Local runs" description="Run Faramesh without external secret backends." href="/dev/" />
-  <LinkCard title="Registry" description="Import providers and policy packs by semver." href="/registry/" />
-  <LinkCard title="Security model" description="Threats, mitigations, and explicit limits." href="/security/" />
-  <LinkCard title="Denial codes" description="Structured error payloads agents and SDKs understand." href="/errors/" />
-</CardGrid>
-
-## Faramesh Cloud
-
-When one stack is no longer enough, **Faramesh Cloud** is the hosted operating console for the same runtime — orgs, projects, an approvals UI, an evidence browser, and fleet visibility.
-
-The daemon stays the enforcement truth. Cloud is the surface security and platform teams operate through.
-
-<LinkButton href="/cloud/" variant="primary">Learn about Faramesh Cloud →</LinkButton>
+	<p class="home-section__more">
+		<a href="/use-cases/">See every pattern →</a>
+	</p>
+</HomeSection>
