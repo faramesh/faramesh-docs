@@ -84,7 +84,7 @@ except ToolDeniedException as denial:
 ## Example `governance.fms`
 
 ```hcl title="governance.fms"
-import "registry.faramesh.dev/frameworks/openai-agents@1.0.0"
+import "github.com/faramesh/faramesh-registry/frameworks/openai-agents@1.0.0"
 
 agent "ops" {
   default deny

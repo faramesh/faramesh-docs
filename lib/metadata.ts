@@ -35,8 +35,15 @@ export const rootMetadata: Metadata = {
   creator: 'Faramesh',
   publisher: 'Faramesh',
   keywords: defaultKeywords,
+  category: 'technology',
+  other: {
+    'ai-content-declaration': 'human-authored-technical-documentation',
+  },
   alternates: {
     canonical: '/',
+    types: {
+      'text/markdown': `${siteUrl}/llms-full.txt`,
+    },
   },
   openGraph: {
     type: 'website',

@@ -20,7 +20,7 @@ Bedrock agent  →  Faramesh HTTP proxy  →  Action group handler (Lambda)
 ### 1. Declare the HTTP listener
 
 ```hcl title="governance.fms"
-import "registry.faramesh.dev/frameworks/bedrock@1.0.0"
+import "github.com/faramesh/faramesh-registry/frameworks/bedrock@1.0.0"
 
 runtime {
   mode        = "enforce"

@@ -35,7 +35,7 @@ A credential spec is derived from the rule and the tool's metadata:
 For example, a Stripe tool registers itself with the framework profile `stripe@1.3.0`. The profile declares the credential spec; the daemon resolves it at call time:
 
 ```hcl title="governance.fms"
-import "registry.faramesh.dev/policies/stripe@1.3.0" as stripe_rules
+import "github.com/faramesh/faramesh-registry/policies/stripe@1.3.0" as stripe_rules
 provider "vault" { type = "vault"; addr = env("VAULT_ADDR"); ... }
 ```
 

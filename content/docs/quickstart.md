@@ -45,7 +45,7 @@ Next steps:
 Faramesh writes a `governance.fms` like this:
 
 ```hcl title="governance.fms"
-import "registry.faramesh.dev/frameworks/langgraph@1.0.0"
+import "github.com/faramesh/faramesh-registry/frameworks/langgraph@1.0.0"
 
 runtime {
   mode    = "enforce"

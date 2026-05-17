@@ -24,7 +24,7 @@ The proxy is transparent. Approved calls forward to the upstream MCP server and 
 In `governance.fms`:
 
 ```hcl title="governance.fms"
-import "registry.faramesh.dev/frameworks/mcp@1.0.0"
+import "github.com/faramesh/faramesh-registry/frameworks/mcp@1.0.0"
 
 runtime {
   mode           = "enforce"

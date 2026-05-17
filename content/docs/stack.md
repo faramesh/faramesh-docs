@@ -14,8 +14,8 @@ A Faramesh **stack** is a directory containing one governance file:
 ## Top-level structure
 
 ```hcl title="governance.fms"
-import   "registry.faramesh.dev/frameworks/langgraph@1.0.0"
-import   "registry.faramesh.dev/policies/pci-dss@1.2.0" as pci
+import   "github.com/faramesh/faramesh-registry/frameworks/langgraph@1.0.0"
+import   "github.com/faramesh/faramesh-registry/policies/pci-dss@1.2.0" as pci
 
 runtime  { ... }
 provider "vault"  { ... }
@@ -45,9 +45,9 @@ The blocks below are in the order you typically declare them.
 Pull a versioned artifact from a registry. Imports are resolved at `faramesh check`.
 
 ```hcl title="governance.fms"
-import "registry.faramesh.dev/frameworks/langgraph@1.0.0"
-import "registry.faramesh.dev/policies/stripe@1.3.0" as stripe_rules
-import "registry.faramesh.dev/providers/vault@2.1.0"
+import "github.com/faramesh/faramesh-registry/frameworks/langgraph@1.0.0"
+import "github.com/faramesh/faramesh-registry/policies/stripe@1.3.0" as stripe_rules
+import "github.com/faramesh/faramesh-registry/providers/vault@2.1.0"
 ```
 
 - A pinned semver is required. `@latest` is rejected.
@@ -121,7 +121,7 @@ Public-key trust roots for verifying signed registry artifacts. The daemon verif
 
 ```hcl title="governance.fms"
 trust {
-  key "registry.faramesh.dev" ed25519:MCowBQYDK2VwAyEA...
+  key "github.com/faramesh/faramesh-registry" ed25519:MCowBQYDK2VwAyEA...
 }
 ```
 

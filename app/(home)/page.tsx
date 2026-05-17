@@ -11,10 +11,10 @@ export default function HomePage() {
         eyebrow="Faramesh"
         title="Governance as code for AI agents."
         body="Declare policy in FPL, enforce it on every tool call, and keep a tamper-evident audit trail. The daemon runs beside your agent; Faramesh Cloud is optional fleet visibility."
-        primaryHref="/quickstart"
-        primaryLabel="Quickstart →"
-        secondaryHref="/concepts/how-it-works"
-        secondaryLabel="How it works"
+        primaryHref="/introduction"
+        primaryLabel="Why Faramesh →"
+        secondaryHref="/quickstart"
+        secondaryLabel="Quickstart"
       />
 
       <HomeSection

@@ -52,7 +52,7 @@ Use one `GovernedToolSet` per agent so each member has its own identity in polic
 ## Per-role policy
 
 ```hcl title="governance.fms"
-import "registry.faramesh.dev/frameworks/crewai@1.0.0"
+import "github.com/faramesh/faramesh-registry/frameworks/crewai@1.0.0"
 
 agent "research-crew/researcher" {
   default deny

@@ -80,7 +80,7 @@ See [Denial codes](/errors/).
 ## Example `governance.fms`
 
 ```hcl title="governance.fms"
-import "registry.faramesh.dev/frameworks/langgraph@1.0.0"
+import "github.com/faramesh/faramesh-registry/frameworks/langgraph@1.0.0"
 
 agent "support-bot" {
   default deny

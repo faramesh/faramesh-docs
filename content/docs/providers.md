@@ -184,7 +184,7 @@ Provider binaries are verified against the `trust` block in `governance.fms`:
 
 ```hcl title="governance.fms"
 trust {
-  key "registry.faramesh.dev" ed25519:MCowBQYDK2VwAyEA...
+  key "github.com/faramesh/faramesh-registry" ed25519:MCowBQYDK2VwAyEA...
 }
 ```
 

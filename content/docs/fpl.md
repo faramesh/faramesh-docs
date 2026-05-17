@@ -11,8 +11,8 @@ This page is the language reference. For block semantics see [Stack reference](/
 
 ```hcl title="governance.fms"
 # Optional imports
-import "registry.faramesh.dev/frameworks/langgraph@1.0.0"
-import "registry.faramesh.dev/policies/stripe@1.3.0" as stripe_rules
+import "github.com/faramesh/faramesh-registry/frameworks/langgraph@1.0.0"
+import "github.com/faramesh/faramesh-registry/policies/stripe@1.3.0" as stripe_rules
 
 # Top-level configuration blocks
 runtime  { ... }
@@ -96,7 +96,7 @@ A free-form block of trust-root declarations parsed line-by-line. Used to verify
 
 ```hcl title="governance.fms"
 trust {
-  key "registry.faramesh.dev" ed25519:MCowBQYDK2VwAyEA...
+  key "github.com/faramesh/faramesh-registry" ed25519:MCowBQYDK2VwAyEA...
 }
 ```
 

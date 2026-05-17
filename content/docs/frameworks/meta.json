@@ -1,0 +1,12 @@
+{
+  "title": "Framework guides",
+  "pages": [
+    "langgraph",
+    "langchain",
+    "openai-agents",
+    "crewai",
+    "claude-code",
+    "cursor",
+    "bedrock"
+  ]
+}
