@@ -32,7 +32,6 @@
     "sdks/python",
     "sdks/typescript",
     "---REGISTRY---",
-    "registry",
     "...registry",
     "---FRAMEWORKS---",
     "...frameworks",

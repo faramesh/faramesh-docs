@@ -34,4 +34,8 @@ faramesh registry info frameworks/langgraph@1.0.0
 
 See the live index on GitHub: [catalog/catalog.json](https://github.com/faramesh/faramesh-registry/blob/main/catalog/catalog.json).
 
-Production-oriented starters include Vault and SPIFFE providers, Stripe/shell/GitHub/OpenAI/MCP policy packs, and framework profiles for LangGraph, MCP clients, Bedrock, and more.
+**Providers:** `faramesh/vault` and `faramesh/spiffe` are intended for production use (with your Vault/SPIRE). `faramesh/dev-kms` is dev-only.
+
+**Policy packs:** `stripe` and `shell` are substantive starter packs. `openai`, `github`, and `mcp` are baselines you should review and extend before production.
+
+**Framework profiles** are short FPL fragments (typically under 15 lines) that set the framework id and default posture — that is expected, not incomplete packaging.
