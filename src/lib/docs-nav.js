@@ -130,6 +130,12 @@ const pathMatchers = docsSections
 	)
 	.sort((left, right) => right.match.length - left.match.length);
 
+/** Serializable matchers for client-side section detection in Header.astro */
+export const sectionPathMatchers = pathMatchers.map(({ section, match }) => ({
+	id: section.id,
+	match,
+}));
+
 export function normalizePathname(pathname) {
 	if (!pathname || pathname === '/') {
 		return '/';

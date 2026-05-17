@@ -32,7 +32,7 @@ export default defineConfig({
 				Sidebar: './src/components/Sidebar.astro',
 				PageTitle: './src/components/PageTitle.astro',
 			},
-			customCss: ['./src/styles/custom.css'],
+			customCss: ['./src/styles/custom.css', './src/styles/home.css'],
 			favicon: '/faramesh-icon-primary-white.svg',
 			head: [
 				{

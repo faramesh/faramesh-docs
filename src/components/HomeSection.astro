@@ -5,78 +5,9 @@ const { label, intro } = Astro.props;
 <section class="home-section">
 	<header class="home-section__head">
 		<span class="home-section__label">[{label}]</span>
-		{intro && <p class="home-section__intro"><slot name="intro" />{intro}</p>}
+		{intro && <p class="home-section__intro">{intro}</p>}
 	</header>
 	<div class="home-section__body">
 		<slot />
 	</div>
 </section>
-
-<style>
-	.home-section {
-		margin: 2rem 0 0;
-	}
-
-	.home-section__head {
-		display: grid;
-		gap: 0.4rem;
-		margin: 0 0 0.85rem;
-	}
-
-	.home-section__label {
-		display: inline-block;
-		width: fit-content;
-		padding: 0.18rem 0.55rem 0.2rem;
-		font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-		font-size: 0.7rem;
-		font-weight: 600;
-		letter-spacing: 0.06em;
-		color: var(--sl-color-accent-high);
-		background: color-mix(in srgb, var(--sl-color-accent) 14%, transparent);
-		border: 1px solid color-mix(in srgb, var(--sl-color-accent) 30%, transparent);
-		border-radius: 0.25rem;
-		text-transform: uppercase;
-	}
-
-	.home-section__intro {
-		margin: 0;
-		font-size: 0.92rem;
-		color: var(--sl-color-gray-2);
-		line-height: 1.55;
-		max-width: 64ch;
-	}
-
-	.home-section__body {
-		display: grid;
-		gap: 0.6rem;
-	}
-
-	.home-section__body :global(.home-section__more) {
-		margin: 0.85rem 0 0;
-		font-size: 0.88rem;
-	}
-
-	.home-section__body :global(.home-section__more a) {
-		color: var(--sl-color-accent-high);
-		text-decoration: none;
-		font-weight: 600;
-	}
-
-	.home-section__body :global(.home-section__more a:hover) {
-		text-decoration: underline;
-	}
-
-	:global(:root[data-theme='light']) .home-section__label {
-		color: #1d4ed8;
-		background: #eff6ff;
-		border-color: #bfdbfe;
-	}
-
-	:global(:root[data-theme='light']) .home-section__intro {
-		color: #475569;
-	}
-
-	:global(:root[data-theme='light']) .home-section__body :global(.home-section__more a) {
-		color: #1d4ed8;
-	}
-</style>

@@ -1,7 +1,7 @@
 ---
 import Search from '@astrojs/starlight/components/Search.astro';
 import ThemeSelect from '@astrojs/starlight/components/ThemeSelect.astro';
-import { getSectionForPath, headerSections } from '../lib/docs-nav.js';
+import { getSectionForPath, headerSections, sectionPathMatchers } from '../lib/docs-nav.js';
 
 import logoDark from '../assets/logo-docs-dark-.svg';
 import logoLight from '../assets/docs-logo-light.svg';
@@ -508,15 +508,7 @@ const mobileSectionsData = headerSections.map((section) => ({
 	}
 </style>
 
-<script is:inline define:vars={{ mobileSectionsData }}>
-
-	const sectionMatchers = [
-		{ id: 'getting-started', matches: ['/getting-started/', '/'] },
-		{ id: 'concepts', matches: ['/concepts/', '/architecture/', '/security/', '/advanced/'] },
-		{ id: 'integrations', matches: ['/integrations/'] },
-		{ id: 'policies', matches: ['/policies/', '/identity/', '/hitl/', '/deployment/'] },
-		{ id: 'reference', matches: ['/reference/'] },
-	];
+<script is:inline define:vars={{ mobileSectionsData, sectionPathMatchers }}>
 
 	function normalizePathname(pathname) {
 		if (!pathname || pathname === '/') return '/';
@@ -525,26 +517,24 @@ const mobileSectionsData = headerSections.map((section) => ({
 
 	function getSectionIdForPath(pathname) {
 		const normalized = normalizePathname(pathname);
-		const pathMatchers = sectionMatchers
-			.flatMap(section =>
-				section.matches
-					.filter(m => m !== '/')
-					.map(match => ({ section: section.id, match }))
-			)
-			.sort((a, b) => b.match.length - a.match.length);
-
-		const matched = pathMatchers.find(({ match }) => normalized.startsWith(match));
-		return matched ? matched.section : 'getting-started';
+		const matched = sectionPathMatchers.find(({ match }) => normalized.startsWith(match));
+		return matched ? matched.id : 'start';
 	}
 
 	function updateActiveTab() {
 		const sectionId = getSectionIdForPath(window.location.pathname);
 		const tabs = document.querySelectorAll('.site-tabs__item');
 
-		tabs.forEach(tab => {
-			const isActive = tab.href.includes(`/${sectionId}/`);
+		tabs.forEach((tab) => {
+			const tabPath = new URL(tab.href, window.location.origin).pathname;
+			const tabSectionId = getSectionIdForPath(tabPath);
+			const isActive = tabSectionId === sectionId;
 			tab.classList.toggle('site-tabs__item--active', isActive);
-			tab.setAttribute('aria-current', isActive ? 'page' : 'false');
+			if (isActive) {
+				tab.setAttribute('aria-current', 'page');
+			} else {
+				tab.removeAttribute('aria-current');
+			}
 		});
 	}
 
@@ -649,10 +639,14 @@ const mobileSectionsData = headerSections.map((section) => ({
 		updateNavHeight();
 	});
 
+	let resizeRaf = 0;
 	window.addEventListener('resize', () => {
-		// throttling not necessary for small site; keep simple
-		updateNavHeight();
-	});
+		if (resizeRaf) cancelAnimationFrame(resizeRaf);
+		resizeRaf = requestAnimationFrame(() => {
+			resizeRaf = 0;
+			updateNavHeight();
+		});
+	}, { passive: true });
 
 	// When details elements in mobile menu expand/collapse, recalculate header height
 	const mobilePages = document.querySelector('.site-mobile-pages');
