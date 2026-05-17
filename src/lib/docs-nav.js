@@ -30,6 +30,7 @@ export const docsSections = [
 					{ slug: 'concepts/enforcement', label: 'Enforcement' },
 					{ slug: 'concepts/interception', label: 'Interception' },
 					{ slug: 'concepts/identity', label: 'Identity' },
+					{ slug: 'concepts/topologies', label: 'Topologies' },
 					{ slug: 'concepts/credentials', label: 'Credentials' },
 					{ slug: 'concepts/auditing', label: 'Auditing' },
 					{ slug: 'concepts/kms', label: 'KMS & signing' },
@@ -57,7 +58,7 @@ export const docsSections = [
 				items: [
 					{ slug: 'cli', label: 'CLI reference' },
 					{ slug: 'sdks/python', label: 'Python SDK' },
-					{ slug: 'sdks/node', label: 'Node SDK' },
+					{ slug: 'sdks/typescript', label: 'TypeScript SDK' },
 				],
 			},
 			{

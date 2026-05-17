@@ -53,7 +53,7 @@ agent = Agent(name="ops", instructions="...", tools=tools)
 
 The adapter accepts the SDK's `function_tool`-decorated functions directly.
 
-## Node SDK
+## TypeScript SDK
 
 ```ts
 import { Agent } from '@openai/agents';

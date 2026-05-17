@@ -16,7 +16,7 @@ Pick the tier that matches your runtime, then read the per-framework page.
 
 ## Native SDK frameworks
 
-These get the **SDK shim**. You import `GovernedToolSet` (Python) or `governedTools` (Node) and pass it your tool list. Every tool call routes through the Faramesh daemon before execution.
+These get the **SDK shim**. You import `GovernedToolSet` (Python) or `governedTools` (TypeScript) and pass it your tool list. Every tool call routes through the Faramesh daemon before execution.
 
 - [LangGraph](/frameworks/langgraph/)
 - [LangChain](/frameworks/langchain/)

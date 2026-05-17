@@ -1,9 +1,11 @@
 ---
-title: Node SDK
-description: governedTools, ToolDeniedError, and transport configuration for Faramesh's TypeScript / Node.js SDK.
+title: TypeScript SDK
+description: governedTools, ToolDeniedError, and transport configuration for Faramesh's TypeScript SDK — the path for TS-native agent runtimes.
 ---
 
-The Node SDK wraps tool collections from Mastra, the Vercel AI SDK, and any TypeScript framework that exposes a tool registry. Every tool invocation flows through the daemon before execution.
+The TypeScript SDK is the in-process integration point for TypeScript agent runtimes — Mastra, the Vercel AI SDK, LangGraph.js, OpenAI Agents JS, and any custom TS framework that exposes a tool registry. Every tool invocation flows through the daemon before execution.
+
+The package targets modern TypeScript ESM. It works in Node, in serverless runtimes (Vercel, Cloudflare Workers, AWS Lambda), and in any environment where you can execute fetch.
 
 ## Install
 
@@ -13,7 +15,7 @@ npm install @faramesh/sdk
 pnpm add @faramesh/sdk
 ```
 
-Requires Node 18+. ESM-first, with a CommonJS build for legacy projects.
+Requires Node 18+ for non-edge runtimes. ESM-first, with a CommonJS build for legacy projects.
 
 ## `governedTools`
 
@@ -32,6 +34,7 @@ The wrapper accepts:
 - A Vercel AI SDK `ToolSet` (object form) — most common
 - An array of tools that follow the AI SDK `tool({ ... })` shape
 - A Mastra `Agent`'s `tools` registry
+- A LangGraph.js / OpenAI Agents JS tool list
 - Plain async functions, treated as tools named after the property key
 
 It returns a registry of the same shape, so consumers don't change.
@@ -130,7 +133,7 @@ Same priority order as the Python SDK:
 
 | Order | Variable | Mechanism |
 |-------|----------|-----------|
-| 1 | `FARAMESH_REMOTE_URL` | HTTPS to a remote daemon. Use for Vercel, Cloudflare Workers, or any serverless runtime. |
+| 1 | `FARAMESH_REMOTE_URL` | HTTPS to a remote daemon. Use for Vercel, Cloudflare Workers, Lambda, or any serverless runtime where there is no local daemon — see [Topologies → serverless agents](/concepts/topologies/#situation-8-serverless-agent). |
 | 2 | `FARAMESH_SOCKET` | Unix socket. Default for local stacks. |
 | 3 | `FARAMESH_BASE_URL` | HTTPS to a local daemon listening on a port. |
 
@@ -145,11 +148,13 @@ const tools = governedTools(toolSet, {
 });
 ```
 
-For Workers / Edge: pass the `fetch` from your runtime — the SDK does not import `node:` modules in the HTTP path.
+For Workers / Edge runtimes that don't expose `node:` modules, pass the runtime's `fetch`:
 
 ```ts
 new HttpTransport("https://eval.internal", { fetch: globalThis.fetch });
 ```
+
+The SDK avoids importing any Node-only module on the HTTP code path.
 
 ## Forwarded metadata
 
@@ -163,6 +168,17 @@ The SDK propagates a known set of fields to the daemon as condition variables:
 | `tags` | Free-form tag list usable in conditions |
 
 Anything else is dropped at the wrapper boundary.
+
+## Multi-agent processes
+
+If your TS process hosts more than one logical agent (a supervisor and its workers, or several agents sharing a runtime), wrap each tool registry with the appropriate `agentId`. The daemon evaluates each call against the matching `agent { ... }` block in `governance.fms`. Multi-agent in one process is one stack — see [Topologies](/concepts/topologies/).
+
+```ts
+const supervisorTools = governedTools(supervisorToolSet, { agentId: "supervisor" });
+const workerTools     = governedTools(workerToolSet,     { agentId: "worker" });
+```
+
+Spawned sub-agents must be declared in the same `governance.fms` and use distinct `agentId`s. Their identities are still attested by the configured identity provider — see [Identity](/concepts/identity/).
 
 ## Testing
 
@@ -178,10 +194,11 @@ const tools = governedTools(toolSet, {
 });
 ```
 
-Use this in your unit / integration tests to assert your agent handles denials and defers without reaching for the daemon.
+Use this in unit / integration tests to assert your agent handles denials and defers without reaching for the daemon.
 
 ## What's next
 
 - [Mastra](/frameworks/mastra/) — full wiring example
 - [Vercel AI SDK](/frameworks/vercel-ai-sdk/)
+- [Topologies](/concepts/topologies/) — where the TypeScript SDK fits in single-machine, multi-agent, sub-agent, sidecar, and serverless deployments
 - [Denial codes](/errors/) — every payload the SDK can throw

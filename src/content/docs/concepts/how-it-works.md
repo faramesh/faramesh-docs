@@ -84,6 +84,14 @@ After `apply`, the daemon **does not re-read the source file**. Hot policy chang
 | Providers | Subprocess | Mint secrets, sign DPRs, ship audit records. |
 | SDK shim / proxy | Agent process or proxy port | Intercepts the call. |
 
+## Stacks, agents, deployments
+
+A **stack** is one `governance.fms` plus one logical daemon plus one audit chain. It is the unit of governance.
+
+A stack can declare many agents. Multiple agents in one process is one stack. A supervisor that spawns workers is one stack. Ten replicas of the same agent across ten machines is **one stack with ten instances**, not ten stacks. Stacks split only when the governance context truly differs — different environments, different teams, different identity providers.
+
+The complete enumeration — laptop, multi-agent, supervisor + workers, horizontal scale, dev/staging/prod, multi-team, Kubernetes sidecar, serverless + remote daemon, engineering team fleet, multi-cloud multi-region — is on [Topologies](/concepts/topologies/). It's the page to read before designing a deployment.
+
 ## Why deterministic matters
 
 The decision engine is intentionally **not** an LLM. Every reviewable property of the system — the rule that fired, the conditions that matched, the redactions applied, the credential that was minted — is reproducible from `(policy, action payload)` alone. That means:
@@ -96,6 +104,8 @@ The decision engine is intentionally **not** an LLM. Every reviewable property o
 
 - [Enforcement](/concepts/enforcement/) — the pipeline in depth
 - [Interception](/concepts/interception/) — how Faramesh sits in front of the agent
+- [Identity](/concepts/identity/) — workload identity for AI agents and sub-agents
+- [Topologies](/concepts/topologies/) — every realistic deployment shape
 - [Auditing](/concepts/auditing/) — DPR, WAL, hash chain, verification
 - [Credentials](/concepts/credentials/) — provider broker and credential sequestration
 - [Security model](/security/) — threats, guarantees, and limits

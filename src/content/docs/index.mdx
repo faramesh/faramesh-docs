@@ -73,7 +73,7 @@ import HomeCard from '../../components/HomeCard.astro';
 	</p>
 </HomeSection>
 
-<HomeSection label="Concepts" intro="What's actually happening inside the daemon.">
+<HomeSection label="Concepts" intro="What's actually happening inside the daemon, end to end.">
 	<HomeGrid cols={2}>
 		<HomeCard
 			href="/concepts/enforcement/"
@@ -91,7 +91,13 @@ import HomeCard from '../../components/HomeCard.astro';
 			href="/concepts/identity/"
 			title="Identity"
 			icon="◉"
-			body="SPIFFE / SVID, IDP attestation, the agent identity that scopes every credential and rule. Workload identity for AI agents."
+			body="SPIFFE / SVID, IDP attestation, multi-agent processes, sub-agent delegation chains. The identity model that holds the whole system together."
+		/>
+		<HomeCard
+			href="/concepts/topologies/"
+			title="Topologies"
+			icon="◇"
+			body="Ten deployment shapes — laptop, sidecar, serverless, multi-region. What counts as one stack and what splits into many."
 		/>
 		<HomeCard
 			href="/concepts/credentials/"
@@ -135,10 +141,10 @@ import HomeCard from '../../components/HomeCard.astro';
 			body="GovernedToolSet for LangGraph, LangChain, CrewAI, OpenAI Agents. ToolDeniedException with the structured denial payload."
 		/>
 		<HomeCard
-			href="/sdks/node/"
-			title="Node SDK"
-			icon="N"
-			body="governedTools() for the AI SDK, Mastra, and custom Node runtimes. ToolDeniedError with the same payload shape."
+			href="/sdks/typescript/"
+			title="TypeScript SDK"
+			icon="T"
+			body="governedTools() for Mastra, the Vercel AI SDK, LangGraph.js, and OpenAI Agents JS. Works in Node, Workers, and Lambda. ToolDeniedError with the same payload shape."
 		/>
 	</HomeGrid>
 

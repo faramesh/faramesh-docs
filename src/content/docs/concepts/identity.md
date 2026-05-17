@@ -141,6 +141,60 @@ spiffe://localhost/dev/<hostname>/<stack-name>/<agent-id>
 
 Every DPR emitted in this mode is tagged so it cannot be confused with a production audit chain. When you switch to `faramesh apply`, the daemon refuses to launch in `enforce` mode without a real identity provider declared.
 
+## Multi-agent processes
+
+When one process hosts more than one logical agent (a supervisor and its workers, an event router that adopts a different identity per task type, a sidecar that proxies several agents), each agent must attest a distinct identity. The daemon refuses to evaluate calls that arrive on the same process under a different agent id without a fresh attestation.
+
+In practice this means:
+
+- The SDK shim is constructed once per agent, with the matching `agentId`.
+- SPIRE selectors should distinguish the agents (different process labels, thread ids, or namespace hints) so SPIRE issues a distinct SVID for each.
+- When that's not possible (one process, one Unix uid, no labels), use a **process-bound JWT** issued at agent boot — the daemon treats the JWT as the SVID for that agent's lifetime.
+
+## Sub-agents and delegation
+
+Supervisor / worker patterns are first-class. The supervisor is a declared agent. Each worker class it can spawn is also a declared agent. When a supervisor spawns a worker, the daemon:
+
+1. Verifies the worker's identity attestation independently — a fresh SVID issued for the worker process.
+2. Records a **delegation chain** in the worker's DPRs (`delegated_from = [supervisor.svid, ...]`).
+3. Applies the worker's own rules and budget, scoped by the supervisor's `delegate { ... }` block.
+
+```fpl
+agent "supervisor" {
+  spawn   { allow = ["worker-research", "worker-writer"] }
+  delegate {
+    to       = ["worker-research", "worker-writer"]
+    inherits = ["budget.daily"]                       # workers spend the supervisor's budget
+  }
+}
+
+agent "worker-research" {
+  rules {
+    permit web/fetch
+    deny   filesystem/write
+  }
+}
+```
+
+The audit chain shows the full identity path that produced an action — every supervisor and worker the request crossed, every SVID it carried, every trust domain it traversed. See [Topologies → situation 3](/concepts/topologies/#situation-3--one-agent-that-spawns-sub-agents-dynamically).
+
+## Identity across deployment shapes
+
+| Shape | Identity attestation |
+|-------|----------------------|
+| Single laptop, one agent | Local SPIRE agent or a developer-issued OIDC token. |
+| One machine, many agents | One SPIRE agent issuing distinct SVIDs per process selector. |
+| Sub-agents spawned at runtime | Each spawned process attests independently; SPIRE selectors include the parent + spawn metadata. |
+| Horizontal scale | All replicas share the same SPIFFE id (same agent identity), differentiated by instance metadata in the DPR. |
+| Multi-environment | Each environment has its own trust domain (`dev.corp.faramesh.dev`, `prod.corp.faramesh.dev`). |
+| Multi-team | Same trust domain, distinct SPIFFE paths (`/teams/payments/agents/...` vs `/teams/logistics/...`). |
+| Kubernetes | Projected service account token + SPIRE attestation via the K8s workload-attestor plugin. |
+| Serverless | Cloud-native workload identity (AWS IAM role, GCP service account, Azure managed identity) wrapped by a Faramesh adapter. |
+| Engineering team (Claude Code) | OIDC JWT minted at session start by the corporate IDP, mapped to a per-engineer SPIFFE id. |
+| Multi-cloud, multi-region | Per-region SPIRE servers federated under one trust domain, or cloud-native identity per region. |
+
+See [Topologies](/concepts/topologies/) for the full set of deployment shapes and what each one means for identity attestation.
+
 ## Trust domains
 
 The SPIFFE **trust domain** is the boundary across which identities are mutually trusted. One trust domain per organization is the default. For federated setups (multi-org agent collaboration), Faramesh supports SPIFFE federation: declare federated trust roots and the daemon will accept SVIDs from peer trust domains for cross-org A2A delegation.
@@ -167,6 +221,7 @@ Identity claims themselves are **not** in the DPR (they may contain PII). The ha
 
 ## What's next
 
+- [Topologies](/concepts/topologies/) — every deployment shape and what it means for identity
 - [Providers → SPIFFE](/providers/#spiffe--spire) — full SPIRE adapter configuration
 - [Credentials](/concepts/credentials/) — how identity scopes the credential broker
 - [Auditing](/concepts/auditing/) — how identity ties into the DPR chain
