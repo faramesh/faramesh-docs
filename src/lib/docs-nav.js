@@ -1,181 +1,63 @@
 export const docsSections = [
 	{
-		id: 'getting-started',
-		label: 'Getting Started',
-		href: '/getting-started/introduction/',
-		matches: ['/getting-started/', '/'],
+		id: 'start',
+		label: 'Start here',
+		href: '/',
+		matches: ['/', '/quickstart/', '/flows/'],
 		sidebar: [
-			{
-				label: 'OVERVIEW',
-				items: [
-					{ slug: 'getting-started/introduction' },
-					{ slug: 'getting-started/quickstart' },
-				],
-			},
-			{
-				label: 'SETUP',
-				items: [
-					{ slug: 'getting-started/installation' },
-					{ slug: 'getting-started/your-first-policy' },
-				],
-			},
-		],
-	},
-	{
-		id: 'concepts',
-		label: 'Core Concepts',
-		href: '/concepts/why-faramesh/',
-		matches: ['/concepts/', '/architecture/', '/security/', '/advanced/'],
-		sidebar: [
-			{
-				label: 'FOUNDATION',
-				items: [
-					{ slug: 'concepts/why-faramesh' },
-					{ slug: 'concepts/action-authorization-boundary' },
-					{ slug: 'concepts/zero-trust-execution' },
-				],
-			},
-			{
-				label: 'ENGINE',
-				items: [
-					{ slug: 'concepts/deterministic-canonicalization' },
-					{ slug: 'concepts/policy-engine' },
-					{ slug: 'concepts/risk-scoring' },
-					{ slug: 'concepts/audit-ledger' },
-				],
-			},
-			{
-				label: 'ARCHITECTURE',
-				items: [
-					{ slug: 'architecture/overview' },
-					{ slug: 'architecture/request-lifecycle' },
-					{ slug: 'architecture/internals' },
-					{ slug: 'architecture/canonicalization-deep-dive' },
-					{ slug: 'architecture/policy-evaluation' },
-					{ slug: 'architecture/storage-model' },
-				],
-			},
-				{
-					label: 'ADVANCED',
-					items: [
-						{ slug: 'advanced/delegation-grants' },
-						{ slug: 'advanced/network-hardening' },
-						{ slug: 'advanced/supply-chain-verification' },
-					],
-				},
-			{
-				label: 'SECURITY',
-				items: [
-					{ slug: 'security/threat-model' },
-					{ slug: 'security/fail-closed' },
-					{ slug: 'security/cryptographic-hashing' },
-					{ slug: 'security/prompt-injection-defense' },
-				],
-			},
-		],
-	},
-	{
-		id: 'integrations',
-		label: 'SDK & Integrations',
-		href: '/integrations/python-sdk/',
-		matches: ['/integrations/'],
-		sidebar: [
-			{
-				label: 'SDK',
-				items: [
-						{ slug: 'integrations/python-sdk', label: 'Python SDK' },
-						{ slug: 'integrations/nodejs-sdk', label: 'Node.js SDK' },
-				],
-			},
-			{
-				label: 'AGENT FRAMEWORKS',
-				items: [
-						{ slug: 'integrations/langchain', label: 'LangChain' },
-						{ slug: 'integrations/langchain-deep-dive', label: 'LangChain Deep Dive' },
-						{ slug: 'integrations/deep-agents-deep-dive', label: 'Deep Agents Deep Dive' },
-						{ slug: 'integrations/crewai', label: 'CrewAI' },
-						{ slug: 'integrations/autogen', label: 'AutoGen' },
-						{ slug: 'integrations/langgraph', label: 'LangGraph' },
-						{ slug: 'integrations/llamaindex', label: 'LlamaIndex' },
-						{ slug: 'integrations/mcp', label: 'MCP' },
-						{ slug: 'integrations/mcp-governance', label: 'MCP Governance' },
-						{ slug: 'integrations/dspy', label: 'DSPy' },
-				],
-			},
-			{
-				label: 'TOOLS',
-				items: [{ slug: 'integrations/govern-your-own-tool' }],
-			},
-		],
-	},
-	{
-		id: 'policies',
-		label: 'Policies',
-		href: '/policies/overview/',
-		matches: ['/policies/', '/identity/', '/hitl/', '/deployment/'],
-		sidebar: [
-			{
-				label: 'POLICY ENGINE',
-				items: [
-					{ slug: 'policies/overview' },
-					{ slug: 'policies/yaml-schema' },
-					{ slug: 'policies/rules-and-matching' },
-					{ slug: 'policies/risk-levels' },
-						{ slug: 'policies/policy-packs' },
-						{ slug: 'policies/fpl-language' },
-					{ slug: 'policies/advanced-conditions' },
-				],
-			},
-			{
-				label: 'IDENTITY',
-				items: [
-					{ slug: 'identity/agent-identities' },
-					{ slug: 'identity/credential-sequestration' },
-						{ slug: 'identity/spiffe-workload-identity' },
-					{ slug: 'identity/rbac' },
-					{ slug: 'identity/secrets-management' },
-				],
-			},
-			{
-				label: 'HUMAN-IN-THE-LOOP',
-				items: [
-					{ slug: 'hitl/overview' },
-					{ slug: 'hitl/approval-workflows' },
-					{ slug: 'hitl/slack-routing' },
-					{ slug: 'hitl/email-routing' },
-					{ slug: 'hitl/web-ui' },
-				],
-			},
-			{
-				label: 'DEPLOYMENT',
-				items: [
-					{ slug: 'deployment/self-hosted' },
-					{ slug: 'deployment/docker-compose' },
-					{ slug: 'deployment/kubernetes' },
-					{ slug: 'deployment/configuration' },
-					{ slug: 'deployment/production-setup' },
-					{ slug: 'deployment/database' },
-					{ slug: 'deployment/horizon' },
-					{ slug: 'deployment/nexus' },
-				],
-			},
+			{ label: 'START', items: [{ slug: 'index' }, { slug: 'quickstart' }, { slug: 'flows' }] },
 		],
 	},
 	{
 		id: 'reference',
 		label: 'Reference',
-		href: '/reference/api/',
-		matches: ['/reference/'],
+		href: '/init/',
+		matches: ['/init/', '/stack/', '/providers/', '/fpl/', '/cli/', '/registry/', '/dev/'],
 		sidebar: [
 			{
-				label: 'API REFERENCE',
+				label: 'REFERENCE',
 				items: [
-						{ slug: 'reference/api', label: 'API' },
-					{ slug: 'reference/policy-schema' },
-						{ slug: 'reference/sdk-client', label: 'SDK Client' },
-						{ slug: 'reference/cli', label: 'CLI' },
-					{ slug: 'reference/environment-variables' },
+					{ slug: 'init' },
+					{ slug: 'stack' },
+					{ slug: 'providers' },
+					{ slug: 'fpl' },
+					{ slug: 'cli' },
+					{ slug: 'registry' },
+					{ slug: 'dev' },
 				],
+			},
+		],
+	},
+	{
+		id: 'frameworks',
+		label: 'Frameworks',
+		href: '/frameworks/',
+		matches: ['/frameworks/'],
+		sidebar: [
+			{
+				label: 'FRAMEWORKS',
+				items: [
+					{ slug: 'frameworks' },
+					{ slug: 'frameworks/langgraph' },
+					{ slug: 'frameworks/langchain' },
+					{ slug: 'frameworks/openai-agents' },
+					{ slug: 'frameworks/crewai' },
+					{ slug: 'frameworks/claude-code' },
+					{ slug: 'frameworks/cursor' },
+					{ slug: 'frameworks/bedrock' },
+				],
+			},
+		],
+	},
+	{
+		id: 'operations',
+		label: 'Operations',
+		href: '/security/',
+		matches: ['/security/', '/errors/', '/limitations/'],
+		sidebar: [
+			{
+				label: 'OPERATIONS',
+				items: [{ slug: 'security' }, { slug: 'errors' }, { slug: 'limitations' }],
 			},
 		],
 	},
@@ -201,18 +83,15 @@ export function normalizePathname(pathname) {
 	if (!pathname || pathname === '/') {
 		return '/';
 	}
-
 	return pathname.endsWith('/') ? pathname : `${pathname}/`;
 }
 
 export function getSectionForPath(pathname) {
 	const normalizedPath = normalizePathname(pathname);
 	const matched = pathMatchers.find(({ match }) => normalizedPath.startsWith(match));
-
 	if (matched) {
 		return matched.section;
 	}
-
 	return docsSections[0];
 }
 

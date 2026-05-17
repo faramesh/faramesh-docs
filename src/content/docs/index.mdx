@@ -1,26 +1,50 @@
 ---
-title: Faramesh Documentation
-description: Non-bypassable execution control for AI agents.
+title: What is a Faramesh stack?
+description: One directory, one governance file, one daemon.
 ---
 
-# Faramesh
+**Documentation:** https://docs.faramesh.dev  
+**Registry:** https://registry.faramesh.dev  
+**Source (core):** https://github.com/faramesh/faramesh-core
 
-Non-bypassable execution control for AI agents.
+## Faramesh
 
-Faramesh provides a deterministic policy gate that every agent tool call must cross before execution. Policies are defined in YAML, applied uniformly across all frameworks, and every decision is logged for compliance and audit.
+Faramesh governs AI agent tool calls before they execute.
 
-## Core Features
+```bash
+faramesh init
+faramesh dev
+faramesh apply
+```
 
-- **Non-Bypassable Execution Control**: Every agent tool call crosses a deterministic policy gate before execution.
-- **Framework Agnostic**: Works with LangChain, CrewAI, AutoGen, MCP, LangGraph, LlamaIndex, DSPy, and custom tools.
-- **Deterministic Policy Engine**: Define rules in YAML, apply consistently, zero surprises.
-- **Credential Sequestration**: Credentials never touch the agent. Faramesh holds them and injects only what's needed.
-- **Human-in-the-Loop**: Approve high-risk actions with Slack, email, or web UI.
-- **Full Audit Trail**: Every decision is logged with cryptographic hashing for compliance.
+A **stack** is a directory with `governance.fms` (FPL, YAML, or JSON). `faramesh apply` compiles it and starts the daemon.
 
-## Getting Started
+A **provider** is a `provider "name" { }` block. The daemon calls it over gRPC for secrets, identity, KMS, audit sink, and cost.
 
-1. [Introduction](/getting-started/introduction/) — Understand what Faramesh does
-2. [Quickstart](/getting-started/quickstart/) — Get running in 5 minutes
-3. [Installation](/getting-started/installation/) — Set up in your environment
-4. [Your First Policy](/getting-started/your-first-policy/) — Define a real policy
+A **policy pack** is an import from `registry.faramesh.dev` with a pinned version.
+
+### Key capabilities
+
+- **Governance as code** — one file per stack; `faramesh check` / `plan` / `apply` replace legacy `serve` flags.
+- **Deterministic engine** — no LLM judges on the enforcement path; structured denials to adapters.
+- **Evidence** — WAL-first DPR chain; `faramesh audit verify` walks active and archived segments.
+- **Registry** — providers, policy packs, and framework profiles with pinned semver imports.
+
+### Start here
+
+- [Quickstart](/quickstart/) — zero to governed in five steps
+- [Flows](/flows/) — init, change, monitor
+- [Stack](/stack/) — `governance.fms` blocks
+- [CLI](/cli/) — thirteen commands
+
+### Reference
+
+- [Init](/init/) · [Providers](/providers/) · [FPL](/fpl/) · [Registry](/registry/) · [Dev mode](/dev/)
+
+### Frameworks
+
+- [Framework index](/frameworks/) — interception tiers and before/after wiring
+
+### Operations
+
+- [Security](/security/) · [Errors](/errors/) · [Limitations](/limitations/)
