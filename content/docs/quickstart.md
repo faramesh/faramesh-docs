@@ -6,7 +6,7 @@ description: From an empty repo to a fully governed agent in under five minutes.
 ## Before you start: what you need
 
 - **Faramesh CLI** — install from [GitHub releases](https://github.com/faramesh/faramesh-core/releases) or `brew install faramesh/tap/faramesh` when the tap is published.
-- **Python 3.10+** (for LangGraph/LangChain examples) and `pip install faramesh==0.3.3`.
+- **Python 3.10+** (for LangGraph/LangChain examples) and `pip install faramesh-sdk==0.3.3` (imports as `faramesh`).
 - **No Vault, SPIRE, or cloud KMS** for your first run — `faramesh dev` starts in-process stubs for credentials, identity, and signing.
 - A project directory where you will run `faramesh init` (it writes `governance.fms` once).
 
