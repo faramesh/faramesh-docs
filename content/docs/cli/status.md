@@ -3,7 +3,7 @@ title: faramesh status
 description: Check daemon health, lifecycle state, policy version, provider status, and current budget consumption.
 ---
 
-`faramesh status` reports the runtime state of the daemon for the current stack. It's the first command you run when something looks wrong — and the command CI uses to confirm the daemon came up clean after `apply`.
+`faramesh status` reports the runtime state of the daemon for the current stack. It's the first command you run when something looks wrong. And the command CI uses to confirm the daemon came up clean after `apply`.
 
 ## Usage
 
@@ -59,11 +59,11 @@ Approvals
 
 ### Providers section
 
-Each provider declared in `governance.fms` reports `HEALTHY`, `DEGRADED`, or `DOWN` plus its last probe time. Degraded providers don't deny tool calls outright — but `CREDENTIAL_UNAVAILABLE` denials become more likely.
+Each provider declared in `governance.fms` reports `HEALTHY`, `DEGRADED`, or `DOWN` plus its last probe time. Degraded providers don't deny tool calls outright. But `CREDENTIAL_UNAVAILABLE` denials become more likely.
 
 ### Budgets section
 
-Per-budget consumption. Useful for "did the agent actually spend anything today?" without running an audit query.
+Per-budget consumption. Useful for confirming whether the agent has spent anything in the current window without running an audit query.
 
 ### Approvals section
 
@@ -134,7 +134,7 @@ Run `faramesh status`. If state is `INITIALIZING`, wait for `READY`. If it's stu
 
 ### "Calls are timing out"
 
-Check the providers section. A `DEGRADED` Vault means provider broker latency is high — calls may eventually succeed but slowly.
+Check the providers section. A `DEGRADED` Vault means provider broker latency is high. Calls may eventually succeed but slowly.
 
 ### "Did my apply take effect?"
 
@@ -149,7 +149,7 @@ echo $?  # 0 if running and READY; 1 if not
 
 ## What's next
 
-- [Troubleshooting](/troubleshooting/) — full failure-mode catalog.
-- [Architecture](/concepts/architecture/) — what each lifecycle state means.
-- [`faramesh audit verify`](/cli/audit/) — verify the chain after a restart.
-- [Denial codes](/errors/) — what `DAEMON_NOT_READY` and friends mean to the SDK.
+- [Troubleshooting](/troubleshooting/): full failure-mode catalog.
+- [Architecture](/concepts/architecture/): what each lifecycle state means.
+- [`faramesh audit verify`](/cli/audit/): verify the chain after a restart.
+- [Denial codes](/errors/): what `DAEMON_NOT_READY` and friends mean to the SDK.

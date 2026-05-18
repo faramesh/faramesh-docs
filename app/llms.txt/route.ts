@@ -12,7 +12,7 @@ export function GET() {
     .join('\n');
   const body = [
     '# Faramesh Documentation (llms.txt)',
-    '# Product: pre-execution governance for AI agents — policy engine, MCP/HTTP proxy, SDK shim, audit WAL.',
+    '# Product: pre-execution governance for AI agents. Policy engine, MCP/HTTP proxy, SDK shim, audit WAL.',
     `# Canonical site: ${siteUrl}`,
     `# Full corpus (plain text): ${siteUrl}/llms-full.txt`,
     `# Sitemap: ${siteUrl}/sitemap.xml`,

@@ -3,7 +3,7 @@ title: faramesh test
 description: Replay policy fixtures against the compiled engine. Assert decisions for known tool calls in CI and locally.
 ---
 
-`faramesh test` runs **policy fixtures** — recorded or hand-written tool calls with expected decisions — against the compiled policy. It's how you write unit tests for `governance.fms` and how you make sure a policy refactor doesn't silently change a decision.
+`faramesh test` runs **policy fixtures**, recorded or hand-written tool calls with expected decisions, against the compiled policy. It's how you write unit tests for `governance.fms` and how you make sure a policy refactor doesn't silently change a decision.
 
 Use it locally while iterating, and in CI on every PR.
 
@@ -107,7 +107,7 @@ A failed test prints the expected and actual decisions plus a one-line explanati
 - run: faramesh plan --format json > plan.json
 ```
 
-`test` runs against the compiled AST in your repo — it doesn't need a running daemon and doesn't write to the WAL.
+`test` runs against the compiled AST in your repo. It doesn't need a running daemon and doesn't write to the WAL.
 
 ## Recording fixtures from real traffic
 
@@ -127,7 +127,7 @@ If you intentionally changed a rule and need to update the expected decisions:
 faramesh test --update
 ```
 
-Diffs are printed before the rewrite so you can review them. Treat `--update` like committing test snapshots — review the diff before pushing.
+Diffs are printed before the rewrite so you can review them. Treat `--update` like committing test snapshots. Review the diff before pushing.
 
 ## Difference from `faramesh plan`
 
@@ -140,7 +140,7 @@ Use both: `test` for the cases you care about, `plan` for the rest of history.
 
 ## What's next
 
-- [`faramesh check`](/cli/check/) — the cheaper validator.
-- [`faramesh plan`](/cli/plan/) — replay against history.
-- [Workflows](/flows/) — putting `check` + `test` + `plan` + `apply` together in CI.
-- [Debugging denials](/guides/debugging-denials/) — what to do when a test fails.
+- [`faramesh check`](/cli/check/): the cheaper validator.
+- [`faramesh plan`](/cli/plan/): replay against history.
+- [Workflows](/flows/): putting `check` + `test` + `plan` + `apply` together in CI.
+- [Debugging denials](/guides/debugging-denials/): what to do when a test fails.

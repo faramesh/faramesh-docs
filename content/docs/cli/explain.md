@@ -3,7 +3,7 @@ title: faramesh explain
 description: Diagnostic command that traces a single decision, approval, or run through the policy pipeline and prints exactly why it landed where it did.
 ---
 
-`faramesh explain` is the highest-signal debug command in Faramesh. Given a decision id, an approval id, an agent id, or a run/correlation id, it walks the full evaluation pipeline and prints **every step** — which rules were tried, which conditions evaluated true, which rate-limit and budget state applied, what credential was minted (or wasn't), and what redactions ran.
+`faramesh explain` is the highest-signal debug command in Faramesh. Given a decision id, an approval id, an agent id, or a run/correlation id, it walks the full evaluation pipeline and prints **every step**: which rules were tried, which conditions evaluated true, which rate-limit and budget state applied, what credential was minted (or wasn't), and what redactions ran.
 
 If you have a denial you don't understand, run this first.
 
@@ -21,7 +21,7 @@ The daemon must be running and have access to the same WAL/SQLite store as the d
 
 ## Subcommands
 
-### `explain decision` — why one DPR landed where it did
+### `explain decision`: why one DPR landed where it did
 
 ```bash title="Terminal"
 $ faramesh explain decision dpr-7f3b
@@ -63,7 +63,7 @@ This output tells you, line by line:
 - Rate limits and budgets were not the cause.
 - The denial was logged with full chain integrity.
 
-### `explain approval` — why a defer is sitting there
+### `explain approval`: why a defer is sitting there
 
 ```bash title="Terminal"
 $ faramesh explain approval apr-9001
@@ -93,7 +93,7 @@ Suggested operator commands:
 
 This is what an on-call operator wants to see when triaging the queue.
 
-### `explain agent` — current state of one agent
+### `explain agent`: current state of one agent
 
 ```bash title="Terminal"
 $ faramesh explain agent support-bot
@@ -122,9 +122,9 @@ Rate limits:
   send_email  100/hour  (current: 13)
 ```
 
-Useful when an agent suddenly behaves unexpectedly — you can see at a glance what it can and can't do.
+Useful when an agent suddenly behaves unexpectedly. You can see at a glance what it can and can't do.
 
-### `explain run` — trace one logical action across many DPRs
+### `explain run`: trace one logical action across many DPRs
 
 When an agent task produces many tool calls, all sharing a `request_id` or `run_id`, `explain run` collects the entire lineage:
 
@@ -146,7 +146,7 @@ Approvals:  1 pending (apr-9001)
 
 The DPR ids in the timeline are clickable in tools that consume the JSON variant.
 
-### `explain rule` — what one rule does and which decisions it has fired
+### `explain rule`: what one rule does and which decisions it has fired
 
 ```bash title="Terminal"
 $ faramesh explain rule governance.fms:18
@@ -192,11 +192,11 @@ The schema is stable and is what the [Faramesh Cloud](/cloud/) UI consumes for i
 
 - It doesn't change state. Read-only.
 - It doesn't replay a call against current policy (use `audit show` plus mental check, or `plan` for replay).
-- It doesn't talk to providers — pipeline state is read from the WAL/SQLite, not re-evaluated.
+- It doesn't talk to providers. Pipeline state is read from the WAL/SQLite, not re-evaluated.
 
 ## What's next
 
-- [Debugging denials](/guides/debugging-denials/) — full diagnostic walkthrough.
-- [`faramesh audit show`](/cli/audit/) — the underlying DPR record.
-- [Denial codes](/errors/) — every code, payload, and recovery.
-- [Enforcement](/concepts/enforcement/) — the pipeline `explain` walks.
+- [Debugging denials](/guides/debugging-denials/): full diagnostic walkthrough.
+- [`faramesh audit show`](/cli/audit/): the underlying DPR record.
+- [Denial codes](/errors/): every code, payload, and recovery.
+- [Enforcement](/concepts/enforcement/): the pipeline `explain` walks.

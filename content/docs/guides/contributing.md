@@ -1,9 +1,9 @@
 ---
 title: Contributing to Faramesh
-description: How to clone the repos, find the right code, and open a pull request — across core, docs, SDKs, and the registry.
+description: How to clone the repos, find the right code, and open a pull request. Across core, docs, SDKs, and the registry.
 ---
 
-This guide is for **anyone who wants to contribute to Faramesh** — open a PR, fix a bug, add a framework profile, improve a docs page. You don't need any special access. Everything is on GitHub, MIT-licensed, and reviewed in the open.
+This guide is for **anyone who wants to contribute to Faramesh**: open a PR, fix a bug, add a framework profile, improve a docs page. You don't need any special access. Everything is on GitHub, MIT-licensed, and reviewed in the open.
 
 If you're a maintainer and need release / signing-key procedures, those live inside each repo's `MAINTAINERS.md` and aren't part of these docs.
 
@@ -97,16 +97,16 @@ bash tests/e2e_zero_governed.sh
 bash tests/e2e_completion_gate.sh
 ```
 
-These pass on macOS and Linux. They use only the local stub providers — no infra required.
+These pass on macOS and Linux. They use only the local stub providers. No infra required.
 
 ## Cross-repo features
 
 Some features touch more than one repo. The conventional order is:
 
-1. **core** (the engine) — change behavior, add tests.
-2. **SDKs** — adopt the new core protocol or denial code.
-3. **registry** — publish any new framework profile / policy pack / provider.
-4. **docs** — explain the new feature.
+1. **core** (the engine). Change behavior, add tests.
+2. **SDKs**: adopt the new core protocol or denial code.
+3. **registry**: publish any new framework profile / policy pack / provider.
+4. **docs**: explain the new feature.
 
 Reference sibling PR URLs in each PR description so reviewers can follow the dependency chain. Don't merge a docs change that describes a CLI flag that doesn't exist yet.
 
@@ -139,7 +139,7 @@ For features, describe the use case before the proposed solution. We're more lik
 
 ## Related
 
-- [Architecture](/concepts/architecture/) — useful before changing daemon code.
-- [FPL reference](/fpl/) — useful before changing parser code.
-- [Denial codes](/errors/) — useful before adding new denial paths.
-- [CLI reference](/cli/) — useful before changing user-visible CLI behavior.
+- [Architecture](/concepts/architecture/): useful before changing daemon code.
+- [FPL reference](/fpl/): useful before changing parser code.
+- [Denial codes](/errors/): useful before adding new denial paths.
+- [CLI reference](/cli/): useful before changing user-visible CLI behavior.

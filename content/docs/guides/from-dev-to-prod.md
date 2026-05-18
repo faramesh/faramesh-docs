@@ -1,11 +1,11 @@
 ---
-title: Tutorial — From dev to production
+title: Tutorial. From dev to production
 description: Move a Faramesh stack from in-process stubs to real Vault, SPIFFE, and KMS providers without changing a single rule.
 ---
 
 You wrote a policy. You ran it locally with `faramesh dev`. Now you want it in production.
 
-The good news: **you don't change rules.** The agent code stays the same. The `governance.fms` stays the same — except for the `provider` and `identity` declarations, which swap from in-process stubs to real backends.
+The good news: **you don't change rules.** The agent code stays the same. The `governance.fms` stays the same. Except for the `provider` and `identity` declarations, which swap from in-process stubs to real backends.
 
 This tutorial walks through the swap.
 
@@ -97,7 +97,7 @@ identity "prod" {
 
 The SPIRE workload API will give the daemon a verified SVID for each agent process. Mismatches fail closed.
 
-If you don't have SPIRE, use an OIDC IDP (Okta, Auth0, Google) — Faramesh accepts ID tokens at attestation time:
+If you don't have SPIRE, use an OIDC IDP (Okta, Auth0, Google). Faramesh accepts ID tokens at attestation time:
 
 ```hcl title="governance.fms"
 identity "prod" {
@@ -276,7 +276,7 @@ Run a smoke test through the agent. Confirm:
 
 ## Where to go next
 
-- [Deploying at scale](/guides/platform-engineer/) — fleet operations, catalog mirroring, CI gates.
-- [Architecture](/concepts/architecture/) — full process layout including the supervisor.
-- [Security model](/security/) — threats, guarantees, and explicit limits.
-- [Auditing](/guides/security-engineer/) — what evidence to collect and how to map it to controls.
+- [Deploying at scale](/guides/platform-engineer/): fleet operations, catalog mirroring, CI gates.
+- [Architecture](/concepts/architecture/): full process layout including the supervisor.
+- [Security model](/security/): threats, guarantees, and explicit limits.
+- [Auditing](/guides/security-engineer/): what evidence to collect and how to map it to controls.

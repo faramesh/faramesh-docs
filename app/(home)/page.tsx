@@ -10,46 +10,46 @@ export default function HomePage() {
       <HomeHero
         eyebrow="Faramesh"
         title="Make every agent tool call a decision, not a hope."
-        body="Declare what your AI agent is allowed to do in one file. A small daemon runs alongside it and decides — permit, defer, or deny — before each tool call. You get a tamper-evident audit trail by default. No SDK lock-in, no cloud required."
+        body="Declare what an AI agent is allowed to do in one file. A small daemon runs alongside it and decides every tool call before it executes: permit, defer, or deny. The audit trail is tamper-evident by default. No SDK lock-in. No cloud required."
         primaryHref="/quickstart"
-        primaryLabel="Get started in 5 min →"
+        primaryLabel="Get started in 5 minutes"
         secondaryHref="/introduction"
         secondaryLabel="Why Faramesh"
       />
 
       <HomeSection
-        label="New here? Start with the story"
-        intro="Three short pages that take you from never-heard-of-it to a running governed agent."
+        label="Start with the story"
+        intro="Three short pages that take you from never heard of it to a running governed agent."
       >
         <HomeGrid cols={3}>
           <HomeCard
             href="/introduction"
             title="1. Why Faramesh exists"
             icon="?"
-            body="The problem in one paragraph. What you get, who it's for, and the one scene that explains everything: declare → enforce → record → review."
+            body="The problem in one paragraph. What you get, who it is for, and the one scene that explains everything: declare, enforce, record, review."
           />
           <HomeCard
             href="/quickstart"
             title="2. Run a governed agent"
             icon="▸"
             accent
-            body="Install the CLI, run faramesh init, wire the SDK shim. You'll see your first permit, defer, and deny in under five minutes."
+            body="Install the CLI, run faramesh init, wire the SDK shim. The first permit, defer, and deny in under five minutes."
           />
           <HomeCard
             href="/concepts/how-it-works"
             title="3. The mental model"
             icon="◆"
-            body="Where Faramesh sits, what runs on every call, and what it deliberately doesn't do. Read this before designing a deployment."
+            body="Where Faramesh sits, what runs on every call, and what it deliberately does not do. Read this before designing a deployment."
           />
         </HomeGrid>
       </HomeSection>
 
       <HomeSection
         label="Tutorials"
-        intro="Step-by-step walkthroughs for common situations. Pick the one that matches what you're building."
+        intro="Step-by-step walkthroughs for common situations. Pick the one that matches what you are building."
         footer={
           <Link href="/guides/govern-a-langgraph-agent" className="text-fd-primary no-underline hover:underline">
-            See all tutorials →
+            See all tutorials
           </Link>
         }
       >
@@ -58,19 +58,19 @@ export default function HomePage() {
             href="/guides/govern-a-langgraph-agent"
             title="Govern your first LangGraph agent"
             icon="①"
-            body="Take an existing LangGraph agent, add governance, watch a deferred refund get approved by a human. No infra needed."
+            body="Take an existing LangGraph agent, add governance, then watch a deferred refund get approved by a human. No infrastructure required."
           />
           <HomeCard
             href="/guides/your-first-policy"
             title="Write your first policy"
             icon="②"
-            body="Build a governance.fms from scratch — rules, budgets, redaction. Plain-English explanations of every line."
+            body="Build a governance.fms from scratch: rules, budgets, redaction. Plain-English explanations of every line."
           />
           <HomeCard
             href="/guides/debugging-denials"
             title="Debug a denial"
             icon="③"
-            body="Why was my call denied? A diagnostic walkthrough using faramesh explain, the WAL, and the structured denial payload."
+            body="Why was the call denied? A diagnostic walkthrough using faramesh explain, the WAL, and the structured denial payload."
           />
           <HomeCard
             href="/guides/from-dev-to-prod"
@@ -83,10 +83,10 @@ export default function HomePage() {
 
       <HomeSection
         label="Build with Faramesh"
-        intro="Pick the wiring tier that matches your agent runtime."
+        intro="Pick the wiring tier that matches the agent runtime."
         footer={
           <Link href="/frameworks" className="text-fd-primary no-underline hover:underline">
-            See every framework →
+            See every framework
           </Link>
         }
       >
@@ -95,29 +95,29 @@ export default function HomePage() {
             href="/frameworks/langgraph"
             title="Govern a native agent"
             icon="L"
-            body="LangGraph, LangChain, CrewAI, OpenAI Agents. One-line SDK shim wraps your tool list."
+            body="LangGraph, LangChain, CrewAI, OpenAI Agents. A one-line SDK shim wraps the tool list."
           />
           <HomeCard
             href="/frameworks/claude-code"
             title="Govern an MCP client"
             icon="M"
-            body="Claude Code, Cursor, OpenCode. Point the client at the Faramesh MCP proxy — zero code change."
+            body="Claude Code, Cursor, OpenCode. Point the client at the Faramesh MCP proxy; no code change."
           />
           <HomeCard
             href="/frameworks/bedrock"
             title="Govern a hosted runtime"
             icon="H"
-            body="Bedrock and any OpenAPI action group. The HTTP proxy sits in front of your tool endpoints."
+            body="Bedrock and any OpenAPI action group. The HTTP proxy sits in front of the tool endpoints."
           />
         </HomeGrid>
       </HomeSection>
 
       <HomeSection
         label="Concepts"
-        intro="What's actually happening inside the daemon, in plain language. Read these in order if you're new."
+        intro="What is happening inside the daemon, in plain language. Read these in order if you are new."
         footer={
           <Link href="/concepts/architecture" className="text-fd-primary no-underline hover:underline">
-            Full architecture →
+            Full architecture
           </Link>
         }
       >
@@ -126,25 +126,25 @@ export default function HomePage() {
             href="/concepts/enforcement"
             title="Enforcement"
             icon="⊕"
-            body="The decision pipeline, step by step. Same input, same decision — every time."
+            body="The decision pipeline, step by step. Same input, same decision, every time."
           />
           <HomeCard
             href="/concepts/interception"
             title="Interception"
             icon="⇆"
-            body="How the call reaches the daemon: SDK shim, MCP proxy, or HTTP proxy. Pick one based on your runtime."
+            body="How the call reaches the daemon: SDK shim, MCP proxy, or HTTP proxy. Pick one based on the runtime."
           />
           <HomeCard
             href="/concepts/architecture"
-            title="Architecture & supervisor"
+            title="Architecture and supervisor"
             icon="◆"
-            body="Daemon lifecycle, the agent supervisor, OS-tier sandbox, and how everything fits together end to end."
+            body="Daemon lifecycle, the agent supervisor, the OS-tier sandbox, and how everything fits together end to end."
           />
           <HomeCard
             href="/concepts/identity"
             title="Identity"
             icon="◉"
-            body="SPIFFE/SVID and OIDC attestation. How the daemon knows which agent is calling — without trusting the agent."
+            body="SPIFFE/SVID and OIDC attestation. How the daemon knows which agent is calling without trusting the agent."
           />
           <HomeCard
             href="/concepts/credentials"
@@ -156,24 +156,24 @@ export default function HomePage() {
             href="/concepts/auditing"
             title="Auditing"
             icon="✓"
-            body="Decision Provenance Records, hash-chained WAL, KMS signing. Tamper-evident by construction."
+            body="Decision Provenance Records, the hash-chained WAL, KMS signing. Tamper-evident by construction."
           />
         </HomeGrid>
       </HomeSection>
 
       <HomeSection
-        label="CLI & SDKs"
-        intro="The CLI is the primary interface. The SDKs wire it into your agent."
+        label="CLI and SDKs"
+        intro="The CLI is the primary interface. The SDKs wire it into the agent."
         footer={
           <span className="flex flex-wrap gap-x-4 gap-y-1">
             <Link href="/cli" className="text-fd-primary no-underline hover:underline">
-              CLI reference →
+              CLI reference
             </Link>
             <Link href="/fpl" className="text-fd-primary no-underline hover:underline">
-              FPL reference →
+              FPL reference
             </Link>
             <Link href="/stack" className="text-fd-primary no-underline hover:underline">
-              Stack reference →
+              Stack reference
             </Link>
           </span>
         }
@@ -189,7 +189,7 @@ export default function HomePage() {
             href="/fpl"
             title="FPL language"
             icon="ƒ"
-            body="The grammar of governance.fms — imports, runtime, providers, agents, rules, budgets, rate limits, redaction, egress, alerts."
+            body="The grammar of governance.fms: imports, runtime, providers, agents, rules, budgets, rate limits, redaction, egress, alerts."
           />
           <HomeCard
             href="/sdks/python"
@@ -240,7 +240,7 @@ export default function HomePage() {
         intro="Production patterns we see most often. Full policy snippets for each."
         footer={
           <Link href="/use-cases" className="text-fd-primary no-underline hover:underline">
-            See every pattern →
+            See every pattern
           </Link>
         }
       >
@@ -258,7 +258,7 @@ export default function HomePage() {
           <HomeCard
             href="/use-cases#2-customer-support-agents"
             title="Customer support"
-            body="Email confined to your domain. Cancellations need a click."
+            body="Email confined to your domain. Cancellations require a click."
           />
           <HomeCard
             href="/use-cases#6-multi-tenant-saas-agents"

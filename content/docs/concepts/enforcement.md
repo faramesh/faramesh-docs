@@ -13,7 +13,7 @@ A tool call arrives at the daemon. Twelve numbered steps run. Steps 1–8 are pu
 
 The pipeline is **deterministic**: same input, same decision, every time. There is no LLM in the decision path.
 
-A worked example before we go deep — the policy:
+A worked example before we go deep. The policy:
 
 ```hcl title="governance.fms"
 agent "support-bot" {

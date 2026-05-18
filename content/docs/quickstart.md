@@ -1,64 +1,76 @@
 ---
 title: Quickstart
-description: From an empty repo to a fully governed agent in about five minutes. No infrastructure required.
+description: From an empty repo to a governed agent in about five minutes. No infrastructure required.
 ---
 
-## What you'll do
-
-In the next five minutes you'll:
+## What you will do
 
 1. Install the Faramesh CLI.
 2. Run `faramesh init` to write a starter `governance.fms`.
-3. Wire one line of SDK code into your agent.
-4. Watch a tool call get permitted, another get deferred, and approve the deferred one from the CLI.
+3. Add one line of SDK code to your agent.
+4. Watch one tool call get permitted, another get deferred, and approve the deferred one from the CLI.
 
-You don't need Vault, SPIRE, KMS, Docker, or a cloud account. `faramesh dev` runs everything in-process. We'll cover moving to production at the end.
+Vault, SPIRE, KMS, Docker, and a cloud account are not required. `faramesh dev` runs everything in-process. The migration to production is covered at the end.
 
 ## Before you start
 
-- **Faramesh CLI** — install from [GitHub releases](https://github.com/faramesh/faramesh-core/releases) or `brew install faramesh/tap/faramesh` when the tap is published.
-- **Python 3.10+** for the example below. (TypeScript, Node, and Go SDKs work the same way; pick whichever matches your agent.)
-- A project directory. Anything works — a fresh folder, your existing repo, a scratch space.
+- The Faramesh CLI. Installed from source or a release binary, instructions below.
+- Python 3.10 or later for the example. The TypeScript, Node, and Go SDKs follow the same flow.
+- A project directory. Any directory works.
 
-### How the pieces fit (very short version)
+### How the pieces fit
 
 ```text title="In your head"
-your agent  ──► Faramesh SDK shim  ──► local daemon  ──► your tools
-                  (one-line wrapper)    (governance.fms)
+your agent  ──►  Faramesh SDK shim  ──►  local daemon  ──►  your tools
+                 (one-line wrapper)      (governance.fms)
 ```
 
-The shim turns every tool call into a question for the daemon: "is this allowed?" The daemon checks your policy and answers permit, defer, or deny. **Permit** runs the tool. **Defer** waits for human approval. **Deny** refuses with a structured reason.
+The shim turns every tool call into a question for the daemon: is this allowed? The daemon checks your policy and answers with one of three effects. `permit` runs the tool. `defer` waits for human approval. `deny` refuses with a structured reason.
 
-That's the whole runtime. Everything else is detail.
+That is the entire runtime. Everything else is detail.
 
 ### The five steps at a glance
 
 | Step | Command | What it does |
 |------|---------|-------------|
-| 1 | `faramesh init` | Writes a starter `governance.fms` based on your framework |
-| 2 | `faramesh dev` | Starts the daemon with in-process stubs for everything |
-| 3 | One-line SDK wrapper | The agent now routes every call through the daemon |
-| 4 | `faramesh approvals approve …` | Resolve a deferred call from the CLI |
-| 5 | `faramesh apply` (later) | Replace stubs with real providers, persist the WAL, enable OS sandbox |
+| 1 | `faramesh init` | Writes a starter `governance.fms` based on your framework. |
+| 2 | `faramesh dev` | Starts the daemon with in-process stubs for everything. |
+| 3 | One-line SDK wrapper | The agent now routes every tool call through the daemon. |
+| 4 | `faramesh approvals approve ...` | Resolves a deferred call from the CLI. |
+| 5 | `faramesh apply` (later) | Replaces stubs with real providers, persists the WAL, enables the OS sandbox. |
 
-No Docker, Vault, or SPIRE required for steps 1–4. If you get stuck, jump to [Troubleshooting](/troubleshooting/).
-
----
+No Docker, Vault, or SPIRE is required for steps 1 through 4. For problems, see [Troubleshooting](/troubleshooting/).
 
 The walkthrough below is the short version. For a fully worked example with a LangGraph agent, see [Tutorial: Govern your first LangGraph agent](/guides/govern-a-langgraph-agent/).
 
 :::info
-The example uses **LangGraph**. The flow is identical for every other framework; only the wiring in step 4 changes.
+The example uses **LangGraph**. The flow is identical for every other framework; only the SDK wiring in step 4 changes.
 :::
 
 ## 1. Install the CLI
+
+Two options. Pick one.
+
+### Option A: install script (recommended)
 
 ```bash title="Terminal"
 curl -fsSL https://raw.githubusercontent.com/faramesh/faramesh-core/main/install.sh | bash
 faramesh version
 ```
 
-Or `npx @faramesh/cli@latest` if you'd rather not install a binary globally.
+The script downloads the latest release binary for your platform, verifies the SHA256 checksum, and places `faramesh` on your `PATH`. It does not require root unless you choose a system-wide install location.
+
+### Option B: build from source
+
+```bash title="Terminal"
+git clone https://github.com/faramesh/faramesh-core.git
+cd faramesh-core
+go build -o faramesh ./cmd/faramesh
+sudo install -m 0755 faramesh /usr/local/bin/faramesh
+faramesh version
+```
+
+Requires Go 1.22 or later. Useful if you want to track `main` or modify the CLI.
 
 ## 2. Generate your stack
 
@@ -118,7 +130,7 @@ Every discovered tool starts at `defer` so nothing runs without your review.
 
 ## 3. Tune the policy
 
-Open `governance.fms` and edit the rules. Read-only tools can usually go straight to `permit`; anything that costs money or sends data should stay deferred or be conditionally permitted.
+Open `governance.fms` and edit the rules. Read-only tools can usually move directly to `permit`. Anything that spends money or sends data outside should stay deferred or be conditionally permitted.
 
 ```hcl title="governance.fms"
 agent "myproject-agent" {
@@ -143,7 +155,7 @@ agent "myproject-agent" {
 }
 ```
 
-Validate before you ship:
+Validate before shipping:
 
 ```bash title="Terminal"
 faramesh check
@@ -151,12 +163,12 @@ faramesh plan
 ```
 
 :::note
-`plan` prints the exact decision diff so you know what changes when you apply.
+`plan` prints the exact decision diff so you can see what will change when you apply.
 :::
 
 ## 4. Wire your agent
 
-Drop the SDK shim into your code (Python or TypeScript):
+Add the SDK shim to your code, Python or TypeScript.
 
 <Tabs items={['Python', 'TypeScript']}>
 <Tab value="Python">
@@ -195,16 +207,16 @@ Set `FARAMESH_SOCKET` to the path printed by `faramesh dev` (default `~/.farames
 </Tab>
 </Tabs>
 
-That's the entire integration. Every tool call now traverses the Faramesh daemon before it executes.
+That is the entire integration. Every tool call now traverses the Faramesh daemon before it executes.
 
 :::tip[MCP clients]
-Using Claude Code, Cursor, or another MCP client? See [Frameworks → MCP](/frameworks/claude-code/) and point the client at the Faramesh proxy URL instead.
+Using Claude Code, Cursor, or another MCP client? See [Frameworks > MCP](/frameworks/claude-code/) and point the client at the Faramesh proxy URL instead.
 :::
 
-## 5. Dev locally, then apply
+## 5. Develop locally, then apply
 
-<Tabs items={['Dev (no infra)', 'Apply (production path)']}>
-<Tab value="Dev (no infra)">
+<Tabs items={['Dev (no infrastructure)', 'Apply (production path)']}>
+<Tab value="Dev (no infrastructure)">
 
 ```bash title="Terminal"
 faramesh dev
@@ -221,19 +233,19 @@ faramesh apply
 python my_agent.py
 ```
 
-On macOS you will see a note that OS-tier seccomp/Landlock is Linux-only; application-tier enforcement still applies.
+On macOS the CLI prints a note that OS-tier seccomp and Landlock are Linux-only. Application-tier enforcement still applies.
 
 </Tab>
 </Tabs>
 
-A `permit` call returns the tool result. A `defer` call raises `ToolDeniedException` (Python) or `ToolDeniedException` (TypeScript) with a structured payload. Watch the inbox in another terminal:
+A `permit` call returns the tool result. A `defer` call raises `ToolDeniedException` (Python or TypeScript) with a structured payload. Watch the inbox in another terminal:
 
 ```bash title="Terminal"
 faramesh approvals list
 faramesh approvals approve apr-9001
 ```
 
-Once approved, the agent's next attempt at `send_email` will succeed, or you can promote the rule to `permit` in `governance.fms` and `faramesh apply` again.
+Once approved, the agent's next attempt at `send_email` succeeds. Alternatively, promote the rule to `permit` in `governance.fms` and run `faramesh apply` again.
 
 ## What you now have
 
@@ -244,7 +256,7 @@ Once approved, the agent's next attempt at `send_email` will succeed, or you can
 
 ## Next
 
-- [Stack reference](/stack/): every block in `governance.fms`
-- [FPL language](/fpl/): the grammar with examples
-- [Workflows](/flows/): first apply, change, monitor
-- [CLI](/cli/): every command
+- [Stack reference](/stack/): every block in `governance.fms`.
+- [FPL language](/fpl/): the grammar with examples.
+- [Workflows](/flows/): first apply, change, monitor.
+- [CLI](/cli/): every command.

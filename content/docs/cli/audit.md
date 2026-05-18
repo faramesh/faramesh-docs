@@ -3,7 +3,7 @@ title: faramesh audit
 description: Inspect, verify, and export the Decision Provenance Record chain. The hash-chained, optionally KMS-signed source of truth for what your agent did.
 ---
 
-`faramesh audit` is the read side of the WAL. Every governance decision the daemon makes — permit, defer, deny, plus credential issuance, redactions, and rule references — is written as a **Decision Provenance Record (DPR)** into a hash-chained log. The `audit` subcommands let you tail it, inspect individual records, verify the chain, and export windows for SIEMs and auditors.
+`faramesh audit` is the read side of the WAL. Every governance decision the daemon makes, permit, defer, deny, plus credential issuance, redactions, and rule references, is written as a **Decision Provenance Record (DPR)** into a hash-chained log. The `audit` subcommands let you tail it, inspect individual records, verify the chain, and export windows for SIEMs and auditors.
 
 If you can't trust this command, you can't trust the audit story. Treat its output as evidence.
 
@@ -25,7 +25,7 @@ All subcommands operate on the local stack's WAL (`runtime { wal_dir }`). They d
 
 ## Subcommands
 
-### `tail` — stream the live decision log
+### `tail`: stream the live decision log
 
 ```bash title="Terminal"
 $ faramesh audit tail --effect deny
@@ -36,7 +36,7 @@ $ faramesh audit tail --effect deny
 
 Filters: `--agent`, `--effect`, `--tool`. Combine freely. `--format json` emits one DPR per line for piping to `jq`.
 
-### `show` — full DPR for one decision
+### `show`: full DPR for one decision
 
 ```bash title="Terminal"
 $ faramesh audit show dpr-7f3b
@@ -66,7 +66,7 @@ DPR
 
 The `show` output is the full structured record. You read this when an auditor asks "what exactly happened on May 17 at 19:30:01."
 
-### `ls` — paginate decisions
+### `ls`: paginate decisions
 
 ```bash title="Terminal"
 $ faramesh audit ls --tool stripe/refund --since 24h
@@ -77,7 +77,7 @@ TIMESTAMP             DPR        EFFECT  AMOUNT  REASON
 
 For richer queries, export and use `jq` or your SIEM.
 
-### `verify` — check the chain end to end
+### `verify`: check the chain end to end
 
 ```bash title="Terminal"
 $ faramesh audit verify
@@ -109,7 +109,7 @@ audit chain verification failed
 
 A chain break is **always** investigated. It means either the WAL was tampered with, hardware corruption occurred, or a `faramesh audit compact` ran without proper merge.
 
-### `export` — for SIEM, compliance, retention
+### `export`: for SIEM, compliance, retention
 
 ```bash title="Terminal"
 faramesh audit export --from 2026-05-01 --to 2026-05-31 --format jsonl > may.jsonl
@@ -125,7 +125,7 @@ Formats:
 
 Export is **read-only**. Records are emitted with their original hashes and signatures so the consumer can re-verify offline.
 
-### `stats` — at-a-glance counts
+### `stats`: at-a-glance counts
 
 ```bash title="Terminal"
 $ faramesh audit stats --since 24h
@@ -148,7 +148,7 @@ Top denial codes
   CREDENTIAL_UNAVAILABLE   1
 ```
 
-### `trace` — follow one logical action across DPRs
+### `trace`: follow one logical action across DPRs
 
 A single agent task often produces many decisions. If you propagated a `request_id` (or one was auto-generated), `trace` collects every related DPR:
 
@@ -158,7 +158,7 @@ faramesh audit trace req-abc123
 
 You get the full lineage: identity attestation, every tool call, every credential issuance, the final decision.
 
-### `compact` — merge old WAL segments
+### `compact`: merge old WAL segments
 
 Long-running stacks accumulate WAL segments. `compact` merges old segments into a single archive file while preserving the hash chain:
 
@@ -168,7 +168,7 @@ faramesh audit compact --older-than 90d
 
 Compaction writes a new file with a continuation hash so `verify` continues to work across the boundary. Run during low-traffic windows; it's I/O-heavy.
 
-### `wal inspect` — diagnostic dump
+### `wal inspect`: diagnostic dump
 
 ```bash title="Terminal"
 faramesh audit wal inspect
@@ -220,12 +220,12 @@ The local WAL is the source of truth; the audit sink is for fan-out. Both record
 ## What `audit` does NOT do
 
 - It doesn't change anything. Read-only.
-- It doesn't redact arguments — redaction happens at decision time, in the pipeline.
+- It doesn't redact arguments. Redaction happens at decision time, in the pipeline.
 - It doesn't re-evaluate decisions against current policy (use [`faramesh plan`](/cli/plan/) for that).
 
 ## What's next
 
-- [Auditing concept](/concepts/auditing/) — DPR structure, hash chain, KMS verification.
-- [KMS & signing](/concepts/kms/) — choosing a signer.
-- [Security guide for auditors](/guides/security-engineer/) — what to collect and how to map to controls.
-- [`faramesh explain`](/cli/explain/) — when you want the why, not just the what.
+- [Auditing concept](/concepts/auditing/): dPR structure, hash chain, KMS verification.
+- [KMS & signing](/concepts/kms/): choosing a signer.
+- [Security guide for auditors](/guides/security-engineer/): what to collect and how to map to controls.
+- [`faramesh explain`](/cli/explain/): when you want the why, not just the what.

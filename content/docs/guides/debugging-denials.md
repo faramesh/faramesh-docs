@@ -1,5 +1,5 @@
 ---
-title: Tutorial — Debug a denial
+title: Tutorial. Debug a denial
 description: Why was my call denied? A diagnostic walkthrough using faramesh explain, the WAL, and the structured denial payload.
 ---
 
@@ -124,7 +124,7 @@ Daily budgets reset on UTC midnight by default. Bump `max` or change `on_exceed`
 
 ### "Egress denied for host X"
 
-The destination is not in `egress.allow`. Either add it or stop calling that host. **Don't** add `*` — egress confinement is one of your real defenses.
+The destination is not in `egress.allow`. Either add it or stop calling that host. **Don't** add `*`: egress confinement is one of your real defenses.
 
 ### "DAEMON_NOT_READY"
 
@@ -134,7 +134,7 @@ The daemon is still in `INITIALIZING`. The payload includes `retry_after_seconds
 
 A provider couldn't mint the credential the rule required (Vault unreachable, AWS STS rate-limited, etc.). The decision was logically a permit; Faramesh failed closed because it can't fulfill the credential safely. Check provider health.
 
-### "POLICY_DEFER" — and the approval never resolved
+### "POLICY_DEFER". And the approval never resolved
 
 The defer token has a timeout. If no operator approves it within the configured window (default 24h), it expires:
 
@@ -161,7 +161,7 @@ A useful diagnostic question: **was this call something the agent should be allo
 
 ## Where to go next
 
-- [Denial codes](/errors/) — every code, with payload and recovery.
-- [FPL reference](/fpl/) — the grammar in detail.
-- [Auditing](/concepts/auditing/) — DPR structure, hash chain, KMS verification.
-- [Approvals CLI](/cli/approvals/) — manage the deferred queue.
+- [Denial codes](/errors/): every code, with payload and recovery.
+- [FPL reference](/fpl/): the grammar in detail.
+- [Auditing](/concepts/auditing/): dPR structure, hash chain, KMS verification.
+- [Approvals CLI](/cli/approvals/): manage the deferred queue.

@@ -3,7 +3,7 @@ title: Policy packs
 description: Import versioned FPL rule sets from the GitHub catalog and extend them in your agents.
 ---
 
-Policy packs are **FPL fragments** — rules, defaults, rate limits, and redactions you import and compose with agent-specific overrides.
+Policy packs are **FPL fragments**: rules, defaults, rate limits, and redactions you import and compose with agent-specific overrides.
 
 ## Import
 

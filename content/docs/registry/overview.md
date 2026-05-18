@@ -7,8 +7,8 @@ The catalog is a Git repository. The index file `catalog/catalog.json` lists eve
 
 ## Resolution flow
 
-1. **`faramesh check`** — Fetches FPL for policy and framework imports from GitHub (or `FARAMESH_REGISTRY_ROOT`), verifies signatures when present, merges into your stack AST.
-2. **`faramesh apply`** — Downloads the provider binary for your OS/architecture, verifies `sha256` and optional Ed25519 signature, installs under `.faramesh/providers/`.
+1. **`faramesh check`**: fetches FPL for policy and framework imports from GitHub (or `FARAMESH_REGISTRY_ROOT`), verifies signatures when present, merges into your stack AST.
+2. **`faramesh apply`**: downloads the provider binary for your OS/architecture, verifies `sha256` and optional Ed25519 signature, installs under `.faramesh/providers/`.
 
 Default source: `https://raw.githubusercontent.com/faramesh/faramesh-registry/main/...`
 
@@ -38,4 +38,4 @@ See the live index on GitHub: [catalog/catalog.json](https://github.com/faramesh
 
 **Policy packs:** `stripe` and `shell` are substantive starter packs. `openai`, `github`, and `mcp` are baselines you should review and extend before production.
 
-**Framework profiles** are short FPL fragments (typically under 15 lines) that set the framework id and default posture — that is expected, not incomplete packaging.
+**Framework profiles** are short FPL fragments (typically under 15 lines) that set the framework id and default posture. That is expected, not incomplete packaging.

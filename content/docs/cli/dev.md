@@ -1,6 +1,6 @@
 ---
 title: faramesh dev
-description: Run governance locally with in-process stubs for Vault, SPIFFE, KMS, and the audit sink — no external infrastructure.
+description: Run governance locally with in-process stubs for Vault, SPIFFE, KMS, and the audit sink. No external infrastructure.
 ---
 
 `faramesh dev` is the **no-infrastructure mode** of the daemon. It compiles your `governance.fms` exactly like `faramesh apply` does, then runs the daemon against in-process stubs for every provider you haven't declared. You get the full policy engine without Vault, SPIRE, KMS, or a SIEM endpoint.
@@ -24,7 +24,7 @@ faramesh dev [--dir DIR]
 - Demo Faramesh on a laptop without provisioning anything.
 - Run integration tests in CI without a Vault container.
 
-When you're ready for persistent WAL, OS-tier sandbox, and real providers, switch to [`faramesh apply`](/cli/apply/). **Nothing about your agent code or your policy rules changes** — only the provider declarations.
+When you're ready for persistent WAL, OS-tier sandbox, and real providers, switch to [`faramesh apply`](/cli/apply/). **Nothing about your agent code or your policy rules changes**: only the provider declarations.
 
 ## What happens when you run it
 
@@ -33,23 +33,23 @@ When you're ready for persistent WAL, OS-tier sandbox, and real providers, switc
 3. For every provider you **didn't** declare, an in-process stub takes its place.
 4. The WAL is in-memory; nothing persists past daemon shutdown.
 
-Every DPR emitted during a dev run is tagged so it's obvious in the chain that stubs were in use. A dev WAL **cannot be confused with a production audit trail** — `faramesh audit verify` flags the dev tag explicitly.
+Every DPR emitted during a dev run is tagged so it's obvious in the chain that stubs were in use. A dev WAL **cannot be confused with a production audit trail**: `faramesh audit verify` flags the dev tag explicitly.
 
 ## What the stubs provide
 
 `faramesh dev` starts in-process stubs for every provider type. Each is realistic enough to exercise the full pipeline:
 
-**Secrets stub** — returns a `STUB-<id>` placeholder secret with the TTL declared in policy. The SDK shim sees a real, scoped, time-bounded credential. Replace with a real `provider` block for production.
+**Secrets stub**: returns a `STUB-<id>` placeholder secret with the TTL declared in policy. The SDK shim sees a real, scoped, time-bounded credential. Replace with a real `provider` block for production.
 
-**Identity stub** — generates an ephemeral SPIFFE id under `spiffe://dev.local/<host>/<pid>`. Your agent gets a real identity string that works with policy conditions and `principal.*` claims. Replace with `identity "spiffe" { ... }` for production.
+**Identity stub**: generates an ephemeral SPIFFE id under `spiffe://dev.local/<host>/<pid>`. Your agent gets a real identity string that works with policy conditions and `principal.*` claims. Replace with `identity "spiffe" { ... }` for production.
 
-**KMS stub** — generates an ephemeral Ed25519 keypair per session and signs DPR records. The audit chain is cryptographically intact and verifiable for the lifetime of the run. Replace with `provider "kms" { ... }` for production.
+**KMS stub**: generates an ephemeral Ed25519 keypair per session and signs DPR records. The audit chain is cryptographically intact and verifiable for the lifetime of the run. Replace with `provider "kms" { ... }` for production.
 
-**WAL** — in-memory only. DPR records exist only for the lifetime of the dev session. For persistent audit, use `faramesh apply`.
+**WAL**: in-memory only. DPR records exist only for the lifetime of the dev session. For persistent audit, use `faramesh apply`.
 
-**Audit sink** — DPRs are pretty-printed to stderr instead of shipped to Splunk/Datadog/S3.
+**Audit sink**: dPRs are pretty-printed to stderr instead of shipped to Splunk/Datadog/S3.
 
-**Cost provider** — uses Faramesh's bundled pricing table for the major model APIs and a flat per-call cost for non-LLM tools.
+**Cost provider**: uses Faramesh's bundled pricing table for the major model APIs and a flat per-call cost for non-LLM tools.
 
 None of these stubs make network calls. `faramesh dev` works on an airplane.
 
@@ -102,7 +102,7 @@ faramesh apply
 | OS-tier syscall sandbox | seccomp+Landlock | Seatbelt | — |
 | eBPF LSM | Linux 5.7+ | — | — |
 
-`faramesh dev` itself works on all three operating systems. The OS-tier sandbox is not active in dev mode (it's intentionally application-tier only) — turn on `runtime { os_tier = true }` and use [`faramesh apply`](/cli/apply/) when you want it.
+`faramesh dev` itself works on all three operating systems. The OS-tier sandbox is not active in dev mode (it's intentionally application-tier only). Turn on `runtime { os_tier = true }` and use [`faramesh apply`](/cli/apply/) when you want it.
 
 ## Common issues
 
@@ -116,7 +116,7 @@ faramesh apply
 
 ## What's next
 
-- [Quickstart](/quickstart/) — the full five-step walkthrough.
-- [`faramesh apply`](/cli/apply/) — production path with real providers.
-- [Providers](/providers/) — declare Vault, AWS, GCP, Azure, SPIFFE.
-- [Workflows](/flows/) — first apply, change, monitor.
+- [Quickstart](/quickstart/): the full five-step walkthrough.
+- [`faramesh apply`](/cli/apply/): production path with real providers.
+- [Providers](/providers/): declare Vault, AWS, GCP, Azure, SPIFFE.
+- [Workflows](/flows/): first apply, change, monitor.

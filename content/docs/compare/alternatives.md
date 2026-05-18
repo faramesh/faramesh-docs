@@ -5,7 +5,7 @@ description: Faramesh vs Microsoft Agent Governance Toolkit, Galileo Agent Contr
 
 Teams evaluating agent governance usually consider three paths: **platform guardrail layers**, **open-source security kits**, or **custom code** around each agent. Faramesh is a **local enforcement daemon** with declarative policy (`governance.fms`), signed catalog artifacts on GitHub, and tamper-evident audit by default.
 
-This page is a practical comparison for production architects—not a feature checklist of unreleased products.
+This page is a practical comparison for production architects not a feature checklist of unreleased products.
 
 ## At a glance
 
@@ -26,10 +26,10 @@ Microsoft’s toolkit is a **broad security and reliability suite** for agentic 
 
 **Where Faramesh differs**
 
-- **Single enforcement choke point** — One daemon evaluates every tool call; policy is not scattered across SDK hooks unless you choose the shim tier.
-- **Governance-as-code workflow** — `faramesh init` → `check` → `plan` → `apply` mirrors infrastructure workflows teams already trust.
-- **Catalog on GitHub** — Providers and FPL packs version together; no dependency on a separate commercial registry host.
-- **Narrower scope, deeper path** — Faramesh optimizes for *per-call* permit/deny/defer and credential brokering, not the full marketplace/SRE surface area of the Microsoft toolkit.
+- **Single enforcement choke point**: one daemon evaluates every tool call; policy is not scattered across SDK hooks unless you choose the shim tier.
+- **Governance-as-code workflow**: `faramesh init` → `check` → `plan` → `apply` mirrors infrastructure workflows teams already trust.
+- **Catalog on GitHub**: providers and FPL packs version together; no dependency on a separate commercial registry host.
+- **Narrower scope, deeper path**: faramesh optimizes for *per-call* permit/deny/defer and credential brokering, not the full marketplace/SRE surface area of the Microsoft toolkit.
 
 **When Microsoft’s toolkit may fit better**
 
@@ -37,14 +37,14 @@ Microsoft’s toolkit is a **broad security and reliability suite** for agentic 
 
 ## Galileo Agent Control
 
-Galileo’s **Agent Control** is an open-source control plane for **centralized behavioral policies**—guardrails applied across agents via a control decorator, with emphasis on hallucination, PII, cost, and human approval patterns at enterprise scale.
+Galileo’s **Agent Control** is an open-source control plane for **centralized behavioral policies** guardrails applied across agents via a control decorator, with emphasis on hallucination, PII, cost, and human approval patterns at enterprise scale.
 
 **Where Faramesh differs**
 
-- **Enforcement outside the model vendor** — Decisions happen at tool invocation, not only at LLM output evaluation.
-- **Deterministic policy core** — FPL compiles to a stable AST; the same inputs yield the same decision (see [Enforcement](/concepts/enforcement/)).
-- **Offline-capable audit** — `faramesh audit verify` works on exported WAL/DPR without Galileo’s platform.
-- **Signed provider binaries** — Secrets and identity integrate via gRPC providers, not only evaluator plugins.
+- **Enforcement outside the model vendor**: decisions happen at tool invocation, not only at LLM output evaluation.
+- **Deterministic policy core**: fPL compiles to a stable AST; the same inputs yield the same decision (see [Enforcement](/concepts/enforcement/)).
+- **Offline-capable audit**: `faramesh audit verify` works on exported WAL/DPR without Galileo’s platform.
+- **Signed provider binaries**: secrets and identity integrate via gRPC providers, not only evaluator plugins.
 
 **When Galileo may fit better**
 
@@ -63,10 +63,10 @@ These approaches fail in predictable ways: they are **bypassable** (any code pat
 
 Faramesh standardizes:
 
-1. **Declaration** — `governance.fms` is reviewable in PRs.
-2. **Compilation** — `faramesh check` catches errors before runtime.
-3. **Evidence** — Every decision can be verified post hoc.
-4. **Reusable packs** — Stripe, shell, GitHub, MCP baselines from the catalog.
+1. **Declaration**: `governance.fms` is reviewable in PRs.
+2. **Compilation**: `faramesh check` catches errors before runtime.
+3. **Evidence**: every decision can be verified post hoc.
+4. **Reusable packs**: stripe, shell, GitHub, MCP baselines from the catalog.
 
 ## Summary
 

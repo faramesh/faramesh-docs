@@ -3,7 +3,7 @@ title: Auditing agent decisions
 description: A security-focused guide to DPR verification, compliance exports, and evidence workflows with Faramesh.
 ---
 
-Security and GRC teams care about **what the agent did**, **under which policy**, and **whether records were tampered with**—not about LangGraph nodes.
+Security and GRC teams care about **what the agent did**, **under which policy**, and **whether records were tampered with** not about LangGraph nodes.
 
 ## What to collect
 

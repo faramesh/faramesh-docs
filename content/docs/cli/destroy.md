@@ -116,10 +116,10 @@ faramesh audit export --format json > audit-$(date +%Y%m%d).json
 faramesh destroy --keep-wal
 ```
 
-For dev/CI stacks, removing the WAL is fine — the records are tagged as dev anyway.
+For dev/CI stacks, removing the WAL is fine. The records are tagged as dev anyway.
 
 ## What's next
 
-- [`faramesh apply --stop`](/cli/apply/#stopping-the-daemon) — softer alternative.
-- [`faramesh audit export`](/cli/audit/) — archive the WAL before destroy.
-- [`faramesh init`](/cli/init/) — start a fresh stack after destroy.
+- [`faramesh apply --stop`](/cli/apply/#stopping-the-daemon): softer alternative.
+- [`faramesh audit export`](/cli/audit/): archive the WAL before destroy.
+- [`faramesh init`](/cli/init/): start a fresh stack after destroy.

@@ -12,9 +12,9 @@ description: Remove Faramesh enforcement, export final audit evidence, and retir
    faramesh audit verify --stack ./my-stack
    ```
 
-2. **Revoke brokered credentials** — Rotate Vault paths, cloud IAM roles, and API keys that providers issued to agents.
+2. **Revoke brokered credentials**: rotate Vault paths, cloud IAM roles, and API keys that providers issued to agents.
 
-3. **Document final policy** — Archive `governance.fms`, `governance.compiled.json`, and import pins for retention policy.
+3. **Document final policy**: archive `governance.fms`, `governance.compiled.json`, and import pins for retention policy.
 
 ## Stop enforcement
 
@@ -42,7 +42,7 @@ Removes cached providers, import cache, and WAL (only after export if audit rete
 
 ## Partial offboarding
 
-To keep audit but pause enforcement, use `runtime { mode = "monitor" }` (if enabled in your version) or detach providers while retaining WAL—verify behavior in staging first.
+To keep audit but pause enforcement, use `runtime { mode = "monitor" }` (if enabled in your version) or detach providers while retaining WAL verify behavior in staging first.
 
 ## Related
 

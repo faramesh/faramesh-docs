@@ -1,6 +1,6 @@
 ---
 title: faramesh check
-description: Validate governance.fms — parse, type-check, resolve imports, verify provider references — without starting the daemon.
+description: Validate governance.fms, parse, type-check, resolve imports, verify provider references, without starting the daemon.
 ---
 
 `faramesh check` is the command you run **every time you edit `governance.fms`**. It parses the file, resolves registry imports, verifies provider references, checks `env()` resolutions, and reports schema or type errors with file and line. It does not start the daemon, write any state, or contact the network unless an import requires resolution.
@@ -70,7 +70,7 @@ The error includes the offending source span and a suggestion when one is obviou
 
 - It doesn't talk to the daemon.
 - It doesn't replay decisions against history (that's [`faramesh plan`](/cli/plan/)).
-- It doesn't verify that `env()` values resolve at runtime — those are checked at `apply` time unless you pass `--strict-env`.
+- It doesn't verify that `env()` values resolve at runtime. Those are checked at `apply` time unless you pass `--strict-env`.
 - It doesn't download provider binaries (that's `apply`).
 
 ## Recommended use
@@ -93,7 +93,7 @@ In CI:
 
 ## What's next
 
-- [`faramesh plan`](/cli/plan/) — see what would change at apply.
-- [`faramesh apply`](/cli/apply/) — compile and start enforcing.
-- [FPL reference](/fpl/) — full grammar and conditions.
-- [Stack reference](/stack/) — block-by-block semantics.
+- [`faramesh plan`](/cli/plan/): see what would change at apply.
+- [`faramesh apply`](/cli/apply/): compile and start enforcing.
+- [FPL reference](/fpl/): full grammar and conditions.
+- [Stack reference](/stack/): block-by-block semantics.

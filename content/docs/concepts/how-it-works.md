@@ -9,15 +9,15 @@ Everything below is detail on top of that one sentence.
 
 ## The three things to understand
 
-1. **Where Faramesh sits** — the placement.
-2. **What happens on every call** — the decision pipeline.
-3. **What guarantees the daemon provides** — the trust boundary.
+1. **Where Faramesh sits**: the placement.
+2. **What happens on every call**: the decision pipeline.
+3. **What guarantees the daemon provides**: the trust boundary.
 
 We'll cover all three with examples.
 
 ## 1. Where Faramesh sits (placement)
 
-Your agent runs in some process. It has tools. The framework you're using (LangGraph, Claude Code, Bedrock, whatever) decides which tool to call, with which arguments, and runs it. **Faramesh inserts itself between "decided to call" and "actually called."**
+Your agent runs in some process. It has tools. The framework in use (LangGraph, Claude Code, Bedrock, or another) decides which tool to call, with which arguments, and runs it. **Faramesh inserts itself between "decided to call" and "called."**
 
 ```text title="The placement"
 ┌──────────────────────────────────────────────────────────┐
@@ -44,8 +44,8 @@ Your agent runs in some process. It has tools. The framework you're using (LangG
 
 The agent only sees one of two things, depending on how you wire it:
 
-- **The Faramesh SDK shim** — a tiny library you import. Replaces your tool list with a wrapped version that calls the daemon first.
-- **A proxy URL** — for MCP clients and HTTP-based runtimes, Faramesh runs a proxy port. You point the client at the proxy instead of the upstream.
+- **The Faramesh SDK shim**: a tiny library you import. Replaces your tool list with a wrapped version that calls the daemon first.
+- **A proxy URL**: for MCP clients and HTTP-based runtimes, Faramesh runs a proxy port. You point the client at the proxy instead of the upstream.
 
 Either way: the agent **never reaches the real endpoint directly** while the daemon is running. There is no opt-out path through the framework, because the framework itself has been redirected.
 
@@ -57,7 +57,7 @@ Either way: the agent **never reaches the real endpoint directly** while the dae
 | MCP proxy | Claude Code, Cursor, OpenCode, your own MCP client | None (config only) |
 | HTTP proxy | Bedrock, hosted vendors, anything calling REST | None (config only) |
 
-You can mix tiers. A LangGraph agent that also talks to a hosted MCP server can use both the SDK shim **and** the MCP proxy — same daemon, same policy, two interception points.
+You can mix tiers. A LangGraph agent that also talks to a hosted MCP server can use both the SDK shim **and** the MCP proxy. Same daemon, same policy, two interception points.
 
 → Full detail on [Interception](/concepts/interception/).
 
@@ -87,7 +87,7 @@ A few important properties of this pipeline:
 - **Steps 1–8 are pure functions.** They take `(policy AST, action payload)` and return a decision. No LLM, no network call, no file read.
 - **Same input → same decision, every time.** That's what "deterministic" means here. You can replay any decision offline and prove the daemon would make the same one.
 - **Defer stops the pipeline at step 8.** The action is queued for a human; the credential is **not** brokered, the tool is **not** run.
-- **Deny stops the pipeline at step 8.** Same — nothing else happens.
+- **Deny stops the pipeline at step 8.** Same. Nothing else happens.
 
 ### Worked example
 
@@ -140,7 +140,7 @@ The daemon is the only thing trusted to enforce policy on this host. Concretely,
 
 What the daemon does **not** guarantee:
 
-- It doesn't stop a malicious tool from doing something out-of-band that doesn't touch its declared API. (Mitigation: OS-tier sandbox on Linux/macOS — see [Architecture](/concepts/architecture/#5-the-agent-supervisor-and-os-tier-sandbox).)
+- It doesn't stop a malicious tool from doing something out-of-band that doesn't touch its declared API. (Mitigation: OS-tier sandbox on Linux/macOS. See [Architecture](/concepts/architecture/#5-the-agent-supervisor-and-os-tier-sandbox).)
 - It doesn't make a wrong policy correct. If your `governance.fms` says `permit *`, that's what it'll do.
 - It doesn't replace network segmentation, IAM, or the rest of your security stack. It augments them at the agent decision layer.
 
@@ -167,7 +167,7 @@ People get this confused, so let's draw it out:
 └────────────────────────────────────────┘  └────────────────────────────────┘
 ```
 
-`faramesh apply` is the **only** path from source to running daemon. After apply, the daemon does not re-read the file, does not watch the disk, does not poll a registry. The in-memory AST is what's enforced. To change policy, you `faramesh apply` again — which atomically swaps the AST.
+`faramesh apply` is the **only** path from source to running daemon. After apply, the daemon does not re-read the file, does not watch the disk, does not poll a registry. The in-memory AST is what's enforced. To change policy, you `faramesh apply` again. Which atomically swaps the AST.
 
 This is deliberate. If the daemon hot-reloaded `governance.fms` automatically, an attacker who got file write would also get policy authority.
 
@@ -185,7 +185,7 @@ A stack splits into two stacks only when the **governance context** truly differ
 
 ## Why deterministic matters
 
-The decision engine is intentionally **not** an LLM. Every reviewable property — the rule that fired, the conditions that matched, the redactions applied, the credential that was minted — is reproducible from `(policy, action payload)` alone. That means:
+The decision engine is intentionally **not** an LLM. Every reviewable property, the rule that fired, the conditions that matched, the redactions applied, the credential that was minted, is reproducible from `(policy, action payload)` alone. That means:
 
 - A denial is auditable. You can read the exact rule and the exact args.
 - Policy changes can be tested. `faramesh plan` replays history against the new AST and tells you what would have changed.
@@ -196,10 +196,10 @@ If we let an LLM make policy decisions, none of those properties would hold.
 
 ## Where to go from here
 
-- [Architecture](/concepts/architecture/) — the daemon, the supervisor, the OS sandbox, end to end.
-- [Enforcement](/concepts/enforcement/) — the pipeline in depth, with latency numbers.
-- [Interception](/concepts/interception/) — how the call reaches the daemon.
-- [Identity](/concepts/identity/) — workload identity for agents.
-- [Topologies](/concepts/topologies/) — every realistic deployment shape.
-- [Auditing](/concepts/auditing/) — DPR, WAL, hash chain, verification.
-- [Security model](/security/) — threats, guarantees, and explicit limits.
+- [Architecture](/concepts/architecture/): the daemon, the supervisor, the OS sandbox, end to end.
+- [Enforcement](/concepts/enforcement/): the pipeline in depth, with latency numbers.
+- [Interception](/concepts/interception/): how the call reaches the daemon.
+- [Identity](/concepts/identity/): workload identity for agents.
+- [Topologies](/concepts/topologies/): every realistic deployment shape.
+- [Auditing](/concepts/auditing/): dPR, WAL, hash chain, verification.
+- [Security model](/security/): threats, guarantees, and explicit limits.

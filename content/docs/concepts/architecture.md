@@ -3,7 +3,7 @@ title: Architecture
 description: How the Faramesh daemon, lifecycle, supervisor, OS-tier sandbox, interception tiers, providers, and optional cloud control plane fit together end-to-end.
 ---
 
-This page explains the **runtime architecture** of a Faramesh stack — what processes run, what they do, in what order, and where the trust boundaries are.
+This page explains the **runtime architecture** of a Faramesh stack. What processes run, what they do, in what order, and where the trust boundaries are.
 
 If you haven't read [How Faramesh works](/concepts/how-it-works/) yet, do that first. This page assumes you know the placement and the decision pipeline.
 
@@ -45,7 +45,7 @@ If you haven't read [How Faramesh works](/concepts/how-it-works/) yet, do that f
 
 ## 1. The daemon lifecycle
 
-The daemon goes through explicit states. The Unix socket is **only** opened after the daemon is `READY` — early calls return `DAEMON_NOT_READY` instead of being silently evaluated against an incomplete policy.
+The daemon goes through explicit states. The Unix socket is **only** opened after the daemon is `READY`: early calls return `DAEMON_NOT_READY` instead of being silently evaluated against an incomplete policy.
 
 ```text title="Daemon lifecycle"
 STARTING ──► INITIALIZING ──► READY ──► (running) ──► HALT
@@ -134,7 +134,7 @@ There is **no separate `faramesh run` command**. The launcher is the single entr
 
 ### 3b. The daemon supervisor
 
-When `runtime { supervised_command = "..." }` is set, the daemon **launches and supervises the agent child itself** after reaching `READY`. You don't need to remember to invoke the launcher — `faramesh apply` starts the daemon, and the daemon starts the agent.
+When `runtime { supervised_command = "..." }` is set, the daemon **launches and supervises the agent child itself** after reaching `READY`. You don't need to remember to invoke the launcher. `faramesh apply` starts the daemon, and the daemon starts the agent.
 
 ```text title="Supervised lifecycle"
 faramesh apply
@@ -162,7 +162,7 @@ The supervisor:
 - Strips ambient credentials before exec.
 - Exposes `supervisor_launch`, `supervisor_stop`, `supervisor_list` over the SDK socket so external tooling (or a future operator UI) can manage children programmatically.
 
-`supervised_command` is optional. If you set it, the daemon manages the child. If you don't, you start the agent yourself with `.faramesh/bin/agent --`. **Both paths use exactly the same sandbox** — they differ only in who starts the process.
+`supervised_command` is optional. If you set it, the daemon manages the child. If you don't, you start the agent yourself with `.faramesh/bin/agent --`. **Both paths use exactly the same sandbox**: they differ only in who starts the process.
 
 ### 3c. The OS sandbox itself
 
@@ -176,9 +176,9 @@ The supervisor:
 
 Profiles map to severity:
 
-- `agent_enforce_profile = "full"` — strict sandbox; the agent can talk to the local daemon and nothing else without policy approval.
-- `agent_enforce_profile = "minimal"` — looser sandbox for development.
-- `agent_enforce_profile = "off"` — no OS sandbox; SDK/proxy tier only.
+- `agent_enforce_profile = "full"`: strict sandbox; the agent can talk to the local daemon and nothing else without policy approval.
+- `agent_enforce_profile = "minimal"`: looser sandbox for development.
+- `agent_enforce_profile = "off"`: no OS sandbox; SDK/proxy tier only.
 
 → Full security posture: [Security model](/security/).
 
@@ -225,9 +225,9 @@ The agent being untrusted is the whole point. Everything else flows from that as
 
 Imports in `governance.fms` resolve from [github.com/faramesh/faramesh-registry](https://github.com/faramesh/faramesh-registry):
 
-- **Framework profiles** — FPL wiring for a runtime tier.
-- **Policy packs** — reusable rules (Stripe, shell, GitHub, MCP, …).
-- **Providers** — signed binaries downloaded at `faramesh apply`.
+- **Framework profiles**: fPL wiring for a runtime tier.
+- **Policy packs**: reusable rules (Stripe, shell, GitHub, MCP, …).
+- **Providers**: signed binaries downloaded at `faramesh apply`.
 
 The CLI fetches from GitHub by default. For air-gapped setups, mirror the catalog and set `FARAMESH_REGISTRY_ROOT`.
 
@@ -270,9 +270,9 @@ That's the entire system. Everything else in the docs is depth on top of these s
 
 ## Related
 
-- [How Faramesh works](/concepts/how-it-works/) — the prerequisite mental model.
-- [Enforcement](/concepts/enforcement/) — the pipeline (steps 1–12) in depth.
-- [Interception](/concepts/interception/) — the three interception tiers in detail.
-- [Topologies](/concepts/topologies/) — every realistic deployment shape.
-- [Security model](/security/) — threats, guarantees, and limits.
-- [Stack reference](/stack/) — the `runtime { }` fields that drive the supervisor and sandbox.
+- [How Faramesh works](/concepts/how-it-works/): the prerequisite mental model.
+- [Enforcement](/concepts/enforcement/): the pipeline (steps 1–12) in depth.
+- [Interception](/concepts/interception/): the three interception tiers in detail.
+- [Topologies](/concepts/topologies/): every realistic deployment shape.
+- [Security model](/security/): threats, guarantees, and limits.
+- [Stack reference](/stack/): the `runtime { }` fields that drive the supervisor and sandbox.

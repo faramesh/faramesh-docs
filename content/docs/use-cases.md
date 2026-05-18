@@ -308,7 +308,7 @@ agent "research-bot" {
 
 **What this gives you.**
 
-- Bounded crawl. The agent literally cannot reach hosts outside the allow list.
+- Bounded crawl. The agent cannot reach hosts outside the allow list.
 - No file uploads without human approval.
 - Daily dollar ceiling on browsing cost.
 
@@ -324,7 +324,7 @@ You'll notice the same building blocks recur:
 - **`egress`** for any agent that touches the network.
 - **`alert`** for the security-team-needs-to-know moments.
 
-A first draft of `governance.fms` for a new agent usually takes 30 minutes. The rest of the time is tightening the rules as you see what your agent actually wants to do.
+A first draft of `governance.fms` for a new agent usually takes 30 minutes. The rest of the time is tightening the rules as you see what the agent attempts to do in practice.
 
 ## What's next
 

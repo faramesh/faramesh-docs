@@ -161,9 +161,9 @@ Tier 1 (SDK shim) governs **any callable the framework exposes as a tool**, not 
 
 **What Tier 1 does not automatically cover:** code inside the agent that bypasses the tool list (direct `requests.get`, raw `open()`, `os.system`). Mitigations:
 
-1. **Linux OS-tier** — `enforcement { os_tier = true }` with seccomp/Landlock blocks syscalls and paths outside policy.
-2. **Network proxy** — egress rules on the daemon HTTP proxy for outbound API calls that never go through a named tool.
-3. **Process separation** — run the agent as an unprivileged user; run `faramesh apply` as the `faramesh` system user.
+1. **Linux OS-tier**: `enforcement { os_tier = true }` with seccomp/Landlock blocks syscalls and paths outside policy.
+2. **Network proxy**: egress rules on the daemon HTTP proxy for outbound API calls that never go through a named tool.
+3. **Process separation**: run the agent as an unprivileged user; run `faramesh apply` as the `faramesh` system user.
 
 For MCP-only clients without source access, use **Tier 2** so every `tools/call` is proxied regardless of tool implementation.
 
@@ -171,8 +171,8 @@ For MCP-only clients without source access, use **Tier 2** so every `tools/call`
 
 Agents often call REST, GraphQL, or vendor SDKs that are **not** MCP servers. Faramesh covers them in two ways:
 
-1. **HTTP proxy (Tier 3)** — Point the runtime or SDK at `FARAMESH_HTTP_PROXY`. Every outbound request is canonicalized to a tool id (OpenAPI `operationId` or configured route map) and evaluated before the upstream sees traffic. Use `egress { allow = [...] }` to deny unknown hosts.
-2. **Named tools via SDK shim** — Wrap each integration as a `@tool` / `GovernedToolSet` entry so policy matches on structured args even when the wire format is bespoke.
+1. **HTTP proxy (Tier 3)**: point the runtime or SDK at `FARAMESH_HTTP_PROXY`. Every outbound request is canonicalized to a tool id (OpenAPI `operationId` or configured route map) and evaluated before the upstream sees traffic. Use `egress { allow = [...] }` to deny unknown hosts.
+2. **Named tools via SDK shim**: wrap each integration as a `@tool` / `GovernedToolSet` entry so policy matches on structured args even when the wire format is bespoke.
 
 Calls that use neither surface (hard-coded sockets, DNS to arbitrary hosts) require **OS-tier** enforcement on Linux or network policy outside the agent process. Document your gaps with `faramesh check --strict` and extend `governance.fms` egress rules.
 

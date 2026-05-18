@@ -7,7 +7,7 @@ import { siteUrl } from '@/lib/shared';
 export const metadata = createDocMetadata({
   title: 'Faramesh Docs',
   description:
-    'Governance as code for AI agents — policy, identity, credential brokering, and audit trails.',
+    'Governance as code for AI agents. Policy, identity, credential brokering, and audit trails.',
   path: '/',
   ogImage: `${siteUrl}/docs-cover.png`,
 });

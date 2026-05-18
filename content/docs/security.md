@@ -81,8 +81,8 @@ The agent runtime is treated as untrusted code. Everything below the dashed line
 **Mitigation.**
 
 1. **`faramesh apply`** compiles policy into `.faramesh/governance.compiled.json` and materialized `governance.policy.fpl`. The daemon started with `--from-compiled` does **not** hot-reload source files on SIGHUP (load-once default).
-2. **`runtime { immutable_config = true }`** — after apply, the CLI sets the Linux immutable flag (`chattr +i`) or macOS `uchg` on the config source so even root must explicitly unlock before editing.
-3. **Privileged apply only** — policy changes require `faramesh apply` as a user that can restart the daemon, not the agent UID.
+2. **`runtime { immutable_config = true }`**: after apply, the CLI sets the Linux immutable flag (`chattr +i`) or macOS `uchg` on the config source so even root must explicitly unlock before editing.
+3. **Privileged apply only**: policy changes require `faramesh apply` as a user that can restart the daemon, not the agent UID.
 
 ### Daemon lifecycle and `DAEMON_NOT_READY`
 
@@ -102,7 +102,7 @@ Optional `runtime { cold_start_deny_window = "30s" }` transitions to **HALT** if
 
 ### Seccomp and eBPF for hostile agents
 
-On Linux, the agent seccomp profile **denies** `kill`, `tkill`, and `tgkill` against foreign PIDs. Landlock and optional **eBPF LSM** enforce the same baseline at kernel level. Enable **`runtime { os_tier = true }`** in `governance.fms`, then start the agent with **`.faramesh/bin/agent`** (written by `faramesh apply`) — no separate CLI command.
+On Linux, the agent seccomp profile **denies** `kill`, `tkill`, and `tgkill` against foreign PIDs. Landlock and optional **eBPF LSM** enforce the same baseline at kernel level. Enable **`runtime { os_tier = true }`** in `governance.fms`, then start the agent with **`.faramesh/bin/agent`** (written by `faramesh apply`). No separate CLI command.
 
 ## Defense in depth
 

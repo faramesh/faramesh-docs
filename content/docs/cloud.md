@@ -53,7 +53,7 @@ If enforcement lives in Cloud, your governance guarantee is only as strong as yo
 
 So: **enforcement stays local, always.**
 
-## What Cloud actually is
+## What Cloud is
 
 Cloud is four things, clearly separated.
 

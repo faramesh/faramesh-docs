@@ -11,7 +11,7 @@ description: Common CLI, daemon, registry, and SDK failures and fixes.
 | Unknown trust key | Add the Ed25519 key from [catalog/trust/keys.json](https://github.com/faramesh/faramesh-registry/blob/main/catalog/trust/keys.json) to `trust { }` in `governance.fms` |
 | Pin rejected | Use exact semver (`@1.0.0`), not `@latest` |
 
-## `faramesh dev` / `apply` — daemon not reachable
+## `faramesh dev` / `apply`: daemon not reachable
 
 | Symptom | Fix |
 |---------|-----|
@@ -44,6 +44,6 @@ Set `runtime { os_tier = true }` in `governance.fms`, run `faramesh apply`, then
 
 ## More help
 
-- [Contributing](/guides/contributing/) — repo layout and PR flow
-- [Security model](/security/) — threat mitigations and limits
+- [Contributing](/guides/contributing/): repo layout and PR flow
+- [Security model](/security/): threat mitigations and limits
 - [GitHub issues](https://github.com/faramesh/faramesh-core/issues)

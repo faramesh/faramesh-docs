@@ -119,7 +119,7 @@ For CI, `0` means "safe to proceed to apply"; non-zero blocks the merge.
 - It doesn't change the running daemon.
 - It doesn't write to the WAL.
 - It doesn't contact providers (compile-time only; provider checks happen at `apply`).
-- It can't predict effects on traffic patterns that haven't happened yet — only replay history.
+- It can't predict effects on traffic patterns that haven't happened yet. Only replay history.
 
 ## Common scenarios
 
@@ -133,11 +133,11 @@ For CI, `0` means "safe to proceed to apply"; non-zero blocks the merge.
 
 ### "I'm rolling out a new framework profile via import."
 
-The diff section shows every rule the import added. Skim it before merging — registry imports can ship many rules.
+The diff section shows every rule the import added. Skim it before merging. Registry imports can ship many rules.
 
 ## What's next
 
-- [`faramesh apply`](/cli/apply/) — actually apply the change.
-- [`faramesh check`](/cli/check/) — the cheaper, no-replay validator.
-- [Workflows](/flows/) — the day-to-day flow including `plan` in CI.
-- [Rolling out a stricter policy](/guides/your-first-policy/) — when to use `audit` mode + `plan` before flipping to `enforce`.
+- [`faramesh apply`](/cli/apply/): apply the change to the running daemon.
+- [`faramesh check`](/cli/check/): the cheaper, no-replay validator.
+- [Workflows](/flows/): the day-to-day flow including `plan` in CI.
+- [Rolling out a stricter policy](/guides/your-first-policy/): when to use `audit` mode + `plan` before flipping to `enforce`.

@@ -1,5 +1,5 @@
 ---
-title: Tutorial — Govern your first LangGraph agent
+title: Tutorial. Govern your first LangGraph agent
 description: Take an existing LangGraph agent, add Faramesh governance, and watch a deferred refund get approved by a human. No infra needed.
 ---
 
@@ -9,9 +9,9 @@ This tutorial takes about ten minutes. By the end you'll have a working LangGrap
 
 A small LangGraph agent that has three tools:
 
-- `search_docs` — read-only, always allowed
-- `send_email` — should defer for human approval
-- `charge_card` — should be allowed under $50, denied above
+- `search_docs`: read-only, always allowed
+- `send_email`: should defer for human approval
+- `charge_card`: should be allowed under $50, denied above
 
 You'll watch each tool call go through the daemon, see the deferred call appear in the approvals queue, approve it from the CLI, and verify the audit trail.
 
@@ -110,7 +110,7 @@ agent "refund-bot" {
 
 What this says:
 - `search_docs` always runs.
-- `send_email` always defers — a human has to approve every email.
+- `send_email` always defers. A human has to approve every email.
 - `charge_card` runs if amount is under $50; otherwise it's denied.
 - Card charges are rate-limited to 5/minute and capped at $100/day.
 
@@ -195,11 +195,11 @@ You'll see a hash-chain verification report covering every decision. The signed 
 | 6 | A deferred call became an approvable record. The human is in the loop. |
 | 7 | Every decision is a tamper-evident audit record. |
 
-Crucially, **none of your agent code knows or cares about Faramesh** beyond the one-line wrapper. Switching the agent to LangChain, CrewAI, or OpenAI Agents would change the framework imports — the policy stays exactly the same.
+Crucially, **none of your agent code knows or cares about Faramesh** beyond the one-line wrapper. Switching the agent to LangChain, CrewAI, or OpenAI Agents would change the framework imports. The policy stays exactly the same.
 
 ## Where to go next
 
-- [Write your first policy](/guides/your-first-policy/) — author `governance.fms` from scratch.
-- [Debug a denial](/guides/debugging-denials/) — what to do when something denies you didn't expect.
-- [From dev to production](/guides/from-dev-to-prod/) — replace stubs with real Vault/SPIFFE/KMS.
-- [Architecture](/concepts/architecture/) — the supervisor and OS-tier sandbox.
+- [Write your first policy](/guides/your-first-policy/): author `governance.fms` from scratch.
+- [Debug a denial](/guides/debugging-denials/): what to do when something denies you didn't expect.
+- [From dev to production](/guides/from-dev-to-prod/): replace stubs with real Vault/SPIFFE/KMS.
+- [Architecture](/concepts/architecture/): the supervisor and OS-tier sandbox.

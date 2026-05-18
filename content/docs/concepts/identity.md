@@ -217,7 +217,7 @@ Every DPR carries:
 - `agent_svid_expiry`, when the credential was due to rotate
 - `principal_claims_hash`. SHA-256 of the structured claim set
 
-Identity claims themselves are **not** in the DPR (they may contain PII). The hash is enough to reproduce the decision; the audit sink stream carries the full claim set with whatever retention and access controls you've configured.
+Identity claims themselves are **not** in the DPR because they may contain PII. The hash is enough to reproduce the decision; the audit sink stream carries the full claim set under the retention and access controls you have configured.
 
 ## What's next
 

@@ -60,7 +60,7 @@ For Python and TypeScript projects, Faramesh scans for tool registrations and ad
 | Bedrock | `actionGroup` / `action_group` JSON entries |
 | Deep Agents | `skills/*/SKILL.md` |
 
-Every discovered tool is added as a comment plus a `defer` rule. **Defer is the safe default** — nothing runs until you explicitly review and promote each rule to `permit`.
+Every discovered tool is added as a comment plus a `defer` rule. **Defer is the safe default**: nothing runs until you explicitly review and promote each rule to `permit`.
 
 ## Output
 
@@ -122,9 +122,9 @@ Three things to know about this file:
 
 ## What's next
 
-- [Tune the policy](/cli/check/) — validate your edits.
-- [Run locally](/cli/dev/) — start the daemon with in-process stubs.
-- [FPL reference](/fpl/) — every block you can add.
-- [Stack reference](/stack/) — block-by-block semantics.
-- [Providers](/providers/) — declare Vault, AWS, GCP, Azure, SPIFFE.
-- [Quickstart](/quickstart/) — the five-step end-to-end walkthrough.
+- [Tune the policy](/cli/check/): validate your edits.
+- [Run locally](/cli/dev/): start the daemon with in-process stubs.
+- [FPL reference](/fpl/): every block you can add.
+- [Stack reference](/stack/): block-by-block semantics.
+- [Providers](/providers/): declare Vault, AWS, GCP, Azure, SPIFFE.
+- [Quickstart](/quickstart/): the five-step end-to-end walkthrough.

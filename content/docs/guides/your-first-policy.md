@@ -1,5 +1,5 @@
 ---
-title: Tutorial — Write your first policy
+title: Tutorial. Write your first policy
 description: Build a governance.fms from scratch. Plain-English explanations of every line, with the reasoning behind each rule.
 ---
 
@@ -39,10 +39,10 @@ What's here:
 
 - `runtime` configures the daemon itself. `mode = "enforce"` means denials block; `audit` would let everything through but record what would have been blocked.
 - `wal_dir` is where Decision Provenance Records live.
-- `agent "support-bot"` opens the policy for one logical agent. The string is the **agent id** — it's what the SDK shim sends with every call so the daemon knows which rules to apply.
+- `agent "support-bot"` opens the policy for one logical agent. The string is the **agent id**: it's what the SDK shim sends with every call so the daemon knows which rules to apply.
 - `default deny` is the most important line in the file. **If no rule matches, the call is denied.** This is the only safe default for governance: every permit must be explicit.
 
-## Step 2: the safe stuff first
+## Step 2: permit the safe tools first
 
 Start by permitting only what's clearly safe. Read-only tools are usually first.
 
@@ -59,7 +59,7 @@ agent "support-bot" {
 
 `knowledgebase/search` and `ticket/read` are read-only. There's no scenario where reading the knowledge base is a problem, so an unconditional `permit` is fine.
 
-The slash in the tool name is a convention for "namespace/action." Faramesh treats it as a string match — you can use it or not. Whatever your framework reports as the tool name is what you put here.
+The slash in the tool name is a convention for "namespace/action." Faramesh treats it as a string match. You can use it or not. Whatever your framework reports as the tool name is what you put here.
 
 ## Step 3: rules with conditions
 
@@ -76,7 +76,7 @@ rules {
 }
 ```
 
-Three rules for `refund`, evaluated top to bottom — **first match wins**:
+Three rules for `refund`, evaluated top to bottom. **first match wins**:
 
 - Refunds under $25 run automatically.
 - Refunds between $25 and $500 wait for human approval (`defer`).
@@ -112,8 +112,8 @@ budget daily {
 }
 ```
 
-- `rate_limit "refund": 5 per minute` — a token bucket. The 6th refund in a minute denies with `RATE_EXCEEDED`. Buckets are per-agent.
-- `budget daily { max $1000 }` — the agent's total spend across all permitted calls today is capped at $1000. Cost comes from the configured cost provider; for non-LLM tools it defaults to a flat per-call cost. At 80% you get a `BUDGET_WARNING`; at 100% the configured `on_exceed` (here, `defer`) kicks in.
+- `rate_limit "refund": 5 per minute`: a token bucket. The 6th refund in a minute denies with `RATE_EXCEEDED`. Buckets are per-agent.
+- `budget daily { max $1000 }`: the agent's total spend across all permitted calls today is capped at $1000. Cost comes from the configured cost provider; for non-LLM tools it defaults to a flat per-call cost. At 80% you get a `BUDGET_WARNING`; at 100% the configured `on_exceed` (here, `defer`) kicks in.
 
 ## Step 6: redact sensitive args before logging
 
@@ -221,13 +221,13 @@ governance.fms:18: agent "support-bot": rate_limit "refund": expected 'per <wind
 ## Common authoring mistakes
 
 - **Forgetting `default deny`.** Without it, anything not matched falls through to `default permit`, which is rarely what you want.
-- **Putting the broad rule before the narrow one.** `permit refund` followed by `deny refund if amount > $500` does nothing — the first rule already matched. Order specific-to-general.
+- **Putting the broad rule before the narrow one.** `permit refund` followed by `deny refund if amount > $500` does nothing. The first rule already matched. Order specific-to-general.
 - **Using `==` for tool patterns instead of bare names or globs.** The first token after `permit`/`defer`/`deny` is a tool pattern, not a condition; `==` is a condition operator.
 - **Logging secrets.** If your tool args contain anything sensitive, add a `redact` block. The default is to log everything you pass.
 
 ## Where to go next
 
-- [FPL reference](/fpl/) — every block, every operator, with cookbook examples.
-- [Debug a denial](/guides/debugging-denials/) — what to do when a rule fires you didn't expect.
-- [Govern a LangGraph agent](/guides/govern-a-langgraph-agent/) — wire this policy into a real agent.
-- [Enforcement](/concepts/enforcement/) — what happens at decision time.
+- [FPL reference](/fpl/): every block, every operator, with cookbook examples.
+- [Debug a denial](/guides/debugging-denials/): what to do when a rule fires you didn't expect.
+- [Govern a LangGraph agent](/guides/govern-a-langgraph-agent/): wire this policy into a real agent.
+- [Enforcement](/concepts/enforcement/): what happens at decision time.

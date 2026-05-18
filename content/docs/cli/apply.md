@@ -45,7 +45,7 @@ faramesh apply [--dir DIR] [--force] [--check-uid] [--require-uid-separation] [-
 
 You have two options:
 
-### Option A — generated launcher
+### Option A. Generated launcher
 
 `apply` writes `.faramesh/bin/agent` for you:
 
@@ -55,7 +55,7 @@ You have two options:
 
 The launcher loads `.faramesh/runtime/agent.env`, applies the OS sandbox if configured, strips ambient credentials, and execs your command. You don't need to remember any flags.
 
-### Option B — daemon-supervised agent (recommended)
+### Option B. Daemon-supervised agent (recommended)
 
 Set `runtime { supervised_command = "python your_agent.py" }` and the daemon launches the agent itself after reaching `READY`:
 
@@ -138,7 +138,7 @@ In-flight calls that have already passed step 3 of the [pipeline](/concepts/enfo
 
 ## What's next
 
-- [Architecture](/concepts/architecture/) — daemon lifecycle, supervisor, sandbox.
-- [`faramesh status`](/cli/status/) — confirm the daemon is `READY` and providers are healthy.
-- [`faramesh plan`](/cli/plan/) — preview before apply.
-- [From dev to production](/guides/from-dev-to-prod/) — full migration guide.
+- [Architecture](/concepts/architecture/): daemon lifecycle, supervisor, sandbox.
+- [`faramesh status`](/cli/status/): confirm the daemon is `READY` and providers are healthy.
+- [`faramesh plan`](/cli/plan/): preview before apply.
+- [From dev to production](/guides/from-dev-to-prod/): full migration guide.

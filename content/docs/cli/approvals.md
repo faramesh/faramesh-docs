@@ -3,7 +3,7 @@ title: faramesh approvals
 description: List, inspect, approve, deny, and watch deferred tool calls. The CLI surface for human-in-the-loop governance.
 ---
 
-`faramesh approvals` is the operator command set for resolving **deferred** tool calls — actions that policy says require a human in the loop before they run. Every `defer` rule in your `governance.fms` produces approval records; this is how you (or a UI built on the same socket) handle them.
+`faramesh approvals` is the operator command set for resolving **deferred** tool calls. Actions that policy says require a human in the loop before they run. Every `defer` rule in your `governance.fms` produces approval records; this is how you (or a UI built on the same socket) handle them.
 
 You'll use this all day if you're an operator. If you're an agent developer, you'll mostly call `list` and `approve` while iterating on policy.
 
@@ -89,7 +89,7 @@ Pipeline state at decision time:
 NEXT STEP: faramesh approvals approve apr-9001 --reason "...".
 ```
 
-The arguments shown are post-redaction — exactly what's stored in the WAL.
+The arguments shown are post-redaction. Exactly what's stored in the WAL.
 
 ### `approve`
 
@@ -189,11 +189,11 @@ Raise `runtime { approval_ttl }` or wire alerts to a channel you watch. The `ale
 
 ### "I want a UI, not the CLI"
 
-[Faramesh Cloud](/cloud/) provides a web UI on top of the same socket. Self-host or use the hosted control plane. The CLI and UI are interchangeable — you can resolve a CLI-listed approval from the UI and vice versa.
+[Faramesh Cloud](/cloud/) provides a web UI on top of the same socket. Self-host or use the hosted control plane. The CLI and UI are interchangeable. You can resolve a CLI-listed approval from the UI and vice versa.
 
 ## What's next
 
-- [Denial codes → POLICY_DEFER](/errors/#policy_defer) — the SDK side.
-- [Credentials → standing grants](/concepts/credentials/#standing-grants) — bulk pre-authorization for trusted operators.
-- [Faramesh Cloud](/cloud/) — the UI version of these commands.
-- [`faramesh explain approval`](/cli/explain/) — full evaluation context for one approval.
+- [Denial codes → POLICY_DEFER](/errors/#policy_defer): the SDK side.
+- [Credentials → standing grants](/concepts/credentials/#standing-grants): bulk pre-authorization for trusted operators.
+- [Faramesh Cloud](/cloud/): the UI version of these commands.
+- [`faramesh explain approval`](/cli/explain/): full evaluation context for one approval.

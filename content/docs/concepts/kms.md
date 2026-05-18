@@ -131,7 +131,7 @@ Rotation is a configuration change. Add a new key version, update `key_version` 
 faramesh apply
 ```
 
-The daemon includes the active `key_id` in every DPR. When you rotate, new DPRs reference the new key id. Verification checks each DPR against the key id it actually used, so rotated keys don't break old chains.
+The daemon includes the active `key_id` in every DPR. When you rotate, new DPRs reference the new key id. Verification checks each DPR against the key id it used at signing time, so rotated keys do not break older chains.
 
 `faramesh audit verify` emits a per-key-version summary:
 
