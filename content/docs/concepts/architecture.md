@@ -9,26 +9,27 @@ If you haven't read [How Faramesh works](/concepts/how-it-works/) yet, do that f
 
 ## Components at a glance
 
-```mermaid
-flowchart LR
-  subgraph agent [Agent runtime]
-    A[LLM + tools]
-  end
-  subgraph faramesh [Faramesh stack]
-    T["Interception tier<br/>SDK / MCP / HTTP proxy"]
-    D["Daemon<br/>policy engine"]
-    S["Agent supervisor<br/>(optional)"]
-    P["Providers<br/>Vault SPIFFE KMS"]
-    W[WAL + DPR]
-  end
-  subgraph optional [Optional]
-    C[Faramesh Cloud<br/>fleet visibility]
-  end
-  A --> T --> D
-  D --> S
-  D --> P
-  D --> W
-  W -.-> C
+```text title="Faramesh stack overview"
+┌─────────────────────────┐         ┌────────────────────────────────────────┐
+│      Agent runtime      │         │            Faramesh stack              │
+│                         │         │                                        │
+│      LLM + tools        │ ─────►  │  Interception tier                     │
+│                         │ tool    │  (SDK shim / MCP proxy / HTTP proxy)   │
+└─────────────────────────┘ calls   │             │                          │
+                                    │             ▼                          │
+                                    │  Daemon (policy engine)                │
+                                    │   │                                    │
+                                    │   ├─► Agent supervisor (optional)      │
+                                    │   ├─► Providers (Vault, SPIFFE, KMS)   │
+                                    │   └─► WAL + DPR                        │
+                                    │                  │                     │
+                                    └──────────────────┼─────────────────────┘
+                                                       │
+                                                       ▼  (optional)
+                                              ┌──────────────────────┐
+                                              │  Faramesh Cloud      │
+                                              │  fleet visibility    │
+                                              └──────────────────────┘
 ```
 
 | Component | Process model | Role |

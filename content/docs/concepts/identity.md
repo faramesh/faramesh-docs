@@ -133,7 +133,7 @@ If you find yourself thinking "the agent will tell us who it is", that's the par
 
 ## Identity in the no-infrastructure mode
 
-[Run locally](/dev/) (`faramesh dev`) substitutes a built-in identity provider that synthesizes a deterministic SPIFFE id from the host:
+[Run locally](/cli/dev/) (`faramesh dev`) substitutes a built-in identity provider that synthesizes a deterministic SPIFFE id from the host:
 
 ```text title="Output"
 spiffe://localhost/dev/<hostname>/<stack-name>/<agent-id>

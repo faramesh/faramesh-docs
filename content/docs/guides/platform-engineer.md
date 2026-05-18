@@ -45,4 +45,4 @@ Pin `FARAMESH_REGISTRY_GITHUB_REF` to a release tag for immutable rollouts.
 
 - [CLI reference](/cli/)
 - [Registry versioning](/registry/versioning/)
-- [Dev mode](/dev/) for local parity
+- [Dev mode](/cli/dev/) for local parity

@@ -6,7 +6,7 @@ export const dynamic = 'force-static';
 
 function pagePriority(url: string): number {
   if (url === '/' || url === '/quickstart' || url === '/introduction') return 1;
-  if (url.startsWith('/cli/') || url === '/dev' || url === '/init') return 0.9;
+  if (url.startsWith('/cli/')) return 0.9;
   if (url.startsWith('/concepts/') || url === '/security') return 0.85;
   return 0.75;
 }

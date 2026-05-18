@@ -124,4 +124,4 @@ faramesh apply --offline --bundle bundle.tar
 
 - [CLI](/cli/): every command and flag
 - [Stack reference](/stack/): what you can change in `governance.fms`
-- [Run locally](/dev/): try changes before applying
+- [Run locally](/cli/dev/): try changes before applying

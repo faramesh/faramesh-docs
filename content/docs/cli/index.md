@@ -23,7 +23,7 @@ Generate `governance.fms` from your project layout. Never starts the daemon.
 faramesh init [--dir DIR] [--offline] [--non-interactive] [--yaml | --json]
 ```
 
-See [faramesh init](/cli/init/) (or [full init guide](/init/)) for framework detection rules.
+See [faramesh init](/cli/init/) for framework detection rules.
 
 ### `faramesh check`
 
@@ -92,7 +92,7 @@ faramesh rollback [--to VERSION]
 
 ### `faramesh dev`
 
-Run Faramesh on your machine without external secret stores, KMS, or audit sinks. Built-in stubs fill in for missing providers. See [Run locally](/dev/).
+Run Faramesh on your machine without external secret stores, KMS, or audit sinks. Built-in stubs fill in for missing providers. See [Run locally](/cli/dev/).
 
 ```bash title="Terminal"
 faramesh dev [--dir DIR]
@@ -264,4 +264,4 @@ faramesh auth whoami
 
 - [Workflows](/flows/): the three flows you'll use every day
 - [Stack reference](/stack/): what `governance.fms` accepts
-- [Run locally](/dev/): `faramesh dev` with no external infrastructure
+- [Run locally](/cli/dev/): `faramesh dev` with no external infrastructure

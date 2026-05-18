@@ -176,7 +176,7 @@ When you run Faramesh without external infrastructure, missing providers fall ba
 | Audit sink | Writes to stdout in JSON Lines. |
 | Cost | Uses bundled pricing. |
 
-Stubs are explicit, every DPR is tagged so a production environment that accidentally falls back is obvious in the audit chain. See [Run locally](/dev/).
+Stubs are explicit, every DPR is tagged so a production environment that accidentally falls back is obvious in the audit chain. See [Run locally](/cli/dev/).
 
 ## Trust roots
 

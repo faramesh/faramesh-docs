@@ -1,0 +1,15 @@
+{
+  "title": "Concepts",
+  "defaultOpen": false,
+  "pages": [
+    "how-it-works",
+    "architecture",
+    "enforcement",
+    "interception",
+    "identity",
+    "topologies",
+    "credentials",
+    "auditing",
+    "kms"
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "title": "CLI",
+  "defaultOpen": false,
+  "pages": [
+    "index",
+    "init",
+    "check",
+    "plan",
+    "apply",
+    "dev",
+    "status",
+    "destroy",
+    "test",
+    "approvals",
+    "audit",
+    "explain"
+  ]
+}

@@ -1,78 +1,145 @@
 ---
 title: Contributing to Faramesh
-description: Monorepo map, architecture trees, and how to open PRs across core, docs, SDKs, and registry.
+description: How to clone the repos, find the right code, and open a pull request — across core, docs, SDKs, and the registry.
 ---
 
-Faramesh is split across several GitHub repositories in the [faramesh](https://github.com/faramesh) org. This guide is for contributors who need to change more than one repo or trace a feature end-to-end.
+This guide is for **anyone who wants to contribute to Faramesh** — open a PR, fix a bug, add a framework profile, improve a docs page. You don't need any special access. Everything is on GitHub, MIT-licensed, and reviewed in the open.
+
+If you're a maintainer and need release / signing-key procedures, those live inside each repo's `MAINTAINERS.md` and aren't part of these docs.
 
 ## Repository map
 
-| Repository | Role | Primary language |
-|------------|------|------------------|
-| [faramesh-core](https://github.com/faramesh/faramesh-core) | CLI, daemon, policy engine, proxies, seccomp/eBPF | Go |
+Faramesh is split across a few public GitHub repositories under the [faramesh](https://github.com/faramesh) org:
+
+| Repository | What lives here | Primary language |
+|------------|------------------|------------------|
+| [faramesh-core](https://github.com/faramesh/faramesh-core) | CLI, daemon, policy engine, proxies, sandbox | Go |
 | [faramesh-docs](https://github.com/faramesh/faramesh-docs) | docs.faramesh.dev (this site) | TypeScript / MDX |
-| [faramesh-registry](https://github.com/faramesh/faramesh-registry) | Signed catalog (providers, policies, frameworks) | FPL + JSON |
-| [faramesh-python-sdk](https://github.com/faramesh/faramesh-python-sdk) | PyPI `faramesh` package | Python |
+| [faramesh-registry](https://github.com/faramesh/faramesh-registry) | Public catalog (providers, policy packs, framework profiles) | FPL + JSON |
+| [faramesh-python-sdk](https://github.com/faramesh/faramesh-python-sdk) | PyPI `faramesh-sdk` | Python |
 | [faramesh-typescript-sdk](https://github.com/faramesh/faramesh-typescript-sdk) | npm `@faramesh/sdk` | TypeScript |
 
-Local clones often live in one parent folder (e.g. `Faramesh-Nexus/`) for convenience; each repo still has its own CI and release cadence.
+Each repo has its own CI and release cadence; you typically only need to clone the one(s) you're changing.
 
-## faramesh-core layout
+## Where things live (faramesh-core)
 
 ```text
 faramesh-core/
-├── cmd/faramesh/          # CLI commands (init, dev, check, plan, apply, serve, …)
+├── cmd/faramesh/        CLI entry points (init, dev, check, plan, apply, serve, …)
 ├── internal/
-│   ├── daemon/            # serve lifecycle, WAL replay, socket server
-│   ├── core/              # pipeline, policy engine, denial codes, sandbox/seccomp
-│   ├── adapter/           # SDK socket, MCP/HTTP proxy, gRPC gateway
-│   ├── security/          # config immutability (chattr/uchg)
-│   └── devmode/           # zero-infra stubs for faramesh dev
-├── sdk/python/            # in-tree Python shim (published from faramesh-python-sdk)
-├── tests/                 # e2e scripts (e.g. e2e_zero_governed.sh)
-└── docs/internal/         # FARAMESH.md spec (not the public docs site)
+│   ├── daemon/          Daemon lifecycle, WAL replay, socket server
+│   ├── core/            Pipeline, policy engine, denial codes, sandbox
+│   ├── adapter/         SDK socket, MCP/HTTP proxy, gRPC gateway
+│   └── runtimeagent/    .faramesh/bin/agent generation
+├── tests/               End-to-end shell scripts (e.g. e2e_zero_governed.sh)
+└── packs/               Built-in policy fragments
 ```
 
-**Data flow:** `governance.fms` → `faramesh check` / `plan` → `faramesh apply` writes `.faramesh/governance.compiled.json` → `faramesh serve --from-compiled` → agents connect via Unix socket / proxies.
+**Common change shapes:**
 
-## faramesh-docs layout
+- Add or fix a CLI flag → `cmd/faramesh/<command>.go`
+- Add a new denial code → `internal/core/reasons/`
+- Add a provider type → `internal/provider/` plus an entry in `faramesh-registry`
+- Fix a pipeline bug → `internal/core/pipeline.go` (the most edited file)
+
+## Where things live (faramesh-docs)
 
 ```text
 faramesh-docs/
-├── content/docs/          # MDX pages (meta.json defines sidebar order)
-├── lib/shared.ts          # gitConfig → header links to faramesh-core
-└── app/                   # Next.js / Fumadocs routes
+├── content/docs/        MDX pages (sidebar order in meta.json)
+├── components/          Reusable React/MDX components
+├── lib/                 Source loader, metadata, shared helpers
+└── app/                 Next.js routes (Fumadocs)
 ```
 
-Doc changes do not require a core release unless you document new flags or denial codes that are not yet shipped.
+Doc-only changes don't require a core release. Build locally with `npm run build`.
 
-## SDK and registry
+## Setting up your environment
 
-- **Python / Node SDKs** — transport (`govern` RPC), `GovernedToolSet`, `ToolDeniedException` / structured denials. Version with daemon socket protocol; bump minor when denial schema changes.
-- **Registry** — `catalog/catalog.json`, `catalog/trust/keys.json`, `make sign-catalog`. CI validates signatures with `REGISTRY_SIGNING_KEY_B64` (see [SIGNING_KEY_LOCATION](https://github.com/faramesh/faramesh-registry/blob/main/SIGNING_KEY_LOCATION.md)).
+```bash title="Terminal"
+# Clone what you need
+git clone https://github.com/faramesh/faramesh-core
+git clone https://github.com/faramesh/faramesh-docs
 
-## PR workflow
+# Core: Go 1.22+
+cd faramesh-core
+go build ./...
+go test ./...
 
-1. **Fork + branch** on the repo you are changing (`feat/…` or `fix/…`).
-2. **Core changes** — `go test ./...` from `faramesh-core`; run `tests/e2e_zero_governed.sh` for dev/apply paths.
-3. **Docs** — `npm run build` in `faramesh-docs`; link new CLI pages in `content/docs/meta.json`.
-4. **Registry** — `./scripts/validate-catalog.sh` after manifest or signature changes.
-5. **Cross-repo features** — open PRs in dependency order (core → SDKs → registry catalog → docs). Reference sibling PR URLs in descriptions.
-
-## Signing key rotation (registry maintainers)
-
-From the **root of a cloned `faramesh-registry` repo** (not a parent monorepo path):
-
-```bash
-gh secret set REGISTRY_SIGNING_KEY_B64 \
-  --repo faramesh/faramesh-registry \
-  --body "$(cat .secrets/REGISTRY_SIGNING_KEY_B64)"
+# Docs: Node 20+
+cd ../faramesh-docs
+npm install
+npm run dev   # local preview at localhost:3000
 ```
 
-Paste the single-line base64 private key if prompted. Update `catalog/trust/keys.json` and docs trust blocks when the public key changes.
+That's the whole setup. No secrets, no credentials, no hosted services required.
 
-## Related pages
+## Opening a PR
 
-- [Security model](/security/)
-- [Architecture](/concepts/architecture/)
-- [CLI reference](/cli/)
+The flow we expect from contributors:
+
+1. **Fork** the repo on GitHub.
+2. **Branch** with a descriptive name (`feat/cli-rollback-flag`, `fix/seccomp-mac-syscall`, `docs/explain-defer-flow`).
+3. **Code + tests.** For core, `go test ./...` must pass; for SDKs, the package's own test suite. For docs, `npm run build` must succeed.
+4. **Open a PR** describing the change, the motivation, and how to verify it. Link any related issue.
+5. A maintainer reviews. Smaller, focused PRs land faster than big ones.
+
+We don't require CLAs or DCO sign-offs. We do require that your changes work, have tests where reasonable, and explain themselves.
+
+## Running the end-to-end tests
+
+`faramesh-core` ships shell-level E2E tests that exercise the full daemon + SDK + CLI path:
+
+```bash title="Terminal"
+cd faramesh-core
+go build -o faramesh ./cmd/faramesh
+bash tests/e2e_zero_governed.sh
+bash tests/e2e_completion_gate.sh
+```
+
+These pass on macOS and Linux. They use only the local stub providers — no infra required.
+
+## Cross-repo features
+
+Some features touch more than one repo. The conventional order is:
+
+1. **core** (the engine) — change behavior, add tests.
+2. **SDKs** — adopt the new core protocol or denial code.
+3. **registry** — publish any new framework profile / policy pack / provider.
+4. **docs** — explain the new feature.
+
+Reference sibling PR URLs in each PR description so reviewers can follow the dependency chain. Don't merge a docs change that describes a CLI flag that doesn't exist yet.
+
+## Code style
+
+- **Go**: standard `gofmt`, golangci-lint clean. We aim for short, descriptive names; we don't worship interfaces.
+- **TypeScript**: ESM, `strict: true`. Prefer named exports.
+- **MDX**: keep front matter (`title`, `description`) on every page. Use code blocks with `title="…"` for filenames.
+- **Comments**: explain *why*, not *what*. The diff already shows what changed.
+
+## Filing an issue
+
+Good bug reports get fixed faster:
+
+```text title="What helps"
+- OS, architecture, faramesh --version
+- Minimal governance.fms reproducing the issue
+- Exact command(s) you ran
+- Full output (use a code block, not a screenshot)
+- What you expected, what happened
+```
+
+For features, describe the use case before the proposed solution. We're more likely to ship a feature that solves a real problem than one that fits a clean abstraction.
+
+## Things we'll likely say no to (for now)
+
+- New top-level CLI commands that duplicate existing flags. We intentionally keep the surface small.
+- Provider integrations that aren't part of the public catalog (open a PR against `faramesh-registry` instead).
+- Breaking changes to the SDK socket protocol without a migration story.
+
+## Related
+
+- [Architecture](/concepts/architecture/) — useful before changing daemon code.
+- [FPL reference](/fpl/) — useful before changing parser code.
+- [Denial codes](/errors/) — useful before adding new denial paths.
+- [CLI reference](/cli/) — useful before changing user-visible CLI behavior.

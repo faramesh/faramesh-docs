@@ -144,7 +144,7 @@ Built-in sinks:
 | S3 | `s3-sink` (NDJSON files per hour) |
 | GCS | `gcs-sink` |
 | Webhook | `webhook-sink` |
-| stdout | Default in [local runs](/dev/) |
+| stdout | Default in [local runs](/cli/dev/) |
 
 See [Providers → audit sinks](/providers/#audit-sinks).
 

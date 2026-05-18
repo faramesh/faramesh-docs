@@ -31,7 +31,7 @@ Tampering with any of those breaks the signature.
 
 | Mode | Where the private key lives | Production-ready? |
 |------|------------------------------|-------------------|
-| **Local** | Ephemeral ed25519 key on disk in `wal_dir/` | No, use only for [local runs](/dev/) and CI fixtures. |
+| **Local** | Ephemeral ed25519 key on disk in `wal_dir/` | No, use only for [local runs](/cli/dev/) and CI fixtures. |
 | **External KMS** | AWS KMS, GCP KMS, Azure Key Vault, HashiCorp Vault Transit | Yes. |
 | **HSM** | PKCS#11 device | Yes, for air-gapped and highest-assurance setups. |
 

@@ -1,0 +1,14 @@
+{
+  "title": "Tutorials & guides",
+  "defaultOpen": false,
+  "pages": [
+    "govern-a-langgraph-agent",
+    "your-first-policy",
+    "debugging-denials",
+    "from-dev-to-prod",
+    "security-engineer",
+    "platform-engineer",
+    "offboarding",
+    "contributing"
+  ]
+}
