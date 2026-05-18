@@ -12,7 +12,7 @@ The OpenAI Agents SDK runs natively in your process. Faramesh provides a thin ad
 <div>
 
 ```bash title="Terminal"
-pip install faramesh openai-agents
+pip install faramesh-sdk openai-agents
 ```
 
 </div>

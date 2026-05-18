@@ -10,7 +10,7 @@ A CrewAI **crew** is a set of agents that hand work to one another. Faramesh gov
 ## Install
 
 ```bash title="Terminal"
-pip install faramesh crewai
+pip install faramesh-sdk crewai
 ```
 
 ## Wire a crew

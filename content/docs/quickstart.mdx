@@ -7,7 +7,7 @@ This page is a single path from zero to a governed agent. Run each block in orde
 
 **You need:** a terminal, Python 3.10+ for the LangGraph example (TypeScript works the same), and an empty project directory.
 
-## Install the CLI {#install-the-cli}
+## Install the CLI [#install-the-cli]
 
 Pick one method. After any method, run `faramesh version` and confirm you see a version string.
 
@@ -143,7 +143,7 @@ Open your agent entry file in an editor (`nano`, `vim`, VS Code, or Cursor). Pat
 Install the SDK:
 
 ```bash title="Terminal"
-pip install faramesh
+pip install faramesh-sdk
 ```
 
 Edit `agent.py`. Replace the tools list passed to your graph:
@@ -292,6 +292,7 @@ faramesh approvals approve apr-9001
 ## 7. Production path (when ready)
 
 <Tabs items={['Dev', 'Apply']}>
+
 <Tab value="Dev">
 
 ```bash title="Terminal"
@@ -303,6 +304,7 @@ python agent.py
 In-process stubs. No Vault or KMS required.
 
 </Tab>
+
 <Tab value="Apply">
 
 ```bash title="Terminal"
@@ -313,6 +315,7 @@ faramesh apply
 Persistent WAL and optional OS sandbox. See [From dev to production](/guides/from-dev-to-prod/).
 
 </Tab>
+
 </Tabs>
 
 ## Verify the stack

@@ -36,10 +36,6 @@ export default defineConfig({
         light: 'github-light',
         dark: 'github-dark',
       },
-      langAlias: {
-        fpl: 'hcl',
-        fms: 'hcl',
-      },
     },
   },
 });

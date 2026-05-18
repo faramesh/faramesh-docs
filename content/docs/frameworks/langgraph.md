@@ -10,7 +10,7 @@ LangGraph runs natively in your process. Faramesh wraps your tool list so every 
 ## Install
 
 ```bash title="Terminal"
-pip install faramesh
+pip install faramesh-sdk
 ```
 
 ## Wire your agent

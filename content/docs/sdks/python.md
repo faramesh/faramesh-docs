@@ -8,7 +8,7 @@ The Python SDK is the in-process integration point for native frameworks. LangGr
 ## Install
 
 ```bash title="Terminal"
-pip install faramesh
+pip install faramesh-sdk
 ```
 
 Supports Python 3.10+. Pure Python, no native extensions.

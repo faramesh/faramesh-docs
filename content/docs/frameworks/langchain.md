@@ -10,7 +10,7 @@ LangChain agents and chains are governed through the same SDK shim used by LangG
 ## Install
 
 ```bash title="Terminal"
-pip install faramesh
+pip install faramesh-sdk
 ```
 
 ## Wire an `AgentExecutor`
