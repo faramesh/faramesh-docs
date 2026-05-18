@@ -47,13 +47,13 @@ export function HomeHero({
         </div>
       </div>
 
-      <div className="border border-violet-500/25 bg-gradient-to-br from-violet-500/[0.06] to-fd-card p-4 shadow-sm">
+      <div className="min-w-0 overflow-hidden border border-violet-500/25 bg-gradient-to-br from-violet-500/[0.06] to-fd-card p-4 shadow-sm">
         <p className="m-0 mb-2 font-mono text-[0.65rem] font-semibold uppercase tracking-wider text-violet-700 dark:text-violet-300">
           Install
         </p>
         <pre className="m-0 overflow-x-auto rounded-sm border border-fd-border bg-fd-background p-3 font-mono text-[12px] leading-relaxed text-fd-foreground">
 {`curl -fsSL \\
-  raw.githubusercontent.com/faramesh/faramesh-core/main/install.sh | bash
+  https://raw.githubusercontent.com/faramesh/faramesh-core/main/install.sh | bash
 faramesh version`}
         </pre>
         <p className="mb-0 mt-3 text-xs text-fd-muted-foreground">
