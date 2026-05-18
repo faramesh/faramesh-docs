@@ -9,39 +9,38 @@ If you haven't read [How Faramesh works](/concepts/how-it-works/) yet, do that f
 
 ## Components at a glance
 
-```text title="Faramesh stack overview"
-┌─────────────────────────┐         ┌────────────────────────────────────────┐
-│      Agent runtime      │         │            Faramesh stack              │
-│                         │         │                                        │
-│      LLM + tools        │ ─────►  │  Interception tier                     │
-│                         │ tool    │  (SDK shim / MCP proxy / HTTP proxy)   │
-└─────────────────────────┘ calls   │             │                          │
-                                    │             ▼                          │
-                                    │  Daemon (policy engine)                │
-                                    │   │                                    │
-                                    │   ├─► Agent supervisor (optional)      │
-                                    │   ├─► Providers (Vault, SPIFFE, KMS)   │
-                                    │   └─► WAL + DPR                        │
-                                    │                  │                     │
-                                    └──────────────────┼─────────────────────┘
-                                                       │
-                                                       ▼  (optional)
-                                              ┌──────────────────────┐
-                                              │  Faramesh Cloud      │
-                                              │  fleet visibility    │
-                                              └──────────────────────┘
+```mermaid
+flowchart LR
+  subgraph agent [Agent runtime]
+    A[LLM + tools]
+  end
+  subgraph faramesh [Faramesh stack]
+    T[Interception tier]
+    D[Daemon policy engine]
+    S[Agent supervisor]
+    P[Providers]
+    W[WAL and DPR]
+  end
+  subgraph optional [Optional]
+    C[Faramesh Cloud]
+  end
+  A --> T --> D
+  D --> S
+  D --> P
+  D --> W
+  W -.-> C
 ```
 
 | Component | Process model | Role |
 |-----------|---------------|------|
-| **`governance.fms`** | File on disk | Source of truth — agents, rules, imports, providers. |
+| **`governance.fms`** | File on disk | Source of truth: agents, rules, imports, providers. |
 | **CLI (`faramesh`)** | Short-lived | `check`, `plan`, `apply`, `dev`, `audit`. Compiles and operates the stack. |
 | **Daemon** | Long-lived process | Evaluates every tool call. Never bypassed in enforce mode. |
 | **Interception tier** | In-process or daemon port | How calls reach the daemon (SDK shim / MCP proxy / HTTP proxy). |
 | **Agent supervisor** | Threads inside the daemon | Spawns and supervises agent child processes under the OS sandbox. |
 | **Providers** | Subprocesses launched by the daemon | Mint secrets, sign DPRs, ship audit records. |
 | **WAL / DPR** | SQLite + append-only file | Hash-chained local audit; optional KMS signature. |
-| **Faramesh Cloud** | External SaaS (optional) | Fleet UI, approvals, DPR replica — **not** in the enforcement path. |
+| **Faramesh Cloud** | External SaaS (optional) | Fleet UI, approvals, DPR replica. **Not** in the enforcement path. |
 
 ## 1. The daemon lifecycle
 

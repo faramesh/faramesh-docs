@@ -2,6 +2,7 @@ import { defineConfig, defineDocs } from 'fumadocs-mdx/config';
 import { metaSchema, pageSchema } from 'fumadocs-core/source/schema';
 import {
   remarkDirectiveAdmonition,
+  remarkMdxMermaid,
   remarkSteps,
 } from 'fumadocs-core/mdx-plugins';
 import remarkDirective from 'remark-directive';
@@ -28,6 +29,7 @@ export default defineConfig({
       remarkDirectiveAdmonition,
       ...plugins,
       remarkSteps,
+      remarkMdxMermaid,
     ],
     rehypeCodeOptions: {
       themes: {

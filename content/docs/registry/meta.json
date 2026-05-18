@@ -2,6 +2,7 @@
   "title": "Registry guides",
   "pages": [
     "overview",
+    "contributing",
     "providers",
     "policies",
     "frameworks",

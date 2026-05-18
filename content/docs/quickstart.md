@@ -1,174 +1,152 @@
 ---
 title: Quickstart
-description: From an empty repo to a governed agent in about five minutes. No infrastructure required.
+description: Install the CLI, generate governance.fms, wire your agent, and run a governed stack end to end. Copy each block as written.
 ---
 
-## What you will do
+This page is a single path from zero to a governed agent. Run each block in order. Every command is copy-paste ready.
 
-1. Install the Faramesh CLI.
-2. Run `faramesh init` to write a starter `governance.fms`.
-3. Add one line of SDK code to your agent.
-4. Watch one tool call get permitted, another get deferred, and approve the deferred one from the CLI.
+**You need:** a terminal, Python 3.10+ for the LangGraph example (TypeScript works the same), and an empty project directory.
 
-Vault, SPIRE, KMS, Docker, and a cloud account are not required. `faramesh dev` runs everything in-process. The migration to production is covered at the end.
+## Install the CLI {#install-the-cli}
 
-## Before you start
+Pick one method. After any method, run `faramesh version` and confirm you see a version string.
 
-- The Faramesh CLI. Installed from source or a release binary, instructions below.
-- Python 3.10 or later for the example. The TypeScript, Node, and Go SDKs follow the same flow.
-- A project directory. Any directory works.
+<Tabs items={['curl', 'Homebrew', 'npx', 'Go', 'Git']} groupId="faramesh-install" persist>
 
-### How the pieces fit
-
-```text title="In your head"
-your agent  ──►  Faramesh SDK shim  ──►  local daemon  ──►  your tools
-                 (one-line wrapper)      (governance.fms)
-```
-
-The shim turns every tool call into a question for the daemon: is this allowed? The daemon checks your policy and answers with one of three effects. `permit` runs the tool. `defer` waits for human approval. `deny` refuses with a structured reason.
-
-That is the entire runtime. Everything else is detail.
-
-### The five steps at a glance
-
-| Step | Command | What it does |
-|------|---------|-------------|
-| 1 | `faramesh init` | Writes a starter `governance.fms` based on your framework. |
-| 2 | `faramesh dev` | Starts the daemon with in-process stubs for everything. |
-| 3 | One-line SDK wrapper | The agent now routes every tool call through the daemon. |
-| 4 | `faramesh approvals approve ...` | Resolves a deferred call from the CLI. |
-| 5 | `faramesh apply` (later) | Replaces stubs with real providers, persists the WAL, enables the OS sandbox. |
-
-No Docker, Vault, or SPIRE is required for steps 1 through 4. For problems, see [Troubleshooting](/troubleshooting/).
-
-The walkthrough below is the short version. For a fully worked example with a LangGraph agent, see [Tutorial: Govern your first LangGraph agent](/guides/govern-a-langgraph-agent/).
-
-:::info
-The example uses **LangGraph**. The flow is identical for every other framework; only the SDK wiring in step 4 changes.
-:::
-
-## 1. Install the CLI
-
-Two options. Pick one.
-
-### Option A: install script (recommended)
+<Tab value="curl">
 
 ```bash title="Terminal"
 curl -fsSL https://raw.githubusercontent.com/faramesh/faramesh-core/main/install.sh | bash
 faramesh version
 ```
 
-The script downloads the latest release binary for your platform, verifies the SHA256 checksum, and places `faramesh` on your `PATH`. It does not require root unless you choose a system-wide install location.
+Non-interactive (CI):
 
-### Option B: build from source
+```bash title="Terminal"
+curl -fsSL https://raw.githubusercontent.com/faramesh/faramesh-core/main/install.sh | bash -s -- --no-interactive
+faramesh version
+```
+
+Installs the release binary for your OS and architecture, verifies SHA256, and places `faramesh` on your PATH.
+
+</Tab>
+
+<Tab value="Homebrew">
+
+```bash title="Terminal"
+brew tap faramesh/tap
+brew install faramesh
+faramesh version
+```
+
+Requires Homebrew on macOS or Linux. The formula builds from source via Go.
+
+</Tab>
+
+<Tab value="npx">
+
+Run without a global install:
+
+```bash title="Terminal"
+npx @faramesh/cli@latest version
+```
+
+Or install globally:
+
+```bash title="Terminal"
+npm install -g @faramesh/cli
+faramesh version
+```
+
+Requires Node.js 18+.
+
+</Tab>
+
+<Tab value="Go">
+
+```bash title="Terminal"
+go install github.com/faramesh/faramesh-core/cmd/faramesh@latest
+faramesh version
+```
+
+Ensure `$(go env GOPATH)/bin` is on your PATH.
+
+</Tab>
+
+<Tab value="Git">
 
 ```bash title="Terminal"
 git clone https://github.com/faramesh/faramesh-core.git
 cd faramesh-core
 go build -o faramesh ./cmd/faramesh
+export PATH="$(pwd):$PATH"
+faramesh version
+```
+
+Optional system-wide install:
+
+```bash title="Terminal"
 sudo install -m 0755 faramesh /usr/local/bin/faramesh
 faramesh version
 ```
 
-Requires Go 1.22 or later. Useful if you want to track `main` or modify the CLI.
+Requires Go 1.22+.
 
-## 2. Generate your stack
+</Tab>
 
-From the root of your agent project:
+</Tabs>
+
+## 1. Create a project directory
+
+```bash title="Terminal"
+mkdir my-governed-agent && cd my-governed-agent
+```
+
+Use your existing agent repo instead if you already have one. Run the rest from that directory root.
+
+## 2. Generate `governance.fms`
 
 ```bash title="Terminal"
 faramesh init
 ```
 
-Sample output:
+Expected output includes `Framework detected`, `Tools discovered`, and `governance.fms written`.
 
-```text title="Output"
-✓ Framework detected: langgraph
-✓ Tools discovered: 3 (search_docs, send_email, charge_card)
-✓ governance.fms written
-
-Next steps:
-  Run your agent with governance:
-    faramesh dev
-  Review what your agent is doing:
-    faramesh approvals list
-  When ready for full enforcement:
-    faramesh apply
-```
-
-Faramesh writes a `governance.fms` like this:
-
-```hcl title="governance.fms"
-import "github.com/faramesh/faramesh-registry/frameworks/langgraph@1.0.0"
-
-runtime {
-  mode    = "enforce"
-  wal_dir = "./faramesh-wal"
-  backend = "sqlite"
-}
-
-agent "myproject-agent" {
-  rules {
-    defer search_docs
-    defer send_email
-    defer charge_card
-  }
-
-  budget daily {
-    max       $10.00
-    warn_at   0.8
-    on_exceed deny
-  }
-
-  egress { }
-}
-```
-
-:::tip[Safe default]
-Every discovered tool starts at `defer` so nothing runs without your review.
-:::
-
-## 3. Tune the policy
-
-Open `governance.fms` and edit the rules. Read-only tools can usually move directly to `permit`. Anything that spends money or sends data outside should stay deferred or be conditionally permitted.
-
-```hcl title="governance.fms"
-agent "myproject-agent" {
-  rules {
-    permit search_docs
-    defer  send_email
-    permit charge_card if amount < $50
-    deny   charge_card if amount >= $50
-  }
-
-  rate_limit "charge_card": 5 per minute
-
-  budget daily {
-    max       $100.00
-    warn_at   0.8
-    on_exceed deny
-  }
-
-  egress {
-    allow = ["api.openai.com", "api.stripe.com"]
-  }
-}
-```
-
-Validate before shipping:
+Validate:
 
 ```bash title="Terminal"
 faramesh check
-faramesh plan
 ```
 
-:::note
-`plan` prints the exact decision diff so you can see what will change when you apply.
-:::
+## 3. Start the daemon (dev mode)
+
+Terminal 1:
+
+```bash title="Terminal"
+faramesh dev
+```
+
+Leave this running. Note the socket path (default `~/.faramesh/runtime/faramesh.sock`).
 
 ## 4. Wire your agent
 
-Add the SDK shim to your code, Python or TypeScript.
+Open your agent entry file in an editor (`nano`, `vim`, VS Code, or Cursor). Paths below assume project root.
+
+<Tabs items={['Native SDK', 'MCP client', 'HTTP proxy']} groupId="faramesh-wire" persist>
+
+<Tab value="Native SDK">
+
+**Tier:** in-process SDK shim. **Frameworks:** LangGraph, LangChain, CrewAI, OpenAI Agents, Google ADK, and others.
+
+**File:** `agent.py` (or your main agent module) in the project root.
+
+Install the SDK:
+
+```bash title="Terminal"
+pip install faramesh
+```
+
+Edit `agent.py`. Replace the tools list passed to your graph:
 
 <Tabs items={['Python', 'TypeScript']}>
 <Tab value="Python">
@@ -192,71 +170,160 @@ graph = create_react_agent(model, tools)
 <Tab value="TypeScript">
 
 ```ts title="agent.ts"
-import { GovernedToolSet } from '@faramesh/sdk';
-import { createReactAgent } from '@langchain/langgraph/prebuilt';
+import { governedTools } from '@faramesh/sdk';
 
-const tools = new GovernedToolSet([searchDocs, sendEmail, chargeCard], {
-  agentId: 'myproject-agent',
-});
-
-const graph = createReactAgent({ llm: model, tools });
+export const tools = governedTools(
+  { searchDocs, sendEmail, chargeCard },
+  { agentId: 'myproject-agent' },
+);
 ```
 
-Set `FARAMESH_SOCKET` to the path printed by `faramesh dev` (default `~/.faramesh/runtime/faramesh.sock`).
+Install: `npm install @faramesh/sdk`
 
 </Tab>
 </Tabs>
 
-That is the entire integration. Every tool call now traverses the Faramesh daemon before it executes.
-
-:::tip[MCP clients]
-Using Claude Code, Cursor, or another MCP client? See [Frameworks > MCP](/frameworks/claude-code/) and point the client at the Faramesh proxy URL instead.
-:::
-
-## 5. Develop locally, then apply
-
-<Tabs items={['Dev (no infrastructure)', 'Apply (production path)']}>
-<Tab value="Dev (no infrastructure)">
+**Run (terminal 2):**
 
 ```bash title="Terminal"
-faramesh dev
-# separate terminal:
 export FARAMESH_SOCKET=~/.faramesh/runtime/faramesh.sock
-python my_agent.py
+python agent.py
 ```
 
+More frameworks: [LangGraph](/frameworks/langgraph/), [LangChain](/frameworks/langchain/), [OpenAI Agents](/frameworks/openai-agents/), [CrewAI](/frameworks/crewai/).
+
 </Tab>
-<Tab value="Apply (production path)">
+
+<Tab value="MCP client">
+
+**Tier:** MCP proxy. **Clients:** Claude Code, Cursor, OpenCode.
+
+**File:** `governance.fms` in the project root. Add:
+
+```hcl title="governance.fms"
+runtime {
+  mode           = "enforce"
+  mcp_proxy_port = 8081
+}
+```
+
+Apply:
 
 ```bash title="Terminal"
 faramesh apply
-python my_agent.py
 ```
 
-On macOS the CLI prints a note that OS-tier seccomp and Landlock are Linux-only. Application-tier enforcement still applies.
+**File:** Claude Code MCP config (path varies by install). Example `~/.claude/claude_desktop_config.json` or project `.mcp.json`:
+
+```json title="MCP config"
+{
+  "mcpServers": {
+    "my-tools": {
+      "url": "http://127.0.0.1:8081/mcp"
+    }
+  }
+}
+```
+
+Point each upstream MCP server through the Faramesh proxy URL. Full steps: [Claude Code](/frameworks/claude-code/), [Cursor](/frameworks/cursor/).
+
+</Tab>
+
+<Tab value="HTTP proxy">
+
+**Tier:** HTTP proxy. **Runtimes:** Bedrock action groups, OpenAPI tool endpoints.
+
+**File:** `governance.fms` in the project root:
+
+```hcl title="governance.fms"
+runtime {
+  mode        = "enforce"
+  http_listen = "0.0.0.0:8443"
+}
+```
+
+```bash title="Terminal"
+faramesh apply
+```
+
+Point Bedrock or your API gateway at `https://<host>:8443/...` instead of the raw handler. Details: [Bedrock](/frameworks/bedrock/).
+
+</Tab>
+
+</Tabs>
+
+## 5. Tune policy (optional)
+
+**File:** `governance.fms` in the project root.
+
+```hcl title="governance.fms"
+agent "myproject-agent" {
+  rules {
+    permit search_docs
+    defer  send_email
+    permit charge_card if amount < $50
+    deny   charge_card if amount >= $50
+  }
+}
+```
+
+```bash title="Terminal"
+faramesh check
+faramesh plan
+```
+
+Restart `faramesh dev` in terminal 1 after edits (Ctrl+C, then `faramesh dev` again).
+
+## 6. Watch decisions
+
+Terminal 3:
+
+```bash title="Terminal"
+faramesh approvals list
+faramesh audit tail
+```
+
+Approve a deferred call:
+
+```bash title="Terminal"
+faramesh approvals approve apr-9001
+```
+
+## 7. Production path (when ready)
+
+<Tabs items={['Dev', 'Apply']}>
+<Tab value="Dev">
+
+```bash title="Terminal"
+faramesh dev
+export FARAMESH_SOCKET=~/.faramesh/runtime/faramesh.sock
+python agent.py
+```
+
+In-process stubs. No Vault or KMS required.
+
+</Tab>
+<Tab value="Apply">
+
+```bash title="Terminal"
+faramesh apply
+.faramesh/bin/agent -- python agent.py
+```
+
+Persistent WAL and optional OS sandbox. See [From dev to production](/guides/from-dev-to-prod/).
 
 </Tab>
 </Tabs>
 
-A `permit` call returns the tool result. A `defer` call raises `ToolDeniedException` (Python or TypeScript) with a structured payload. Watch the inbox in another terminal:
+## Verify the stack
 
 ```bash title="Terminal"
-faramesh approvals list
-faramesh approvals approve apr-9001
+faramesh status
+faramesh audit verify
 ```
-
-Once approved, the agent's next attempt at `send_email` succeeds. Alternatively, promote the rule to `permit` in `governance.fms` and run `faramesh apply` again.
-
-## What you now have
-
-- **Every tool call** runs through a deterministic policy engine.
-- **Every decision** is recorded in a tamper-evident WAL. Verify with `faramesh audit verify`.
-- **Every credential** comes from a provider at call time. The agent never holds long-lived secrets.
-- **Every deferred action** is visible in the approvals queue with full context.
 
 ## Next
 
-- [Stack reference](/stack/): every block in `governance.fms`.
-- [FPL language](/fpl/): the grammar with examples.
-- [Workflows](/flows/): first apply, change, monitor.
-- [CLI](/cli/): every command.
+- [CLI reference](/cli/)
+- [Stack reference](/stack/)
+- [Architecture](/concepts/architecture/)

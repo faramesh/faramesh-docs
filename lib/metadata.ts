@@ -94,6 +94,7 @@ export function createDocMetadata({
   return {
     title,
     description: desc,
+    icons: rootMetadata.icons,
     alternates: {
       canonical,
     },
