@@ -16,18 +16,24 @@ Pick one method. After any method, run `faramesh version` and confirm you see a 
 <Tab value="curl">
 
 ```bash title="Terminal"
-curl -fsSL https://raw.githubusercontent.com/faramesh/faramesh-core/main/install.sh | bash
+curl -fsSL https://install.faramesh.dev/install.sh | bash
 faramesh version
 ```
 
 Non-interactive (CI):
 
 ```bash title="Terminal"
-curl -fsSL https://raw.githubusercontent.com/faramesh/faramesh-core/main/install.sh | bash -s -- --no-interactive
+curl -fsSL https://install.faramesh.dev/install.sh | bash -s -- --no-interactive
 faramesh version
 ```
 
 Installs the release binary for your OS and architecture, verifies SHA256, and places `faramesh` on your PATH.
+
+To update an existing install in place without touching your runtime data, rerun the same installer with `--update`:
+
+```bash title="Terminal"
+curl -fsSL https://install.faramesh.dev/install.sh | bash -s -- --update
+```
 
 </Tab>
 
@@ -71,6 +77,8 @@ faramesh version
 
 Ensure `$(go env GOPATH)/bin` is on your PATH.
 
+This installs the Go-built binary from source code, not the prebuilt release archive.
+
 </Tab>
 
 <Tab value="Git">
@@ -78,16 +86,16 @@ Ensure `$(go env GOPATH)/bin` is on your PATH.
 ```bash title="Terminal"
 git clone https://github.com/faramesh/faramesh-core.git
 cd faramesh-core
-go build -o faramesh ./cmd/faramesh
-export PATH="$(pwd):$PATH"
+make install
 faramesh version
 ```
 
-Optional system-wide install:
+Optional update and removal helpers:
 
 ```bash title="Terminal"
-sudo install -m 0755 faramesh /usr/local/bin/faramesh
-faramesh version
+make update
+make uninstall
+make purge
 ```
 
 Requires Go 1.22+.
@@ -95,6 +103,16 @@ Requires Go 1.22+.
 </Tab>
 
 </Tabs>
+
+## Update or uninstall
+
+Choose the path that matches how you installed Faramesh:
+
+- Update the binary only: rerun the curl installer with `--update`, or use `make update` from a source checkout.
+- Remove only the binary: use `faramesh uninstall --binary-only` or `make uninstall` from a source checkout.
+- Purge everything Faramesh set up: use `faramesh uninstall --purge` or `make purge` from a source checkout.
+
+These actions preserve your existing project files unless you explicitly choose a purge.
 
 ## 1. Create a project directory
 

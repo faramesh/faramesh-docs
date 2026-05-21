@@ -53,7 +53,7 @@ export function HomeHero({
         </p>
         <pre className="m-0 overflow-x-auto rounded-sm border border-fd-border bg-fd-background p-3 font-mono text-[12px] leading-relaxed text-fd-foreground">
 {`curl -fsSL \\
-  https://raw.githubusercontent.com/faramesh/faramesh-core/main/install.sh | bash
+  https://install.faramesh.dev/install.sh | bash
 faramesh version`}
         </pre>
         <p className="mb-0 mt-3 text-xs text-fd-muted-foreground">

@@ -35,10 +35,12 @@ Or remove the daemon unit / sidecar from orchestration manifests and redeploy ag
 ## Clean local state
 
 ```bash
-rm -rf .faramesh
+faramesh uninstall --binary-only
 ```
 
-Removes cached providers, import cache, and WAL (only after export if audit retention requires it).
+Use `faramesh uninstall --purge` when you also want to remove cached providers, import cache, WAL, and other local Faramesh artifacts.
+
+If you are offboarding a source checkout, run the same command from inside the stack directory so it can remove local stack state as well.
 
 ## Partial offboarding
 
