@@ -126,7 +126,7 @@ A payment agent runs on ten machines behind a load balancer for horizontal scali
 
 **Stacks: 1 (with 10 instances).** Each daemon has its own WAL. Each daemon governs the agent process on its machine. The **stack identity** is what they share, a stack id provisioned by `faramesh apply` and embedded in the compiled state.
 
-[Faramesh Cloud](/cloud/) gives you the fleet-level view across all ten daemons. Each daemon ships its DPR stream outbound. The platform aggregates them and shows all ten in one place.
+External observability or audit systems can aggregate DPR streams across all ten daemons. Each daemon still writes its local WAL before the action completes.
 
 When budgets need to be enforced across the fleet (one global $1,000/day ceiling for the agent, not ten independent $1,000/day ceilings), declare a **shared budget backend**:
 
@@ -163,7 +163,7 @@ A company has dev, staging, and production environments for their payment agent 
 | OS-tier enforcement | off | optional | required (Linux) |
 | WAL retention | 7 days | 30 days | 18 months + S3 archive |
 
-Faramesh Cloud sees all three. A compliance export can cover prod only, or all three, depending on what the auditor asks for.
+An external evidence workflow can cover prod only, or all three environments, depending on what the auditor asks for.
 
 ## Situation 6. Multiple teams, multiple products
 
@@ -322,7 +322,7 @@ agent "payment-agent" {
 
 **Stacks: 1.** One `governance.fms`. Each region runs its own daemon instances. Each region resolves to the provider local to that region via `env(...)`. Same audit chain. DPRs from both regions stream to the same WAL backend.
 
-The platform's fleet view shows the regional split, including per-region credential issuance latencies and per-region budget burn.
+Fleet-level observability should show the regional split, including per-region credential issuance latencies and per-region budget burn.
 
 ## Cheat sheet
 
@@ -354,5 +354,5 @@ If a deployment shape would break any of those three, it's the wrong shape.
 - [Identity](/concepts/identity/): what attests every agent in every shape above
 - [Enforcement](/concepts/enforcement/): the decision pipeline
 - [Auditing](/concepts/auditing/): what flows out of every daemon
-- [Faramesh Cloud](/cloud/): the fleet view that ties multi-instance and multi-stack deployments together
+- [Auditing](/concepts/auditing/): the evidence stream that ties multi-instance and multi-stack deployments together
 - [Stack file](/stack/): declaring agents, providers, and identity in `governance.fms`

@@ -39,7 +39,7 @@ Pin `FARAMESH_REGISTRY_GITHUB_REF` to a release tag for immutable rollouts.
 
 ## Fleet visibility
 
-[Faramesh Cloud](/cloud/) provides approvals UI and DPR replica it does **not** sit in the enforcement path. Use it for operator workflows; keep enforcement local.
+For fleet visibility, forward DPRs and health signals to your observability and audit systems. Keep enforcement local and keep the daemon WAL as the source of truth.
 
 ## Related
 

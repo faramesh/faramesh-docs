@@ -12,7 +12,7 @@ Security and GRC teams care about **what the agent did**, **under which policy**
 | `governance.fms` + compiled JSON | Repo / CMDB | Policy intent and version |
 | WAL / DPR chain | `.faramesh/` on host | Per-decision evidence |
 | Provider manifests | Import pins in FPL | Binary provenance |
-| Approval records | CLI / Cloud UI | Human-in-the-loop proof |
+| Approval records | CLI / internal approval workflow | Human-in-the-loop proof |
 
 ## Verify integrity offline
 

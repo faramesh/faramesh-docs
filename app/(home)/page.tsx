@@ -158,13 +158,6 @@ export default function HomePage() {
             layout="horizontal"
             body="POLICY_DENY, DEFER, RATE_EXCEEDED, and payloads."
           />
-          <HomeCard
-            href="/cloud"
-            title="Faramesh Cloud"
-            accent="violet"
-            layout="horizontal"
-            body="Fleet UI and approvals. Not in the enforcement path."
-          />
         </HomeGrid>
       </HomeSection>
     </div>

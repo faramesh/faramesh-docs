@@ -1,6 +1,6 @@
 ---
 title: Architecture
-description: How the Faramesh daemon, lifecycle, supervisor, OS-tier sandbox, interception tiers, providers, and optional cloud control plane fit together end-to-end.
+description: How the Faramesh daemon, lifecycle, supervisor, OS-tier sandbox, interception tiers, providers, and optional audit integrations fit together end-to-end.
 ---
 
 This page explains the **runtime architecture** of a Faramesh stack. What processes run, what they do, in what order, and where the trust boundaries are.
@@ -21,8 +21,8 @@ flowchart LR
     P[Providers]
     W[WAL and DPR]
   end
-  subgraph optional [Optional]
-    C[Faramesh Cloud]
+  subgraph optional [Optional integrations]
+    C[Audit and observability sinks]
   end
   A --> T --> D
   D --> S
@@ -40,7 +40,7 @@ flowchart LR
 | **Agent supervisor** | Threads inside the daemon | Spawns and supervises agent child processes under the OS sandbox. |
 | **Providers** | Subprocesses launched by the daemon | Mint secrets, sign DPRs, ship audit records. |
 | **WAL / DPR** | SQLite + append-only file | Hash-chained local audit; optional KMS signature. |
-| **Faramesh Cloud** | External SaaS (optional) | Fleet UI, approvals, DPR replica. **Not** in the enforcement path. |
+| **Audit and observability sinks** | External integrations (optional) | DPR replication, metrics, and logs. **Not** in the enforcement path. |
 
 ## 1. The daemon lifecycle
 
@@ -216,7 +216,7 @@ The **daemon is one process**. The supervisor and the policy engine live as comp
 | Daemon | Trusted | The thing enforcing policy and writing audit. |
 | Providers | Trusted **after** signature verification | Loaded from the registry; verified against `trust { }`. |
 | Agent process | **Untrusted** | Tool args and model output are inputs to policy, not authority. |
-| Faramesh Cloud | Untrusted (optional) | Visibility plane. Never on the enforcement path. |
+| External audit and observability sinks | Untrusted (optional) | Visibility plane. Never on the enforcement path. |
 
 The agent being untrusted is the whole point. Everything else flows from that assumption.
 

@@ -165,7 +165,7 @@ echo "$PENDING_JSON" | jq -c '.approvals[]' | while read approval; do
 done
 ```
 
-For programmatic use over the SDK socket directly, the protocol is documented in [Faramesh Cloud → approval webhook](/cloud/) (the same shape used by the hosted approvals UI).
+For programmatic use, build against the SDK socket directly and record every approval decision back into the daemon audit path.
 
 ## Approval lifecycle
 
@@ -189,11 +189,11 @@ Raise `runtime { approval_ttl }` or wire alerts to a channel you watch. The `ale
 
 ### "I want a UI, not the CLI"
 
-[Faramesh Cloud](/cloud/) provides a web UI on top of the same socket. Self-host or use the hosted control plane. The CLI and UI are interchangeable. You can resolve a CLI-listed approval from the UI and vice versa.
+Build an internal UI or workflow integration on top of the same approval socket. The CLI remains the reference operator interface.
 
 ## What's next
 
 - [Denial codes → POLICY_DEFER](/errors/#policy_defer): the SDK side.
 - [Credentials → standing grants](/concepts/credentials/#standing-grants): bulk pre-authorization for trusted operators.
-- [Faramesh Cloud](/cloud/): the UI version of these commands.
+- [Auditing](/concepts/auditing/): how approval decisions are recorded.
 - [`faramesh explain approval`](/cli/explain/): full evaluation context for one approval.

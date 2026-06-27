@@ -74,7 +74,7 @@ That loop, **declare, enforce, record, review**, is the entire product.
 
 - **Not a model gateway.** It does not proxy LLM completions. Use a model gateway for that and place Faramesh on the tool side.
 - **Not a prompt firewall.** Prompt-injection defense is one input to a policy. It is not the policy itself.
-- **Not a SaaS dependency.** The daemon and the SDKs are open source. [Faramesh Cloud](/cloud/) is optional fleet visibility and never sits in the enforcement path.
+- **Not a SaaS dependency.** The daemon, SDKs, policy engine, and local audit path are open source and run without a hosted service in the enforcement path.
 - **Not a heavyweight install.** `faramesh dev` boots in-process stubs for Vault, SPIFFE, KMS, and the audit sink. The whole stack runs on a laptop with no network access.
 
 ## Next steps

@@ -2,6 +2,7 @@
   "name": "faramesh-docs",
   "version": "0.0.1",
   "private": true,
+  "license": "CC-BY-4.0",
   "scripts": {
     "build": "fumadocs-mdx && next build",
     "dev": "next dev",

@@ -176,7 +176,7 @@ Every variant supports `--format json`:
 faramesh explain decision dpr-7f3b --format json
 ```
 
-The schema is stable and is what the [Faramesh Cloud](/cloud/) UI consumes for its decision-detail view.
+The schema is stable so CLIs, internal UIs, and audit tooling can consume the same decision-detail shape.
 
 ## When to use it
 

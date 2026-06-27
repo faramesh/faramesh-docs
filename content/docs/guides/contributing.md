@@ -3,7 +3,7 @@ title: Contributing to Faramesh
 description: How to clone the repos, find the right code, and open a pull request. Across core, docs, SDKs, and the registry.
 ---
 
-This guide is for **anyone who wants to contribute to Faramesh**: open a PR, fix a bug, add a framework profile, improve a docs page. You don't need any special access. Everything is on GitHub, MIT-licensed, and reviewed in the open.
+This guide is for **anyone who wants to contribute to Faramesh**: open a PR, fix a bug, add a framework profile, improve a docs page. You don't need any special access. Everything is on GitHub and reviewed in the open. Code repositories use Apache-2.0; documentation uses CC-BY-4.0.
 
 If you're a maintainer and need release / signing-key procedures, those live inside each repo's `MAINTAINERS.md` and aren't part of these docs.
 
@@ -18,6 +18,7 @@ Faramesh is split across a few public GitHub repositories under the [faramesh](h
 | [faramesh-registry](https://github.com/faramesh/faramesh-registry) | Public catalog (providers, policy packs, framework profiles) | FPL + JSON |
 | [faramesh-python-sdk](https://github.com/faramesh/faramesh-python-sdk) | PyPI `faramesh-sdk` | Python |
 | [faramesh-typescript-sdk](https://github.com/faramesh/faramesh-typescript-sdk) | npm `@faramesh/sdk` | TypeScript |
+| [fpl-lang](https://github.com/faramesh/fpl-lang) | FPL specification and conformance fixtures | FPL / Go |
 
 Each repo has its own CI and release cadence; you typically only need to clone the one(s) you're changing.
 
@@ -84,7 +85,15 @@ The flow we expect from contributors:
 4. **Open a PR** describing the change, the motivation, and how to verify it. Link any related issue.
 5. A maintainer reviews. Smaller, focused PRs land faster than big ones.
 
-We don't require CLAs or DCO sign-offs. We do require that your changes work, have tests where reasonable, and explain themselves.
+We do not require a CLA. We do require DCO sign-off on every commit. Use `git commit -s` so each commit includes:
+
+```text
+Signed-off-by: Your Name <you@example.com>
+```
+
+We also require that your changes work, have tests where reasonable, and explain themselves.
+
+AI-assisted contributions are allowed when the contributor understands the change, tests it where appropriate, and takes responsibility for it. Fully automated, low-signal, or undisclosed bulk AI-generated pull requests may be closed.
 
 ## Running the end-to-end tests
 

@@ -149,7 +149,7 @@ To approve from CLI:
 faramesh approvals approve <token> --reason "manual review passed"
 ```
 
-For higher volume, use the [Faramesh Cloud approvals UI](/cloud/) or your own integration via the SDK socket.
+For higher volume, build an internal approval workflow via the SDK socket and keep the daemon audit path as the source of truth.
 
 ## When to change the rule vs. the call
 

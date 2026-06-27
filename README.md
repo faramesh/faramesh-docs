@@ -4,6 +4,11 @@ Source for [docs.faramesh.dev](https://docs.faramesh.dev), the documentation for
 
 You do not need to run the site locally to contribute. Open a pull request with your Markdown changes; when it merges to `main`, the site updates automatically.
 
+Documentation is licensed under [CC-BY-4.0](./LICENSE). Contribution, security,
+conduct, and governance policies are documented in [CONTRIBUTING.md](./CONTRIBUTING.md),
+[SECURITY.md](./SECURITY.md), [CODE_OF_CONDUCT.md](./CODE_OF_CONDUCT.md), and
+[GOVERNANCE.md](./GOVERNANCE.md).
+
 ## Add or edit a page
 
 1. **Create or edit a file** under `content/docs/`. Use `.md` and mirror the URL path in the folder structure:
